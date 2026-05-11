@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["node", "jest", "jest-cucumber", "@faker-js/faker"],
+    "types": ["node", "jest", "jest-cucumber", "@faker-js/faker", "puppeteer"],
     "strict": true,
     "esModuleInterop": true,
     "resolveJsonModule": true
