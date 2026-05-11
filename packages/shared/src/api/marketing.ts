@@ -15,7 +15,7 @@ export type MarketingResponse = AddEmailToListResponse;
 
 export const createMarketingApi = (apiUrl: string) => {
   return {
-    AddEmailToList: async (email: string) => {
+    addEmailToList: async (email: string) => {
       try {
         const response = await axios.post(`${apiUrl}/marketing`, {
           email,

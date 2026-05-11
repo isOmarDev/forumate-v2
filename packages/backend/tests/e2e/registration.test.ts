@@ -1,11 +1,12 @@
 import path from 'path';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 
-import { resetDatabase } from '../support/fixtures';
 import { UserBuilder } from '../support/builders';
 import { ErrorException } from '../../src/shared/errors/error-exception-types';
 import { userErrorCodes } from '../../src/modules/user/user-errors';
-import { CreateUserInputBuilder } from '../../../shared/tests/builders/create-user-input-builder';
+
+import { resetDatabase } from '../../../shared/tests/support/fixtures/reset';
+import { CreateUserInputBuilder } from '../../../shared/tests/support/builders/create-user-input-builder';
 import { createApiClient } from '@dddforum/shared/api';
 import type { AddEmailToListResponse } from '@dddforum/shared/api/marketing';
 import type {
@@ -45,7 +46,7 @@ defineFeature(feature, (test) => {
       async () => {
         response = await apiClient.users.register(user);
 
-        addEmailToListResponse = await apiClient.marketing.AddEmailToList(
+        addEmailToListResponse = await apiClient.marketing.addEmailToList(
           user.email,
         );
       },

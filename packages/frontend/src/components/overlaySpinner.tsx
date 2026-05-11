@@ -1,10 +1,6 @@
 import { Rings } from 'react-loader-spinner';
 
-export const OverlaySpinner = ({
-  isActive,
-}: {
-  isActive: boolean;
-}) =>
+export const OverlaySpinner = ({ isActive }: { isActive: boolean }) =>
   isActive ? (
     <div className="overlay-spinner">
       <Rings

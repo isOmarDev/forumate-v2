@@ -187,3 +187,20 @@ h3 {
   font-size: 1rem;
   box-sizing: border-box;
 }
+
+.marketing-emails-label {
+  display: flex;
+  align-items: center;
+  margin-block-start: 10px;
+  margin-block-end: 20px;
+  gap: 10px;
+}
+
+.registration-form .marketing-emails {
+  width: auto;
+  margin: 0;
+}
+
+.to-login {
+  margin-top: 20px;
+}
