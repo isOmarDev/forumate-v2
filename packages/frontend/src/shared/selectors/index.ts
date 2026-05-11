@@ -21,6 +21,7 @@ export const appSelectors = {
       username: el('.registration.username', 'input'),
       firstname: el('.registration.first-name', 'input'),
       lastname: el('.registration.last-name', 'input'),
+      password: el('.registration.password', 'input'),
       marketingCheckbox: el('.registration.marketing-emails', 'input'),
       submit: el('.registration.submit-button', 'button'),
     },
