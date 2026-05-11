@@ -4,13 +4,6 @@ import { Link } from 'react-router-dom';
 import { appSelectors, toClass } from '../shared/selectors';
 import { CreateUserInput } from '@dddforum/shared/api/users';
 
-export type RegistrationInput = {
-  email: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-};
-
 interface RegistrationFormProps {
   onSubmit: (
     formDetails: CreateUserInput,
@@ -20,63 +13,81 @@ interface RegistrationFormProps {
 
 const selectors = appSelectors.registration.registrationForm;
 
-export const RegistrationForm = (props: RegistrationFormProps) => {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+const FORM_FIELDS: Array<{
+  key: keyof CreateUserInput;
+  type: string;
+  placeholder: string;
+  selector: string;
+}> = [
+  {
+    key: 'email',
+    type: 'email',
+    placeholder: 'Email',
+    selector: selectors.email.selector,
+  },
+  {
+    key: 'username',
+    type: 'text',
+    placeholder: 'Username',
+    selector: selectors.username.selector,
+  },
+  {
+    key: 'firstName',
+    type: 'text',
+    placeholder: 'First name',
+    selector: selectors.firstname.selector,
+  },
+  {
+    key: 'lastName',
+    type: 'text',
+    placeholder: 'Last name',
+    selector: selectors.lastname.selector,
+  },
+  {
+    key: 'password',
+    type: 'password',
+    placeholder: 'Password',
+    selector: selectors.password.selector,
+  },
+];
+
+const INITIAL_VALUE: CreateUserInput = {
+  email: '',
+  username: '',
+  firstName: '',
+  lastName: '',
+  password: '',
+};
+
+export const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
+  const [formData, setFormData] = useState<CreateUserInput>(INITIAL_VALUE);
   const [allowMarketingEmails, setAllowMarketingEmails] = useState(false);
 
-  const toggleAllowMarketingEmails = () => {
-    setAllowMarketingEmails(!allowMarketingEmails);
-  };
+  const handleFieldChange =
+    (field: keyof CreateUserInput) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+    };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    props.onSubmit(
-      {
-        email,
-        username,
-        firstName,
-        lastName,
-        password: '1234',
-      },
-      allowMarketingEmails,
-    );
+    onSubmit(formData, allowMarketingEmails);
   };
 
   return (
     <form className="registration-form" noValidate onSubmit={handleSubmit}>
       <div>Create Account</div>
-      <input
-        className={toClass(selectors.email.selector)}
-        type="email"
-        placeholder="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        className={toClass(selectors.username.selector)}
-        type="text"
-        placeholder="username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        className={toClass(selectors.firstname.selector)}
-        type="text"
-        placeholder="first name"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-      />
-      <input
-        className={toClass(selectors.lastname.selector)}
-        type="text"
-        placeholder="last name"
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
-      />
+
+      {FORM_FIELDS.map(({ key, type, placeholder, selector }) => (
+        <input
+          key={key}
+          className={toClass(selector)}
+          type={type}
+          placeholder={placeholder}
+          value={formData[key]}
+          onChange={handleFieldChange(key)}
+        />
+      ))}
 
       <div>
         <label className="registration-label marketing-emails-label">
@@ -84,9 +95,9 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
             className={toClass(selectors.marketingCheckbox.selector)}
             type="checkbox"
             checked={allowMarketingEmails}
-            onChange={() => toggleAllowMarketingEmails()}
+            onChange={() => setAllowMarketingEmails((prev) => !prev)}
           />
-          Want to be notified about events & discounts?
+          Want to be notified about events &amp; discounts?
         </label>
         <button className={toClass(selectors.submit.selector)} type="submit">
           Submit
