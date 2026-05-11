@@ -1,10 +1,5 @@
 // UserContext.tsx
-import React, {
-  createContext,
-  useState,
-  useContext,
-  ReactNode,
-} from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
 // Define the shape of your user data
 interface SpinnerData {
@@ -28,9 +23,7 @@ export const useSpinner = () => {
 };
 
 // Context provider component
-export const SpinnerProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const SpinnerProvider = ({ children }: React.PropsWithChildren) => {
   const [spinner, setSpinner] = useState<SpinnerData>({
     isActive: false,
   });
@@ -43,9 +36,7 @@ export const SpinnerProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   return (
-    <SpinnerContext.Provider
-      value={{ spinner, activate, deactivate }}
-    >
+    <SpinnerContext.Provider value={{ spinner, activate, deactivate }}>
       {children}
     </SpinnerContext.Provider>
   );
