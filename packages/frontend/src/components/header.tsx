@@ -7,6 +7,7 @@ const Logo = () => (
     <img src={logo}></img>
   </div>
 );
+
 const TitleAndSubmission = () => (
   <div id="title-container">
     <h1>Domain-Driven Designers</h1>
@@ -19,7 +20,7 @@ const HeaderActionButton = ({ user }: { user: UserData | null }) => (
   <div id="header-action-button">
     {user ? (
       <div>
-        <div>{user.username}</div>
+        <div className="header username">{user.username}</div>
         <u>
           <div>logout</div>
         </u>
@@ -34,7 +35,7 @@ const shouldShowActionButton = (pathName: string) => {
   return pathName !== '/join';
 };
 
-export const Header = ({}) => {
+export const Header = () => {
   const { user } = useUser();
   const location = useLocation();
   console.log(user);
