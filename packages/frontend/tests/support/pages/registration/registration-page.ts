@@ -21,6 +21,7 @@ export class RegistrationPage extends PageObject {
       ['username', userInput.username],
       ['firstname', userInput.firstName],
       ['lastname', userInput.lastName],
+      ['password', userInput.password],
     ];
 
     for (const [key, value] of fields) {
