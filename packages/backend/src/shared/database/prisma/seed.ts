@@ -1,5 +1,5 @@
 import { User, Post, Vote, Comment } from './generated/client';
-import { prisma } from '../src/database';
+import { dbClient } from '../../bootstrap';
 
 const initialUsers: User[] = [
   {
@@ -102,11 +102,11 @@ const initialPostComments: Comment[] = [
 
 async function seed() {
   for (const user of initialUsers) {
-    const newUser = await prisma.user.create({
+    const newUser = await dbClient.user.create({
       data: user,
     });
 
-    await prisma.member.create({
+    await dbClient.member.create({
       data: {
         user: {
           connect: { id: newUser.id },
@@ -116,19 +116,19 @@ async function seed() {
   }
 
   for (const post of initialPosts) {
-    await prisma.post.create({
+    await dbClient.post.create({
       data: post,
     });
   }
 
   for (const vote of initialPostVotes) {
-    await prisma.vote.create({
+    await dbClient.vote.create({
       data: vote,
     });
   }
 
   for (const comment of initialPostComments) {
-    await prisma.comment.create({
+    await dbClient.comment.create({
       data: comment,
     });
   }
@@ -140,5 +140,5 @@ seed()
     process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await dbClient.$disconnect();
   });
