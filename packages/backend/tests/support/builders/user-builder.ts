@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { database } from '../../../src/shared/bootstrap';
+import { dbClient } from '../../../src/shared/bootstrap';
 import { CreateUserInput } from '@dddforum/shared/api/users';
 
 export class UserBuilder {
@@ -45,7 +45,7 @@ export class UserBuilder {
   }
 
   public async build() {
-    const user = await database.user.create({ data: this.props });
+    const user = await dbClient.user.create({ data: this.props });
     const { password, ...restUser } = user;
     return restUser;
   }
