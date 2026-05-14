@@ -1,12 +1,13 @@
-import { UserRepo } from './user-repo';
 import { UserService } from './user-service';
 import { UserController } from './user-controller';
 import { UserErrors } from './user-errors';
+import { UserRepo } from './adapters/user-repo';
 import WebServer from '../../shared/server';
 import { Database } from '../../shared/database';
+import { IUserRepository } from './ports/user-repository';
 
 export class UserModule {
-  private userRepo: UserRepo;
+  private userRepo: IUserRepository;
   private userService: UserService;
   private userController: UserController;
 
