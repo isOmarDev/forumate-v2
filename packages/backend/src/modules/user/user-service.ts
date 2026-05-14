@@ -1,14 +1,14 @@
-import { CreateUserDTO } from './user-dto';
-import { UserRepo } from './user-repo';
+import { CreateUserCommand } from './user-command';
+import { IUserRepository } from './ports/user-repository';
 import {
   EmailAlreadyInUseException,
   UsernameAlreadyTakenException,
 } from './user-exceptions';
 
 export class UserService {
-  constructor(private userRepo: UserRepo) {}
+  constructor(private userRepo: IUserRepository) {}
 
-  public async createUser(dto: CreateUserDTO) {
+  public async createUser(dto: CreateUserCommand) {
     const existingUserByEmail = await this.userRepo.findByEmail(dto.email);
 
     if (existingUserByEmail) {
@@ -23,7 +23,9 @@ export class UserService {
       throw new UsernameAlreadyTakenException();
     }
 
-    const { password, ...user } = await this.userRepo.create(dto);
+    const { password, ...user } = await this.userRepo.create(
+      dto.props as CreateUserCommand,
+    );
     return user;
   }
 
