@@ -15,7 +15,7 @@ export class CompositionRoot {
   private marketingModule: MarketingModule;
 
   private constructor(private config: Config) {
-    this.db = this.createDb();
+    this.db = this.createDatabase();
     this.userModule = this.createUsersModule();
     this.postModule = this.createPostModule();
     this.marketingModule = this.createMarketingModule();
@@ -40,11 +40,11 @@ export class CompositionRoot {
     return this.webServer;
   }
 
-  private createDb() {
+  private createDatabase() {
     return new Database();
   }
 
-  public getDb() {
+  public getDatabase() {
     return this.db;
   }
 
