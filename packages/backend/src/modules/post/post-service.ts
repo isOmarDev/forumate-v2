@@ -1,4 +1,4 @@
-import { PostRepo } from './post-repo';
+import { PostRepo } from './adapters/post-repo';
 
 export class PostService {
   constructor(private postRepo: PostRepo) {}
