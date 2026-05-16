@@ -1,4 +1,4 @@
-import { UserRepo } from '../adapters/user-repo';
+import { PrismaUserRepo } from '../adapters/prisma-user-repo';
 import { CreateUserCommand } from '../user-command';
 import { Database } from '../../../shared/database';
 import { CreateUserInputBuilder } from '../../../../../shared/tests/support/builders/create-user-input-builder';
@@ -7,7 +7,7 @@ import { resetDatabase } from '../../../../../shared/tests/support/fixtures/rese
 describe('user repository', () => {
   const database = new Database();
   const dbClient = database.getClient();
-  let userRepositories = [new UserRepo(dbClient)];
+  let userRepositories = [new PrismaUserRepo(dbClient)];
 
   afterEach(async () => {
     await resetDatabase();
@@ -17,29 +17,30 @@ describe('user repository', () => {
     await database.disconnect();
   });
 
-  it('creates and gets a user by email', async () => {
-    const userInput = new CreateUserInputBuilder().build();
+  describe.each(userRepositories.map((repo) => [repo.constructor.name, repo]))(
+    '%s',
+    (_, repo) => {
+      it('creates and gets a user by email', async () => {
+        const userInput = new CreateUserInputBuilder().build();
 
-    for (const repo of userRepositories) {
-      const savedUser = await repo.create(userInput as CreateUserCommand);
-      const fetchedUser = await repo.findByEmail(userInput.email);
+        const savedUser = await repo.create(userInput as CreateUserCommand);
+        const fetchedUser = await repo.findByEmail(userInput.email);
 
-      expect(savedUser).toBeDefined();
-      expect(fetchedUser).toBeDefined();
-      expect(savedUser.email).toBe(fetchedUser?.email);
-    }
-  });
+        expect(savedUser).toBeDefined();
+        expect(fetchedUser).toBeDefined();
+        expect(savedUser.email).toBe(fetchedUser?.email);
+      });
 
-  it('gets a user by username', async () => {
-    const userInput = new CreateUserInputBuilder().build();
+      it('gets a user by username', async () => {
+        const userInput = new CreateUserInputBuilder().build();
 
-    for (const repo of userRepositories) {
-      const savedUser = await repo.create(userInput as CreateUserCommand);
-      const fetchedUser = await repo.findByUsername(userInput.username);
+        const savedUser = await repo.create(userInput as CreateUserCommand);
+        const fetchedUser = await repo.findByUsername(userInput.username);
 
-      expect(savedUser).toBeDefined();
-      expect(fetchedUser).toBeDefined();
-      expect(savedUser.username).toBe(fetchedUser?.username);
-    }
-  });
+        expect(savedUser).toBeDefined();
+        expect(fetchedUser).toBeDefined();
+        expect(savedUser.username).toBe(fetchedUser?.username);
+      });
+    },
+  );
 });
