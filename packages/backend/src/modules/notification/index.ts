@@ -1,1 +1,1 @@
-export * from './fake-mail-service';
+export * from './notification-module';

@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction, Router } from 'express';
 
 import { UserService } from './user-service';
-import { CreateUserDTO } from './user-dto';
+import { CreateUserCommand } from './user-command';
 import { UserErrors } from './user-errors';
 
 export class UserController {
@@ -31,7 +31,7 @@ export class UserController {
 
   public async createUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const dto = CreateUserDTO.validateRequest(req.body);
+      const dto = CreateUserCommand.validateRequest(req.body);
 
       const user = await this.userService.createUser(dto);
 

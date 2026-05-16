@@ -1,14 +1,14 @@
-import { database } from '../../../../backend/src/shared/bootstrap';
+import { dbClient } from '../../../../backend/src/shared/bootstrap';
 
 export async function resetDatabase() {
-  const deleteAllUsers = database.user.deleteMany();
-  const deleteAllMembers = database.member.deleteMany();
-  const deleteAllPosts = database.post.deleteMany();
-  const deleteAllComments = database.comment.deleteMany();
-  const deleteAllVotes = database.vote.deleteMany();
+  const deleteAllUsers = dbClient.user.deleteMany();
+  const deleteAllMembers = dbClient.member.deleteMany();
+  const deleteAllPosts = dbClient.post.deleteMany();
+  const deleteAllComments = dbClient.comment.deleteMany();
+  const deleteAllVotes = dbClient.vote.deleteMany();
 
   try {
-    await database.$transaction([
+    await dbClient.$transaction([
       deleteAllUsers,
       deleteAllMembers,
       deleteAllPosts,
@@ -18,6 +18,6 @@ export async function resetDatabase() {
   } catch (error) {
     console.error(error);
   } finally {
-    await database.$disconnect();
+    await dbClient.$disconnect();
   }
 }

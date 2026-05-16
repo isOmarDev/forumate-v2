@@ -26,7 +26,7 @@ export class Database {
   public async connect() {
     await this.client.$connect();
   }
-
+  
   public async disconnect() {
     await this.client.$disconnect();
   }

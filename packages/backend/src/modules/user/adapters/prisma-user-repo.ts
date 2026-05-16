@@ -1,10 +1,11 @@
-import { PrismaClient } from '../../shared/database';
-import { CreateUserInput } from '@dddforum/shared/api/users';
+import { IUserRepository } from '../ports/user-repository';
+import { CreateUserCommand } from '../user-command';
+import { PrismaClient, User } from '../../../shared/database';
 
-export class UserRepo {
+export class PrismaUserRepo implements IUserRepository {
   constructor(private prisma: PrismaClient) {}
 
-  public async create(user: CreateUserInput) {
+  public async create(user: CreateUserCommand): Promise<User> {
     const { email, username, firstName, lastName, password } = user;
 
     return await this.prisma.$transaction(async () => {
@@ -16,17 +17,17 @@ export class UserRepo {
     });
   }
 
-  public async findByEmail(email: string) {
+  public async findByEmail(email: string): Promise<User | null> {
     const data = await this.prisma.user.findFirst({ where: { email } });
     return data;
   }
 
-  public async findByUsername(username: string) {
+  public async findByUsername(username: string): Promise<User | null> {
     const data = await this.prisma.user.findFirst({ where: { username } });
     return data;
   }
 
-  public async findAll(filters?: { email?: string }) {
+  public async findAll(filters?: { email?: string }): Promise<User[]> {
     const data = await this.prisma.user.findMany({ where: filters });
     return data;
   }

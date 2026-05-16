@@ -5,12 +5,12 @@ const config = new Config('start');
 const compositionRoot = CompositionRoot.createCompositionRoot(config);
 
 const webServer = compositionRoot.getWebServer();
-const db = compositionRoot.getDb();
-
-export const bootstrap = async () => {
-  await db.connect();
-  await webServer.start();
-};
+const database = compositionRoot.getDatabase();
 
 export const app = webServer.getApp();
-export const database = db.getClient();
+export const dbClient = database.getClient();
+
+export const bootstrap = async () => {
+  await database.connect();
+  await webServer.start();
+};

@@ -3,7 +3,7 @@ import {
   EmailAlreadyInUseException,
   UsernameAlreadyTakenException,
 } from './user-exceptions';
-import { UserResponse } from '../../../../shared/dist/api/users';
+import { UserResponse } from '@dddforum/shared/api/users';
 
 export const userErrorCodes = {
   EmailAlreadyInUse: 'EmailAlreadyInUse',

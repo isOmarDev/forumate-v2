@@ -1,9 +1,10 @@
-import { PrismaClient } from '../../shared/database';
+import { Post, PrismaClient } from '../../../shared/database';
+import { IPostRepository } from '../ports/post-repository';
 
-export class PostRepo {
+export class PrismaPostRepo implements IPostRepository {
   constructor(private prisma: PrismaClient) {}
 
-  public async findAll(filters?: {}) {
+  public async findAll(filters?: {}): Promise<Post[]> {
     const data = await this.prisma.post.findMany({
       where: filters,
       include: {

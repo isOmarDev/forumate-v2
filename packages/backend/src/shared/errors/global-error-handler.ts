@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 
 import { InvalidRequestBodyException } from './exceptions';
 import { ErrorException } from './error-exception-types';
-import type { ApiResponse, GenericErrors } from '../../../../shared/dist/api';
+import { ApiResponse, GenericErrors } from '@dddforum/shared/api';
 
 export type ErrorHandler = (
   error: Error,

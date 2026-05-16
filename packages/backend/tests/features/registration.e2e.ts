@@ -2,8 +2,12 @@ import path from 'path';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 
 import { UserBuilder } from '../support/builders';
-import { ErrorException } from '../../src/shared/errors/error-exception-types';
 import { userErrorCodes } from '../../src/modules/user/user-errors';
+import { Config } from '../../src/shared/config';
+import { CompositionRoot } from '../../src/shared/composition-root';
+import WebServer from '../../src/shared/server';
+import { Database } from '../../src/shared/database';
+import { ErrorException } from '../../src/shared/errors/error-exception-types';
 
 import { resetDatabase } from '../../../shared/tests/support/fixtures/reset';
 import { CreateUserInputBuilder } from '../../../shared/tests/support/builders/create-user-input-builder';
@@ -19,14 +23,33 @@ const feature = loadFeature(
 );
 
 defineFeature(feature, (test) => {
+  let config: Config = new Config('test:e2e');
+  let compositionRoot: CompositionRoot;
+  let server: WebServer;
+  let database: Database;
+
   const apiClient = createApiClient('http://localhost:3000');
 
   let response: CreateUserResponse;
   let usersResponses: CreateUserResponse[];
   let addEmailToListResponse: AddEmailToListResponse;
 
+  beforeAll(async () => {
+    compositionRoot = CompositionRoot.createCompositionRoot(config);
+    server = compositionRoot.getWebServer();
+    database = compositionRoot.getDatabase();
+
+    await resetDatabase();
+    await database.connect();
+    await server.start();
+  });
+
   afterEach(async () => {
     await resetDatabase();
+  });
+
+  afterAll(async () => {
+    await server.stop();
   });
 
   test('Successful registration with marketing emails accepted', ({

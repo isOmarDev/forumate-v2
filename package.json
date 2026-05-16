@@ -20,7 +20,8 @@
     "start:dev:back": "npm run start:dev -w @dddforum/backend",
     "start:dev:front": "npm run start:dev -w @dddforum/frontend",
     "test:e2e:back": "npm run test:e2e -w @dddforum/backend",
-    "test:e2e:front": "npm run test:e2e -w @dddforum/frontend"
+    "test:e2e:front": "npm run test:e2e -w @dddforum/frontend",
+    "test:infra:back": "npm run test:infra -w @dddforum/backend"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
