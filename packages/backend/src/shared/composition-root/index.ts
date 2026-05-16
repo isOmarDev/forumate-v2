@@ -1,10 +1,11 @@
 import WebServer from '../server';
 import { Database } from '../database/database';
 import { Config } from '../config';
+import GlobalErrorHandler from '../errors/global-error-handler';
 import { UserModule } from '../../modules/user';
 import { PostModule } from '../../modules/post';
 import { MarketingModule } from '../../modules/marketing';
-import GlobalErrorHandler from '../errors/global-error-handler';
+import { NotificationModule } from '../../modules/notification';
 
 export class CompositionRoot {
   private static instance: CompositionRoot | null = null;
@@ -13,12 +14,14 @@ export class CompositionRoot {
   private userModule: UserModule;
   private postModule: PostModule;
   private marketingModule: MarketingModule;
+  private notificationModule: NotificationModule;
 
   private constructor(private config: Config) {
     this.db = this.createDatabase();
+    this.notificationModule = this.createNotificationModule();
+    this.marketingModule = this.createMarketingModule();
     this.userModule = this.createUsersModule();
     this.postModule = this.createPostModule();
-    this.marketingModule = this.createMarketingModule();
     this.webServer = this.createWebServer();
     this.mountRouters();
     this.registerGlobalErrorHandler();
@@ -49,7 +52,10 @@ export class CompositionRoot {
   }
 
   private createUsersModule() {
-    return UserModule.build(this.db);
+    return UserModule.build(
+      this.db,
+      this.notificationModule.getTransactionalEmailApi(),
+    );
   }
 
   private createPostModule() {
@@ -58,6 +64,10 @@ export class CompositionRoot {
 
   private createMarketingModule() {
     return MarketingModule.build();
+  }
+
+  private createNotificationModule() {
+    return NotificationModule.build();
   }
 
   private mountRouters() {
