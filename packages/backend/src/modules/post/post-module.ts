@@ -1,12 +1,13 @@
 import { PostService } from './post-service';
 import { PostController } from './post-controller';
 import { PostErrors } from './post-errors';
-import { PostRepo } from './adapters/post-repo';
+import { IPostRepository } from './ports/post-repository';
+import { PrismaPostRepo } from './adapters/prisma-post-repo';
 import WebServer from '../../shared/server';
 import { Database } from '../../shared/database';
 
 export class PostModule {
-  private postRepo: PostRepo;
+  private postRepo: IPostRepository;
   private postService: PostService;
   private postController: PostController;
 
@@ -21,7 +22,7 @@ export class PostModule {
   }
 
   private createPostRepo() {
-    return new PostRepo(this.db.getClient());
+    return new PrismaPostRepo(this.db.getClient());
   }
 
   private createPostService() {
