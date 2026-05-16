@@ -1,16 +1,17 @@
-import { FakeMailService } from '../notification';
 import { MarketingService } from './marketing-service';
 import { MarketingController } from './marketing-controller';
 import { MarketingErrors } from './marketing-errors';
+import { IContactListApi } from './ports/contact-list-api';
+import { MailchimpContactList } from './adapters/mailchimp-contact-list';
 import WebServer from '../../shared/server';
 
 export class MarketingModule {
-  private fakeMailService: FakeMailService;
+  private contactListApi: IContactListApi;
   private marketingService: MarketingService;
   private marketingController: MarketingController;
 
   private constructor() {
-    this.fakeMailService = this.createFakeMailService();
+    this.contactListApi = this.createContactListApi();
     this.marketingService = this.createMarketingService();
     this.marketingController = this.createMarketingController();
   }
@@ -19,12 +20,12 @@ export class MarketingModule {
     return new MarketingModule();
   }
 
-  private createFakeMailService() {
-    return new FakeMailService();
+  private createContactListApi() {
+    return new MailchimpContactList();
   }
 
   private createMarketingService() {
-    return new MarketingService(this.fakeMailService);
+    return new MarketingService(this.contactListApi);
   }
 
   private createMarketingController() {
