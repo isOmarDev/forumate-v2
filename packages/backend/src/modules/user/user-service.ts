@@ -3,6 +3,7 @@ import { IUserRepository } from './ports/user-repository';
 import {
   EmailAlreadyInUseException,
   UsernameAlreadyTakenException,
+  UserNotFoundException,
 } from './user-exceptions';
 import { ITransactionalEmailAPI } from '../notification/ports/transactional-email-api';
 
@@ -25,9 +26,7 @@ export class UserService {
       throw new UsernameAlreadyTakenException();
     }
 
-    const { password, ...user } = await this.repo.create(
-      dto.props as CreateUserCommand,
-    );
+    const { password, ...user } = await this.repo.create(dto.props);
 
     await this.emailApi.sendMail({
       to: user.email,
@@ -36,6 +35,18 @@ export class UserService {
     });
 
     return user;
+  }
+
+  public async getUserByEmail(email: string) {
+    const user = await this.repo.findByEmail(email);
+
+    if (!user) {
+      throw new UserNotFoundException(email);
+    }
+
+    const { password, ...result } = user;
+
+    return result;
   }
 
   public async getUsers(filters?: { email?: string }) {
