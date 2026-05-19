@@ -17,7 +17,8 @@
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "test:dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
     "test:e2e": "jest -c jest.config.e2e.ts",
-    "test:infra": "jest -c jest.config.infra.ts"
+    "test:infra": "jest -c jest.config.infra.ts",
+    "test:unit": "jest -c jest.config.unit.ts"
   },
   "dependencies": {
     "@dddforum/shared": "*",
