@@ -1,11 +1,12 @@
 import { IUserRepository } from '../ports/user-repository';
 import { CreateUserCommand } from '../user-command';
 import { PrismaClient, User } from '../../../shared/database';
+import { CreateUserInput } from '@dddforum/shared/api/users';
 
 export class PrismaUserRepo implements IUserRepository {
   constructor(private prisma: PrismaClient) {}
 
-  public async create(user: CreateUserCommand): Promise<User> {
+  public async create(user: CreateUserInput): Promise<User> {
     const { email, username, firstName, lastName, password } = user;
 
     return await this.prisma.$transaction(async () => {
