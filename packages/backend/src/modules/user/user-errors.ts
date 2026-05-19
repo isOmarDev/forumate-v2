@@ -2,12 +2,14 @@ import type { Request, Response, NextFunction } from 'express';
 import {
   EmailAlreadyInUseException,
   UsernameAlreadyTakenException,
+  UserNotFoundException,
 } from './user-exceptions';
 import { UserResponse } from '@dddforum/shared/api/users';
 
 export const userErrorCodes = {
   EmailAlreadyInUse: 'EmailAlreadyInUse',
   UsernameAlreadyTaken: 'UsernameAlreadyTaken',
+  UserNotFound: 'UserNotFound',
 } as const;
 
 export class UserErrors {
@@ -38,6 +40,19 @@ export class UserErrors {
         data: null,
         error: {
           code: 'UsernameAlreadyTaken',
+          message: error.message,
+        },
+      };
+
+      return res.status(409).json(responseBody);
+    }
+
+    if (error instanceof UserNotFoundException) {
+      responseBody = {
+        success: false,
+        data: null,
+        error: {
+          code: 'UserNotFound',
           message: error.message,
         },
       };
