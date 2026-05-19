@@ -24,10 +24,12 @@ export type User = {
 
 type UsernameAlreadyTakenError = 'UsernameAlreadyTaken';
 type EmailAlreadyInUseError = 'EmailAlreadyInUse';
+type UserNotFoundError = 'UserNotFound';
 
 export type CreateUserErrors =
   | UsernameAlreadyTakenError
   | EmailAlreadyInUseError
+  | UserNotFoundError
   | GenericErrors;
 export type CreateUserResponse = ApiResponse<{ user: User }, CreateUserErrors>;
 
