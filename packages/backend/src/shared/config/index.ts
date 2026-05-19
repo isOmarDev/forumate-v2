@@ -10,4 +10,12 @@ export class Config {
     this.env = (process.env.NODE_ENV as Environment) || 'development';
     this.script = script;
   }
+
+  getEnvironment() {
+    return this.env;
+  }
+
+  getScript() {
+    return this.script;
+  }
 }
