@@ -19,7 +19,10 @@ import type {
 } from '@dddforum/shared/api/users';
 
 const feature = loadFeature(
-  path.join(__dirname, '../../../shared/tests/features/registration.feature'),
+  path.resolve(
+    __dirname,
+    '../../../shared/tests/features/registration.feature',
+  ),
 );
 
 defineFeature(feature, (test) => {
