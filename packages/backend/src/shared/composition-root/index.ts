@@ -51,10 +51,26 @@ export class CompositionRoot {
     return this.db;
   }
 
+  public getRepositories() {
+    return {
+      user: this.userModule.getUserRepository(),
+      post: this.postModule.getPostRepository(),
+    };
+  }
+
+  public getApplication() {
+    return {
+      user: this.userModule.getUserService(),
+      post: this.postModule.getPostService(),
+      marketing: this.marketingModule.getMarketingService(),
+    };
+  }
+
   private createUsersModule() {
     return UserModule.build(
       this.db,
       this.notificationModule.getTransactionalEmailApi(),
+      this.config,
     );
   }
 
