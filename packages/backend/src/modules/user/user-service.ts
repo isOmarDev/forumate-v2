@@ -5,15 +5,15 @@ import {
   UsernameAlreadyTakenException,
   UserNotFoundException,
 } from './user-exceptions';
-import { ITransactionalEmailAPI } from '../notification/ports/transactional-email-api';
+import { ITransactionalEmailApi } from '../notification/ports/transactional-email-api';
 
 export class UserService {
   constructor(
     private repo: IUserRepository,
-    private emailApi: ITransactionalEmailAPI,
+    private emailApi: ITransactionalEmailApi,
   ) {}
 
-  public async createUser(dto: CreateUserCommand) {
+  async createUser(dto: CreateUserCommand) {
     const existingUserByEmail = await this.repo.findByEmail(dto.email);
 
     if (existingUserByEmail) {
@@ -37,7 +37,7 @@ export class UserService {
     return user;
   }
 
-  public async getUserByEmail(email: string) {
+  async getUserByEmail(email: string) {
     const user = await this.repo.findByEmail(email);
 
     if (!user) {
@@ -49,7 +49,7 @@ export class UserService {
     return result;
   }
 
-  public async getUsers(filters?: { email?: string }) {
+  async getUsers(filters?: { email?: string }) {
     const users = await this.repo.findAll(filters);
     return users.map((user) => {
       const { password, ...restUser } = user;

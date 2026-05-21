@@ -2,9 +2,9 @@ import { UserService } from './user-service';
 import { UserController } from './user-controller';
 import { UserErrors } from './user-errors';
 import { PrismaUserRepo } from './adapters/prisma-user-repo';
-import { InMemoryUserRepo } from './adapters/in-memory-user-repo';
+import { InMemoryUserRepoSpy } from './adapters/in-memory-user-repo-spy';
 import { IUserRepository } from './ports/user-repository';
-import { ITransactionalEmailAPI } from '../notification/ports/transactional-email-api';
+import { ITransactionalEmailApi } from '../notification/ports/transactional-email-api';
 import WebServer from '../../shared/server';
 import { Database } from '../../shared/database';
 import { Config } from '../../shared/config';
@@ -17,7 +17,7 @@ export class UserModule extends ApplicationModule {
 
   private constructor(
     private db: Database,
-    private emailApi: ITransactionalEmailAPI,
+    private emailApi: ITransactionalEmailApi,
     config: Config,
   ) {
     super(config);
@@ -26,13 +26,13 @@ export class UserModule extends ApplicationModule {
     this.userController = this.createUserController();
   }
 
-  static build(db: Database, emailApi: ITransactionalEmailAPI, config: Config) {
+  static build(db: Database, emailApi: ITransactionalEmailApi, config: Config) {
     return new UserModule(db, emailApi, config);
   }
 
   private createUserRepo() {
     if (this.shoudBuildFakeRepository) {
-      return new InMemoryUserRepo();
+      return new InMemoryUserRepoSpy();
     }
 
     return new PrismaUserRepo(this.db.getClient());
@@ -46,19 +46,19 @@ export class UserModule extends ApplicationModule {
     return new UserController(this.userService, UserErrors);
   }
 
-  public getUserRepository() {
+  getUserRepository() {
     return this.userRepo;
   }
 
-  public getUserService() {
+  getUserService() {
     return this.userService;
   }
 
-  public getUserController() {
+  getUserController() {
     return this.userController;
   }
 
-  public mountRouter(server: WebServer) {
+  mountRouter(server: WebServer) {
     server.moutRouter('/users', this.userController.getRouter());
   }
 }

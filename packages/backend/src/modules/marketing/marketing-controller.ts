@@ -16,10 +16,6 @@ export class MarketingController {
     this.setupErrorExceptionHandler();
   }
 
-  public getRouter() {
-    return this.router;
-  }
-
   private setupRoutes() {
     this.router.post('/', this.addEmailToList.bind(this));
   }
@@ -28,7 +24,11 @@ export class MarketingController {
     this.router.use(this.marketingErrors.handle);
   }
 
-  public async addEmailToList(req: Request, res: Response, next: NextFunction) {
+  getRouter() {
+    return this.router;
+  }
+
+  async addEmailToList(req: Request, res: Response, next: NextFunction) {
     const body = AddEmailToListDTO.validateRequest(req.body);
 
     await this.marketingService.addEmailToList(body);

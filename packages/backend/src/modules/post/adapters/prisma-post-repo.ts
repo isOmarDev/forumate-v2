@@ -4,7 +4,7 @@ import { IPostRepository } from '../ports/post-repository';
 export class PrismaPostRepo implements IPostRepository {
   constructor(private prisma: PrismaClient) {}
 
-  public async findAll(filters?: {}): Promise<Post[]> {
+  async findAll(filters?: {}): Promise<Post[]> {
     const data = await this.prisma.post.findMany({
       where: filters,
       include: {
