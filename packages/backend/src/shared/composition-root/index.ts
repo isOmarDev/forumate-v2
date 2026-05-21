@@ -39,31 +39,8 @@ export class CompositionRoot {
     return new WebServer({ port: 3000, env: this.config.env });
   }
 
-  public getWebServer() {
-    return this.webServer;
-  }
-
   private createDatabase() {
     return new Database();
-  }
-
-  public getDatabase() {
-    return this.db;
-  }
-
-  public getRepositories() {
-    return {
-      user: this.userModule.getUserRepository(),
-      post: this.postModule.getPostRepository(),
-    };
-  }
-
-  public getApplication() {
-    return {
-      user: this.userModule.getUserService(),
-      post: this.postModule.getPostService(),
-      marketing: this.marketingModule.getMarketingService(),
-    };
   }
 
   private createUsersModule() {
@@ -79,11 +56,11 @@ export class CompositionRoot {
   }
 
   private createMarketingModule() {
-    return MarketingModule.build();
+    return MarketingModule.build(this.config);
   }
 
   private createNotificationModule() {
-    return NotificationModule.build();
+    return NotificationModule.build(this.config);
   }
 
   private mountRouters() {
@@ -94,5 +71,36 @@ export class CompositionRoot {
 
   private registerGlobalErrorHandler() {
     this.webServer.setupGlobalErrorHandler(GlobalErrorHandler.handle);
+  }
+
+  getWebServer() {
+    return this.webServer;
+  }
+
+  getDatabase() {
+    return this.db;
+  }
+
+  getRepositories() {
+    return {
+      user: this.userModule.getUserRepository(),
+      post: this.postModule.getPostRepository(),
+    };
+  }
+
+  getTransactionalEmailApi() {
+    return this.notificationModule.getTransactionalEmailApi();
+  }
+
+  getContactListApi() {
+    return this.marketingModule.getContactListApi();
+  }
+
+  getApplication() {
+    return {
+      user: this.userModule.getUserService(),
+      post: this.postModule.getPostService(),
+      marketing: this.marketingModule.getMarketingService(),
+    };
   }
 }
