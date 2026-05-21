@@ -1,7 +1,6 @@
 import path from 'path';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 
-import { UserBuilder } from '../support/builders';
 import { userErrorCodes } from '../../src/modules/user/user-errors';
 import { Config } from '../../src/shared/config';
 import { CompositionRoot } from '../../src/shared/composition-root';
@@ -10,7 +9,10 @@ import { Database } from '../../src/shared/database';
 import { ErrorException } from '../../src/shared/errors/error-exception-types';
 
 import { resetDatabase } from '../../../shared/tests/support/fixtures/reset';
-import { CreateUserInputBuilder } from '../../../shared/tests/support/builders/create-user-input-builder';
+import {
+  CreateUserInputBuilder,
+  UserBuilder,
+} from '../../../shared/tests/support/builders/user';
 import { createApiClient } from '@dddforum/shared/api';
 import type { AddEmailToListResponse } from '@dddforum/shared/api/marketing';
 import type {
