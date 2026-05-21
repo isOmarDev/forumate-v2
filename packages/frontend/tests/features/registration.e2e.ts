@@ -4,9 +4,11 @@ import { defineFeature, loadFeature } from 'jest-cucumber';
 import { App, createAppObject, Layout, Pages } from '../support/pages';
 import { PuppeteerPageDriver } from '../support/driver';
 import { AppNotifications } from '../support/components';
-import { CreateUserInputBuilder } from '../../../shared/tests/support/builders/create-user-input-builder';
+import {
+  CreateUserInputBuilder,
+  UserBuilder,
+} from '../../../shared/tests/support/builders/user';
 import { resetDatabase } from '../../../shared/tests/support/fixtures/reset';
-import { UserBuilder } from '../../../shared/tests/support/builders/user-builder';
 import { CreateUserInput } from '@dddforum/shared/api/users';
 
 const feature = loadFeature(
