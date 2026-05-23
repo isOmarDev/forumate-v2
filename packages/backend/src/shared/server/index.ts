@@ -20,23 +20,24 @@ class WebServer {
     this.addMiddlewares();
   }
 
-  public getApp() {
-    return this._app;
-  }
-
   private addMiddlewares() {
     this._app.use(express.json());
     this._app.use(cors());
   }
-  public moutRouter(path: string, router: Router) {
+
+  getApp() {
+    return this._app;
+  }
+
+  moutRouter(path: string, router: Router) {
     this._app.use(path, router);
   }
 
-  public setupGlobalErrorHandler(errorHandler: ErrorHandler) {
+  setupGlobalErrorHandler(errorHandler: ErrorHandler) {
     this._app.use(errorHandler);
   }
 
-  public async start(): Promise<void> {
+  async start(): Promise<void> {
     const { port } = this.config;
 
     return new Promise((resolve, _reject) => {
@@ -48,7 +49,7 @@ class WebServer {
     });
   }
 
-  public async stop() {
+  async stop() {
     return new Promise((resolve, reject) => {
       if (!this.instance) return reject('Server not started');
       this.instance.close((error) => {
@@ -60,7 +61,7 @@ class WebServer {
     });
   }
 
-  public isStarted() {
+  isStarted() {
     return this.state === 'started';
   }
 }

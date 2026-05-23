@@ -33,11 +33,19 @@ export class PostModule {
     return new PostController(this.postService, PostErrors);
   }
 
-  public getPostController() {
+  getPostRepository() {
+    return this.postRepo;
+  }
+
+  getPostService() {
+    return this.postService;
+  }
+
+  getPostController() {
     return this.postController;
   }
 
-  public mountRouter(server: WebServer) {
+  mountRouter(server: WebServer) {
     server.moutRouter('/posts', this.postController.getRouter());
   }
 }

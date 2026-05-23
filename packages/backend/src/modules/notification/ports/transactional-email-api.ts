@@ -9,6 +9,6 @@ export interface SendMailResult {
   status: 'sent' | 'queued' | 'failed';
 }
 
-export interface ITransactionalEmailAPI {
+export interface ITransactionalEmailApi {
   sendMail(input: SendMailInput): Promise<SendMailResult>;
 }

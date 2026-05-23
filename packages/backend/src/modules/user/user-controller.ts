@@ -16,10 +16,6 @@ export class UserController {
     this.setupErrorExceptionHandler();
   }
 
-  public getRouter() {
-    return this.router;
-  }
-
   private setupRoutes() {
     this.router.post('/', this.createUser.bind(this));
     this.router.get('/', this.getUsers.bind(this));
@@ -29,7 +25,11 @@ export class UserController {
     this.router.use(this.userErrors.handle);
   }
 
-  public async createUser(req: Request, res: Response, next: NextFunction) {
+  getRouter() {
+    return this.router;
+  }
+
+  async createUser(req: Request, res: Response, next: NextFunction) {
     try {
       const dto = CreateUserCommand.validateRequest(req.body);
 
@@ -45,7 +45,7 @@ export class UserController {
     }
   }
 
-  public async getUsers(req: Request, res: Response, next: NextFunction) {
+  async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const filters = req.query;
 

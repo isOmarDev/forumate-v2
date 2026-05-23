@@ -5,7 +5,7 @@ import { IContactListApi } from './ports/contact-list-api';
 export class MarketingService {
   constructor(private contactListAPI: IContactListApi) {}
 
-  public async addEmailToList(dto: AddEmailToListDTO) {
+  async addEmailToList(dto: AddEmailToListDTO) {
     const { email } = dto;
 
     const result = this.contactListAPI.addEmailToList(email);

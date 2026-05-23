@@ -15,10 +15,6 @@ export class PostController {
     this.setupErrorExceptionHandler();
   }
 
-  public getRouter() {
-    return this.router;
-  }
-
   private setupRoutes() {
     this.router.get('/', this.getPosts.bind(this));
   }
@@ -27,7 +23,11 @@ export class PostController {
     this.router.use(this.postErrors.handle);
   }
 
-  public async getPosts(req: Request, res: Response, next: NextFunction) {
+  getRouter() {
+    return this.router;
+  }
+
+  async getPosts(req: Request, res: Response, next: NextFunction) {
     try {
       const filters = req.query;
 

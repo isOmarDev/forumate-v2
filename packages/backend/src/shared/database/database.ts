@@ -13,21 +13,21 @@ export class Database {
     this.client = this.createClient();
   }
 
-  public getClient() {
-    return this.client;
-  }
-
   private createClient() {
     const connectionString = `${process.env.DATABASE_URL}`;
     const adapter = new PrismaPg({ connectionString });
     return new PrismaClient({ adapter });
   }
 
-  public async connect() {
+  getClient() {
+    return this.client;
+  }
+
+  async connect() {
     await this.client.$connect();
   }
-  
-  public async disconnect() {
+
+  async disconnect() {
     await this.client.$disconnect();
   }
 }

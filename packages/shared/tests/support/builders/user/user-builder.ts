@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 
-import { CreateUserInput } from '../../../src/api/users';
-import { database } from '../../../../backend/dist/shared/bootstrap';
+import { CreateUserInput } from '../../../../src/api/users';
+import { dbClient } from '../../../../../backend/src/shared/bootstrap';
 
 export class UserBuilder {
   private props: CreateUserInput;
@@ -45,7 +45,7 @@ export class UserBuilder {
   }
 
   public async build() {
-    const user = await database.user.create({ data: this.props });
+    const user = await dbClient.user.create({ data: this.props });
     const { password, ...restUser } = user;
     return restUser;
   }

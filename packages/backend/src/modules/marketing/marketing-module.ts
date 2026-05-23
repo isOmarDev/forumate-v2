@@ -3,25 +3,33 @@ import { MarketingController } from './marketing-controller';
 import { MarketingErrors } from './marketing-errors';
 import { IContactListApi } from './ports/contact-list-api';
 import { MailchimpContactList } from './adapters/mailchimp-contact-list';
+import { ContactListApiSpy } from './adapters/contact-list-api-spy';
 import WebServer from '../../shared/server';
+import { ApplicationModule } from '../../shared/modules/application-module';
+import { Config } from '../../shared/config';
 
-export class MarketingModule {
+export class MarketingModule extends ApplicationModule {
   private contactListApi: IContactListApi;
   private marketingService: MarketingService;
   private marketingController: MarketingController;
 
-  private constructor() {
+  private constructor(config: Config) {
+    super(config);
     this.contactListApi = this.createContactListApi();
     this.marketingService = this.createMarketingService();
     this.marketingController = this.createMarketingController();
   }
 
-  static build() {
-    return new MarketingModule();
+  static build(config: Config) {
+    return new MarketingModule(config);
   }
 
   private createContactListApi() {
-    return new MailchimpContactList();
+    if (this.getEnvironment() === 'production') {
+      return new MailchimpContactList();
+    }
+
+    return new ContactListApiSpy();
   }
 
   private createMarketingService() {
@@ -32,11 +40,19 @@ export class MarketingModule {
     return new MarketingController(this.marketingService, MarketingErrors);
   }
 
-  public getMarketingController() {
+  getContactListApi() {
+    return this.contactListApi;
+  }
+
+  getMarketingService() {
+    return this.marketingService;
+  }
+
+  getMarketingController() {
     return this.marketingController;
   }
 
-  public mountRouter(server: WebServer) {
+  mountRouter(server: WebServer) {
     server.moutRouter('/marketing', this.marketingController.getRouter());
   }
 }

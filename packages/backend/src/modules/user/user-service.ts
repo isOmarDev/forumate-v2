@@ -3,16 +3,17 @@ import { IUserRepository } from './ports/user-repository';
 import {
   EmailAlreadyInUseException,
   UsernameAlreadyTakenException,
+  UserNotFoundException,
 } from './user-exceptions';
-import { ITransactionalEmailAPI } from '../notification/ports/transactional-email-api';
+import { ITransactionalEmailApi } from '../notification/ports/transactional-email-api';
 
 export class UserService {
   constructor(
     private repo: IUserRepository,
-    private emailApi: ITransactionalEmailAPI,
+    private emailApi: ITransactionalEmailApi,
   ) {}
 
-  public async createUser(dto: CreateUserCommand) {
+  async createUser(dto: CreateUserCommand) {
     const existingUserByEmail = await this.repo.findByEmail(dto.email);
 
     if (existingUserByEmail) {
@@ -25,9 +26,7 @@ export class UserService {
       throw new UsernameAlreadyTakenException();
     }
 
-    const { password, ...user } = await this.repo.create(
-      dto.props as CreateUserCommand,
-    );
+    const { password, ...user } = await this.repo.create(dto.props);
 
     await this.emailApi.sendMail({
       to: user.email,
@@ -38,7 +37,19 @@ export class UserService {
     return user;
   }
 
-  public async getUsers(filters?: { email?: string }) {
+  async getUserByEmail(email: string) {
+    const user = await this.repo.findByEmail(email);
+
+    if (!user) {
+      throw new UserNotFoundException(email);
+    }
+
+    const { password, ...result } = user;
+
+    return result;
+  }
+
+  async getUsers(filters?: { email?: string }) {
     const users = await this.repo.findAll(filters);
     return users.map((user) => {
       const { password, ...restUser } = user;
