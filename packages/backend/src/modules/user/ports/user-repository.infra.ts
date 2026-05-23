@@ -1,5 +1,6 @@
-import { PrismaUserRepo } from '../adapters/prisma-user-repo';
 import { CreateUserCommand } from '../user-command';
+import { PrismaUserRepo } from '../adapters/prisma-user-repo';
+import { InMemoryUserRepoSpy } from '../adapters/in-memory-user-repo-spy';
 import { Database } from '../../../shared/database';
 import { CreateUserInputBuilder } from '../../../../../shared/tests/support/builders/user/create-user-input-builder';
 import { resetDatabase } from '../../../../../shared/tests/support/fixtures/reset';
@@ -7,7 +8,10 @@ import { resetDatabase } from '../../../../../shared/tests/support/fixtures/rese
 describe('user repository', () => {
   const database = new Database();
   const dbClient = database.getClient();
-  let userRepositories = [new PrismaUserRepo(dbClient)];
+  let userRepositories = [
+    new PrismaUserRepo(dbClient),
+    new InMemoryUserRepoSpy(),
+  ];
 
   afterEach(async () => {
     await resetDatabase();
