@@ -29,29 +29,29 @@ Feature: Registration
   @backend @frontend
   Scenario: Account already created with email
     Given a set of users already created accounts
-      | firstName | lastName | email             |
-      | John      | Doe      | john@example.com  |
-      | Alice     | Smith    | alice@example.com |
-      | David     | Brown    | david@example.com |
+      | firstName | lastName | email             | password    |
+      | John      | Doe      | john@example.com  | Sugerland1! |
+      | Alice     | Smith    | alice@example.com | Sugerland1! |
+      | David     | Brown    | david@example.com | Sugerland1! |
     When new users attempt to register with those emails
-      | firstName | lastName | username       | email             |
-      | Bill      | Bob      | the_chosenone1 | john@example.com  |
-      | Max       | Samson   | !chillblinton2 | alice@example.com |
-      | Will      | Steff    | greenday@3     | david@example.com |
+      | firstName | lastName | username       | email             | password    |
+      | Bill      | Bob      | the_chosenone1 | john@example.com  | Sugerland1! |
+      | Max       | Samson   | !chillblinton2 | alice@example.com | Sugerland1! |
+      | Will      | Steff    | greenday@3     | david@example.com | Sugerland1! |
     Then they should see an error notifying them that the account already exists
     And they should not have been sent access to account details
 
   @backend
   Scenario: Username already taken
     Given a set of users have already created their accounts with valid details
-      | firstName | lastName | username     | email              |
-      | John      | Doe      | thechosenone | john1@example.com  |
-      | Alice     | Smith    | chillblinton | alice2@example.com |
-      | David     | Brown    | greenday     | david3@example.com |
+      | firstName | lastName | username     | email              | password    |
+      | John      | Doe      | thechosenone | john1@example.com  | Sugerland1! |
+      | Alice     | Smith    | chillblinton | alice2@example.com | Sugerland1! |
+      | David     | Brown    | greenday     | david3@example.com | Sugerland1! |
     When new users attempt to register with already taken usernames
-      | firstName | lastName | username     | email                 |
-      | Bill      | Bob      | thechosenone | billy@billbob.com     |
-      | Max       | Samson   | chillblinton | maxsamson@example.com |
-      | Will      | Steff    | greenday     | willsteff@example.com |
+      | firstName | lastName | username     | email                 | password    |
+      | Bill      | Bob      | thechosenone | billy@billbob.com     | Sugerland1! |
+      | Max       | Samson   | chillblinton | maxsamson@example.com | Sugerland1! |
+      | Will      | Steff    | greenday     | willsteff@example.com | Sugerland1! |
     Then they see an error notifying them that the username has already been taken
     And they should not have been sent access to account details
