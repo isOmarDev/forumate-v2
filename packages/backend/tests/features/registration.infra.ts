@@ -184,7 +184,7 @@ defineFeature(feature, (test) => {
 
     given(
       'a set of users already created accounts',
-      async (table: Omit<CreateUserInput, 'password'>[]) => {
+      async (table: CreateUserInput[]) => {
         await Promise.all(
           table.map((row) => {
             return new UserBuilder()
@@ -200,7 +200,7 @@ defineFeature(feature, (test) => {
 
     when(
       'new users attempt to register with those emails',
-      async (table: Omit<CreateUserInput, 'password'>[]) => {
+      async (table: CreateUserInput[]) => {
         users = table.map((row) =>
           new CreateUserInputBuilder()
             .withEmail(row.email)
@@ -235,7 +235,7 @@ defineFeature(feature, (test) => {
 
     given(
       'a set of users have already created their accounts with valid details',
-      async (table: Omit<CreateUserInput, 'password'>[]) => {
+      async (table: CreateUserInput[]) => {
         await Promise.all(
           table.map((row) => {
             return new UserBuilder()
@@ -251,7 +251,7 @@ defineFeature(feature, (test) => {
 
     when(
       'new users attempt to register with already taken usernames',
-      async (table: Omit<CreateUserInput, 'password'>[]) => {
+      async (table:CreateUserInput[]) => {
         users = table.map((row) =>
           new CreateUserInputBuilder()
             .withEmail(row.email)
