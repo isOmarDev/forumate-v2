@@ -251,7 +251,7 @@ defineFeature(feature, (test) => {
 
     when(
       'new users attempt to register with already taken usernames',
-      async (table:CreateUserInput[]) => {
+      async (table: CreateUserInput[]) => {
         users = table.map((row) =>
           new CreateUserInputBuilder()
             .withEmail(row.email)
