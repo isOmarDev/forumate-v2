@@ -1,6 +1,7 @@
 import WebServer from '../server';
-import { Database } from '../database/database';
 import { Config } from '../config';
+import { Database } from '../database/database';
+import { IApplication } from '../application/application-interface';
 import GlobalErrorHandler from '../errors/global-error-handler';
 import { UserModule } from '../../modules/user';
 import { PostModule } from '../../modules/post';
@@ -11,6 +12,7 @@ export class CompositionRoot {
   private static instance: CompositionRoot | null = null;
   private webServer: WebServer;
   private db: Database;
+
   private userModule: UserModule;
   private postModule: PostModule;
   private marketingModule: MarketingModule;
@@ -20,7 +22,7 @@ export class CompositionRoot {
     this.db = this.createDatabase();
     this.notificationModule = this.createNotificationModule();
     this.marketingModule = this.createMarketingModule();
-    this.userModule = this.createUsersModule();
+    this.userModule = this.createUserModule();
     this.postModule = this.createPostModule();
     this.webServer = this.createWebServer();
     this.mountRouters();
@@ -43,7 +45,7 @@ export class CompositionRoot {
     return new Database();
   }
 
-  private createUsersModule() {
+  private createUserModule() {
     return UserModule.build(
       this.db,
       this.notificationModule.getTransactionalEmailApi(),
@@ -96,7 +98,7 @@ export class CompositionRoot {
     return this.marketingModule.getContactListApi();
   }
 
-  getApplication() {
+  getApplication(): IApplication {
     return {
       user: this.userModule.getUserService(),
       post: this.postModule.getPostService(),
