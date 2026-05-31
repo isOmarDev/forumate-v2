@@ -10,6 +10,15 @@ export type CreateUserInput = {
   password: string;
 };
 
+export type ValidatedUser = {
+  id?: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+  password: string;
+};
+
 export type GetUsersQuery = {
   email: string;
 };
