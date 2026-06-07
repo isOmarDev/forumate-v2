@@ -1,5 +1,5 @@
 import path from 'path';
-import 'dotenv/config';
+
 import { defineConfig, env } from 'prisma/config';
 
 const PRISMA_DIR = path.join(__dirname, 'src/shared/database/prisma');
