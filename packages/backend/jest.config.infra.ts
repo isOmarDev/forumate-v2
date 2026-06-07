@@ -8,4 +8,5 @@ export default async (): Promise<JestConfigWithTsJest> => ({
   },
   maxWorkers: 1,
   verbose: true,
+  globalSetup: './tests/support/globalDevEnvTestSetup.ts',
 });
