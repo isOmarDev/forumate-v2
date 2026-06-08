@@ -13,12 +13,12 @@ import {
   CreateUserInputBuilder,
   UserBuilder,
 } from '../../../shared/tests/support/builders/user';
-import { createApiClient } from '@dddforum/shared/api';
-import type { AddEmailToListResponse } from '@dddforum/shared/api/marketing';
+import { createApiClient } from '@forumate/shared/api';
+import type { AddEmailToListResponse } from '@forumate/shared/api/marketing';
 import type {
   CreateUserInput,
   CreateUserResponse,
-} from '@dddforum/shared/api/users';
+} from '@forumate/shared/api/users';
 
 const feature = loadFeature(
   path.resolve(

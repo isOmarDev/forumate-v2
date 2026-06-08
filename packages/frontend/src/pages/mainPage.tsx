@@ -3,7 +3,7 @@ import { Layout } from '../components/layout';
 import { PostsList } from '../components/postsList';
 import { PostsViewSwitcher } from '../components/postsViewSwitcher';
 import { api } from '../api';
-import { Post } from '@dddforum/shared/api/posts';
+import { Post } from '@forumate/shared/api/posts';
 
 export const MainPage = () => {
   const [posts, setPosts] = useState<Post[]>([]);

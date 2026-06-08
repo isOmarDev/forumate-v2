@@ -7,7 +7,7 @@ import { RegistrationForm } from '../components/registrationForm';
 import { useUser } from '../contexts/userContext';
 import { useSpinner } from '../contexts/spinnerContext';
 import { OverlaySpinner } from '../components/overlaySpinner';
-import { CreateUserInput } from '@dddforum/shared/api/users';
+import { CreateUserInput } from '@forumate/shared/api/users';
 
 const FAILURE_TOAST_ID = `failure-toast`;
 const SUCCESS_TOAST_ID = `success-toast`;

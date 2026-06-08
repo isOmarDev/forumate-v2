@@ -1,7 +1,7 @@
 import { IUserRepository } from '../ports/user-repository';
 import { User } from '../../../shared/database';
 import { Spy } from '../../../shared/test-doubles/spy';
-import { CreateUserInput } from '@dddforum/shared/api/users';
+import { CreateUserInput } from '@forumate/shared/api/users';
 
 export class InMemoryUserRepoSpy
   extends Spy<IUserRepository>

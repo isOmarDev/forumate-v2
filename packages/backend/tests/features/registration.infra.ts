@@ -17,7 +17,7 @@ import {
   UserBuilder,
   CreateUserInputBuilder,
 } from '../../../shared/tests/support/builders/user';
-import { CreateUserInput, User } from '@dddforum/shared/api/users';
+import { CreateUserInput, User } from '@forumate/shared/api/users';
 
 const feature = loadFeature(
   path.resolve(

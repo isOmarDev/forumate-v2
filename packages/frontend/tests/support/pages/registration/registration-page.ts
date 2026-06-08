@@ -1,6 +1,6 @@
 import { PageObject } from '../page-object';
 import { PuppeteerPageDriver } from '../../driver';
-import { CreateUserInput } from '@dddforum/shared/api/users';
+import { CreateUserInput } from '@forumate/shared/api/users';
 import { PageElements } from '../../components';
 import { appSelectors } from '../../../../src/shared/selectors';
 

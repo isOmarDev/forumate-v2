@@ -14,7 +14,7 @@ import { CompositionRoot } from '../../src/shared/composition-root';
 import { Config } from '../../src/shared/config';
 
 import { CreateUserInputBuilder } from '../../../shared/tests/support/builders/user/create-user-input-builder';
-import { CreateUserInput, User } from '@dddforum/shared/api/users';
+import { CreateUserInput, User } from '@forumate/shared/api/users';
 
 const feature = loadFeature(
   path.resolve(
