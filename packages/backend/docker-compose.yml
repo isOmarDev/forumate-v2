@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:17-alpine
-    container_name: dddforum-postgres
+    container_name: forumate-postgres
     restart: unless-stopped
     env_file:
       - .env.development
@@ -12,6 +12,7 @@ services:
 
   adminer:
     image: adminer
+    container_name: forumate-adminer
     restart: unless-stopped
     ports:
       - '8080:8080'
