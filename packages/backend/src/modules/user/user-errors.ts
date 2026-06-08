@@ -4,7 +4,7 @@ import {
   UsernameAlreadyTakenException,
   UserNotFoundException,
 } from './user-exceptions';
-import { UserResponse } from '@dddforum/shared/api/users';
+import { UserResponse } from '@forumate/shared/api/users';
 
 export const userErrorCodes = {
   EmailAlreadyInUse: 'EmailAlreadyInUse',

@@ -1,5 +1,5 @@
 {
-  "name": "@dddforum/frontend",
+  "name": "@forumate/frontend",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -12,7 +12,7 @@
     "test:e2e": "jest -c jest.config.e2e.ts --detectOpenHandles"
   },
   "dependencies": {
-    "@dddforum/shared": "*",
+    "@forumate/shared": "*",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "axios": "^1.6.2",

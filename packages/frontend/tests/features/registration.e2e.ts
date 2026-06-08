@@ -9,7 +9,7 @@ import {
   UserBuilder,
 } from '../../../shared/tests/support/builders/user';
 import { resetDatabase } from '../../../shared/tests/support/fixtures/reset';
-import { CreateUserInput } from '@dddforum/shared/api/users';
+import { CreateUserInput } from '@forumate/shared/api/users';
 
 const feature = loadFeature(
   path.join(__dirname, '../../../shared/tests/features/registration.feature'),

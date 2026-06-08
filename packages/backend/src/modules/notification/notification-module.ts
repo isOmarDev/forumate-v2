@@ -19,11 +19,10 @@ export class NotificationModule extends ApplicationModule {
   }
 
   private createTransactionalEmailApi() {
-    if (this.getEnvironment() === 'production') {
-      return new MailjetTransactionalEmailApi();
+    if (this.getScript() === 'test:unit') {
+      return new TransactionalEmailApiSpy();
     }
-
-    return new TransactionalEmailApiSpy();
+    return new MailjetTransactionalEmailApi();
   }
 
   getTransactionalEmailApi() {

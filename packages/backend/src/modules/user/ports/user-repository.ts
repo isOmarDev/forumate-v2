@@ -1,5 +1,5 @@
 import { User } from '../../../shared/database';
-import { CreateUserInput } from '@dddforum/shared/api/users';
+import { CreateUserInput } from '@forumate/shared/api/users';
 
 export interface IUserRepository {
   create(user: CreateUserInput): Promise<User>;

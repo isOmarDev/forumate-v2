@@ -25,11 +25,10 @@ export class MarketingModule extends ApplicationModule {
   }
 
   private createContactListApi() {
-    if (this.getEnvironment() === 'production') {
-      return new MailchimpContactList();
+    if (this.getScript() === 'test:unit') {
+      return new ContactListApiSpy();
     }
-
-    return new ContactListApiSpy();
+    return new MailchimpContactList();
   }
 
   private createMarketingService() {

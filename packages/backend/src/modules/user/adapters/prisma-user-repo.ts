@@ -1,6 +1,6 @@
 import { IUserRepository } from '../ports/user-repository';
 import { PrismaClient, User } from '../../../shared/database';
-import { CreateUserInput } from '@dddforum/shared/api/users';
+import { CreateUserInput } from '@forumate/shared/api/users';
 
 export class PrismaUserRepo implements IUserRepository {
   constructor(private prisma: PrismaClient) {}
