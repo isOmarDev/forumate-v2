@@ -1,5 +1,5 @@
 {
-  "name": "@dddforum/backend",
+  "name": "@forumate/backend",
   "version": "1.0.0",
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",
@@ -18,10 +18,14 @@
     "test:dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
     "test:e2e": "jest -c jest.config.e2e.ts",
     "test:infra": "jest -c jest.config.infra.ts",
-    "test:unit": "jest -c jest.config.unit.ts"
+    "test:unit": "jest -c jest.config.unit.ts",
+    "start:db": "docker-compose up -d",
+    "stop:db": "docker-compose down",
+    "stop:db:volumes": "docker-compose down -v",
+    "db:logs": "docker-compose logs -f"
   },
   "dependencies": {
-    "@dddforum/shared": "*",
+    "@forumate/shared": "*",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "cors": "^2.8.6",
