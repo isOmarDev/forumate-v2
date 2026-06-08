@@ -1,10 +1,5 @@
-import dotenv from 'dotenv';
-import path from 'path';
-
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from './prisma/generated/client';
-
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 export class Database {
   private client: PrismaClient;
