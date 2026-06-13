@@ -29,11 +29,12 @@ const feature = loadFeature(
 
 defineFeature(feature, (test) => {
   let config: Config = new Config('test:e2e');
+
+  const apiClient = createApiClient(config.apiUrl);
+
   let compositionRoot: CompositionRoot;
   let server: WebServer;
   let database: Database;
-
-  const apiClient = createApiClient('http://localhost:3000');
 
   let response: CreateUserResponse;
   let usersResponses: CreateUserResponse[];

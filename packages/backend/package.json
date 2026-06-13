@@ -4,8 +4,9 @@
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",
     "build": "tsc",
+    "dev": "tsx prepareEnv.ts nodemon",
     "start": "node dist/index.js",
-    "start:dev": "npm run db:sync && nodemon",
+    "start:dev": "npm run db:sync && npm run dev",
     "db:generate": "tsx prepareEnv.ts prisma generate",
     "db:migrate": "tsx prepareEnv.ts prisma migrate dev",
     "db:seed": "tsx prepareEnv.ts prisma db seed",

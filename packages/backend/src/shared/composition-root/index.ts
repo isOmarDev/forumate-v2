@@ -38,7 +38,7 @@ export class CompositionRoot {
   }
 
   private createWebServer() {
-    return new WebServer({ port: 3000, env: this.config.env });
+    return new WebServer({ port: 3000, env: this.config.environment });
   }
 
   private createDatabase() {
@@ -54,7 +54,7 @@ export class CompositionRoot {
   }
 
   private createPostModule() {
-    return PostModule.build(this.db);
+    return PostModule.build(this.db, this.config);
   }
 
   private createMarketingModule() {

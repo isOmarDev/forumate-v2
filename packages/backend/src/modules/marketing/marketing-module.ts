@@ -25,7 +25,7 @@ export class MarketingModule extends ApplicationModule {
   }
 
   private createContactListApi() {
-    if (this.getScript() === 'test:unit') {
+    if (this.config.script === 'test:unit') {
       return new ContactListApiSpy();
     }
     return new MailchimpContactList();
