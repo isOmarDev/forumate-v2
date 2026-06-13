@@ -7,8 +7,9 @@ import { IApplication } from '../../src/shared/application/application-interface
 import { createApiClient } from '@forumate/shared/api';
 
 describe('users http API', () => {
-  const client = createApiClient('http://localhost:3000');
   const config = new Config('test:infra');
+
+  const client = createApiClient(config.apiUrl);
 
   let composition: CompositionRoot;
   let server: WebServer;
