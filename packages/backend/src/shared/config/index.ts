@@ -3,19 +3,25 @@ export type Environment = 'development' | 'production' | 'staging' | 'ci';
 export type Script = 'start' | 'test:unit' | 'test:e2e' | 'test:infra';
 
 export class Config {
-  public env: Environment;
-  public script: Script;
+  private readonly _env: Environment;
+  private readonly _script: Script;
+  private readonly _apiUrl: string;
 
   constructor(script: Script) {
-    this.env = (process.env.NODE_ENV as Environment) || 'development';
-    this.script = script;
+    this._env = (process.env.NODE_ENV as Environment) || 'development';
+    this._script = script;
+    this._apiUrl = process.env.API_URL || 'http://localhost:3000';
   }
 
-  getEnvironment() {
-    return this.env;
+  get environment() {
+    return this._env;
   }
 
-  getScript() {
-    return this.script;
+  get script() {
+    return this._script;
+  }
+
+  get apiUrl() {
+    return this._apiUrl;
   }
 }
