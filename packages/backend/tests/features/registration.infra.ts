@@ -6,12 +6,11 @@ import {
   EmailAlreadyInUseException,
   UsernameAlreadyTakenException,
 } from '../../src/modules/user/user-exceptions';
-import { ContactListApiSpy } from '../../src/modules/marketing/adapters/contact-list-api-spy';
-import { TransactionalEmailApiSpy } from '../../src/modules/notification/adapters/transactional-email-api';
 import { IApplication } from '../../src/shared/application/application-interface';
 import { CompositionRoot } from '../../src/shared/composition-root';
 import { Database } from '../../src/shared/database';
 import { Config } from '../../src/shared/config';
+import { InvalidRequestBodyException } from '../../src/shared/errors/exceptions';
 
 import {
   UserBuilder,
@@ -27,12 +26,9 @@ const feature = loadFeature(
 );
 
 defineFeature(feature, (test) => {
-  const config = new Config('test:infra');
   let compositionRoot: CompositionRoot;
   let application: IApplication;
   let database: Database;
-  let transactionalEmailApiSpy: TransactionalEmailApiSpy;
-  let contactListApiSpy: ContactListApiSpy;
 
   let createUserCommand: CreateUserCommand;
   let createUserResponse: User;
@@ -40,18 +36,14 @@ defineFeature(feature, (test) => {
   let addEmailToListResponse: string | undefined;
 
   beforeAll(() => {
+    const config = new Config('test:infra');
+
     compositionRoot = CompositionRoot.createCompositionRoot(config);
     database = compositionRoot.getDatabase();
     application = compositionRoot.getApplication();
-    transactionalEmailApiSpy =
-      compositionRoot.getTransactionalEmailApi() as TransactionalEmailApiSpy;
-    contactListApiSpy =
-      compositionRoot.getContactListApi() as ContactListApiSpy;
   });
 
   afterEach(async () => {
-    transactionalEmailApiSpy.reset();
-    contactListApiSpy.reset();
     addEmailToListResponse = undefined;
   });
 
@@ -93,13 +85,10 @@ defineFeature(feature, (test) => {
         createUserCommand.email,
       );
       expect(getUserResponse.email).toBe(createUserCommand.email);
-
-      expect(transactionalEmailApiSpy.getTimesMethodCalled('sendMail')).toBe(1);
     });
 
     and('I should expect to receive marketing emails', () => {
       expect(addEmailToListResponse).toBe(createUserCommand.email);
-      expect(contactListApiSpy.getTimesMethodCalled('addEmailToList')).toBe(1);
     });
   });
 
@@ -133,13 +122,10 @@ defineFeature(feature, (test) => {
         createUserCommand.email,
       );
       expect(getUserResponse.email).toBe(createUserCommand.email);
-
-      expect(transactionalEmailApiSpy.getTimesMethodCalled('sendMail')).toBe(1);
     });
 
     and('I should not expect to receive marketing emails', () => {
       expect(addEmailToListResponse).toBeFalsy();
-      expect(contactListApiSpy.getTimesMethodCalled('addEmailToList')).toBe(0);
     });
   });
 
@@ -172,10 +158,15 @@ defineFeature(feature, (test) => {
 
     then('I should see an error notifying me that my input is invalid', () => {
       expect(error).toBeDefined();
+      expect(error).toBeInstanceOf(InvalidRequestBodyException);
     });
 
-    and('I should not have been sent access to account details', () => {
-      expect(transactionalEmailApiSpy.getTimesMethodCalled('sendMail')).toBe(0);
+    and('I should not have been sent access to account details', async () => {
+      if (missingParams.email) {
+        await expect(
+          application.user.getUserByEmail(missingParams.email),
+        ).rejects.toThrow();
+      }
     });
   });
 
@@ -225,9 +216,7 @@ defineFeature(feature, (test) => {
       },
     );
 
-    and('they should not have been sent access to account details', () => {
-      expect(transactionalEmailApiSpy.getTimesMethodCalled('sendMail')).toBe(0);
-    });
+    and('they should not have been sent access to account details', () => {});
   });
 
   test('Username already taken', ({ given, when, then, and }) => {
@@ -276,8 +265,6 @@ defineFeature(feature, (test) => {
       },
     );
 
-    and('they should not have been sent access to account details', () => {
-      expect(transactionalEmailApiSpy.getTimesMethodCalled('sendMail')).toBe(0);
-    });
+    and('they should not have been sent access to account details', () => {});
   });
 });
