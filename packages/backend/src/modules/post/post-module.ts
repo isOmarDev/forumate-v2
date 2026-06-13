@@ -5,20 +5,23 @@ import { IPostRepository } from './ports/post-repository';
 import { PrismaPostRepo } from './adapters/prisma-post-repo';
 import WebServer from '../../shared/server';
 import { Database } from '../../shared/database';
+import { Config } from '../../shared/config';
+import { ApplicationModule } from '../../shared/modules/application-module';
 
-export class PostModule {
+export class PostModule extends ApplicationModule {
   private postRepo: IPostRepository;
   private postService: PostService;
   private postController: PostController;
 
-  private constructor(private db: Database) {
+  private constructor(private db: Database, config: Config) {
+    super(config);
     this.postRepo = this.createPostRepo();
     this.postService = this.createPostService();
     this.postController = this.createPostController();
   }
 
-  static build(db: Database) {
-    return new PostModule(db);
+  static build(db: Database, config: Config) {
+    return new PostModule(db, config);
   }
 
   private createPostRepo() {
