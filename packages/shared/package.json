@@ -22,5 +22,9 @@
     "clean": "rimraf dist tsconfig.tsbuildinfo",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.9.0",
+    "axios": "^1.6.2"
   }
 }
