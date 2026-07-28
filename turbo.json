@@ -1,0 +1,17 @@
+{
+  "ui": "tui",
+  "globalDependencies": ["**/.env.*local"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "tsconfig.tsbuildinfo"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "start:dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

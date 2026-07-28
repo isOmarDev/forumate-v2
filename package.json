@@ -9,20 +9,20 @@
   },
   "packageManager": "pnpm@11.17.0+sha512.cca3cea332ad254bb84145f966d19f4879615210346fc92c79a047f23a0d7b3cca3c3792f0076ba1f1831d277efbcf0a9119b31a9a60eca7fb3d6231f331ef72",
   "scripts": {
-    "clean": "npm run clean --workspaces --if-present",
+    "clean": "turbo run clean",
     "start": "pnpm --filter @forumate/backend start",
     "start:db": "npm run start:db -w @forumate/backend",
     "stop:db": "npm run stop:db -w @forumate/backend",
     "stop:db:volumes": "npm run stop:db:volumes -w @forumate/backend",
     "db:logs": "npm run db:logs -w @forumate/backend",
-    "build": "npm run build:shared && npm run build:back && npm run build:front",
+    "build": "turbo run build",
     "build:shared": "pnpm --filter @forumate/shared build",
     "build:front": "npm run build -w @forumate/frontend",
     "build:back": "pnpm --filter @forumate/backend build",
-    "start:dev": "concurrently -n backend,frontend -c blue,green \"npm run start:dev -w @forumate/backend\" \"npm run start:dev -w @forumate/frontend\"",
+    "start:dev": "turbo run start:dev --parallel",
     "start:dev:back": "pnpm --filter @forumate/backend start:dev",
     "start:dev:front": "npm run start:dev -w @forumate/frontend",
-    "test:e2e:back": "npm run test:e2e -w @forumate/backend",
+    "test:e2e:back": "pnpm --filter @forumate/backend test:e2e",
     "test:e2e:front": "npm run test:e2e -w @forumate/frontend",
     "test:infra:back": "npm run test:infra -w @forumate/backend",
     "test:unit:back": "pnpm --filter @forumate/backend test:unit"
@@ -40,6 +40,7 @@
     "prettier": "^2.7.1",
     "rimraf": "^6.1.2",
     "ts-jest": "^29.4.6",
+    "turbo": "^2.10.7",
     "typescript": "^5.9.3"
   }
 }

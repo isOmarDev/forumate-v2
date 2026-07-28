@@ -4,7 +4,7 @@
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",
     "build": "tsc",
-    "dev": "tsx prepareEnv.ts nodemon",
+    "dev": "cross-env NODE_OPTIONS=--conditions=development tsx prepareEnv.ts nodemon",
     "start": "node dist/index.js",
     "start:dev": "npm run db:sync && npm run dev",
     "db:generate": "tsx prepareEnv.ts prisma generate",
@@ -17,7 +17,7 @@
     "db:studio": "prisma studio",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "test:dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
-    "test:e2e": "jest -c jest.config.e2e.ts",
+    "test:e2e": "cross-env NODE_OPTIONS=--experimental-vm-modules jest -c jest.config.e2e.ts",
     "test:infra": "jest -c jest.config.infra.ts",
     "test:unit": "jest -c jest.config.unit.ts",
     "start:db": "docker-compose up -d",

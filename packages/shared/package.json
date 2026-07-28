@@ -6,15 +6,18 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
     },
     "./api": {
-      "types": "./dist/api/index.d.ts",
+      "types": "./src/api/index.ts",
+      "development": "./src/api/index.ts",
       "default": "./dist/api/index.js"
     },
     "./api/*": {
-      "types": "./dist/api/*.d.ts",
+      "types": "./src/api/*.ts",
+      "development": "./src/api/*.ts",
       "default": "./dist/api/*.js"
     }
   },

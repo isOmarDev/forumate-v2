@@ -1,5 +1,8 @@
 .vscode
 node_modules
+.pnpm-store
+.turbo
+**/.turbo
 dist
 tsconfig.tsbuildinfo
 package-lock.json
