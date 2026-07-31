@@ -52,6 +52,6 @@ export class MarketingModule extends ApplicationModule {
   }
 
   mountRouter(server: WebServer) {
-    server.moutRouter('/marketing', this.marketingController.getRouter());
+    server.mountRouter('/marketing', this.marketingController.getRouter());
   }
 }

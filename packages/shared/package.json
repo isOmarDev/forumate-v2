@@ -2,23 +2,18 @@
   "name": "@forumate/shared",
   "version": "1.0.0",
   "private": true,
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
+   "exports": {
     ".": {
       "types": "./src/index.ts",
-      "development": "./src/index.ts",
-      "default": "./dist/index.js"
+      "default": "./src/index.ts"
     },
     "./api": {
       "types": "./src/api/index.ts",
-      "development": "./src/api/index.ts",
-      "default": "./dist/api/index.js"
+      "default": "./src/api/index.ts"
     },
     "./api/*": {
       "types": "./src/api/*.ts",
-      "development": "./src/api/*.ts",
-      "default": "./dist/api/*.js"
+      "default": "./src/api/*.ts"
     }
   },
   "scripts": {

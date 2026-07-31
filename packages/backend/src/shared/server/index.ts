@@ -29,7 +29,7 @@ class WebServer {
     return this._app;
   }
 
-  moutRouter(path: string, router: Router) {
+  mountRouter(path: string, router: Router) {
     this._app.use(path, router);
   }
 

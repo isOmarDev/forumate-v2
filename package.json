@@ -24,7 +24,7 @@
     "start:dev:front": "npm run start:dev -w @forumate/frontend",
     "test:e2e:back": "pnpm --filter @forumate/backend test:e2e",
     "test:e2e:front": "npm run test:e2e -w @forumate/frontend",
-    "test:infra:back": "npm run test:infra -w @forumate/backend",
+    "test:infra:back": "pnpm --filter @forumate/backend test:infra",
     "test:unit:back": "pnpm --filter @forumate/backend test:unit"
   },
   "devDependencies": {

@@ -31,7 +31,7 @@ export class UserModule extends ApplicationModule {
   }
 
   private createUserRepo() {
-    if (this.shoudBuildFakeRepository) {
+    if (this.shouldBuildFakeRepository) {
       return new InMemoryUserRepoSpy();
     }
 
@@ -59,6 +59,6 @@ export class UserModule extends ApplicationModule {
   }
 
   mountRouter(server: WebServer) {
-    server.moutRouter('/users', this.userController.getRouter());
+    server.mountRouter('/users', this.userController.getRouter());
   }
 }

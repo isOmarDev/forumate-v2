@@ -49,6 +49,6 @@ export class PostModule extends ApplicationModule {
   }
 
   mountRouter(server: WebServer) {
-    server.moutRouter('/posts', this.postController.getRouter());
+    server.mountRouter('/posts', this.postController.getRouter());
   }
 }
