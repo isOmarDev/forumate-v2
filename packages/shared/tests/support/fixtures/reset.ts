@@ -1,4 +1,4 @@
-import { dbClient } from '../../../../backend/src/shared/bootstrap';
+import { dbClient } from '../../../../../apps/backend/src/shared/bootstrap';
 
 export async function resetDatabase() {
   const deleteAllUsers = dbClient.user.deleteMany();

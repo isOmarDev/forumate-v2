@@ -7,12 +7,15 @@ import { AppNotifications } from '../support/components';
 import {
   CreateUserInputBuilder,
   UserBuilder,
-} from '../../../shared/tests/support/builders/user';
-import { resetDatabase } from '../../../shared/tests/support/fixtures/reset';
+} from '../../../../packages/shared/tests/support/builders/user';
+import { resetDatabase } from '../../../../packages/shared/tests/support/fixtures/reset';
 import { CreateUserInput } from '@forumate/shared/api/users';
 
 const feature = loadFeature(
-  path.join(__dirname, '../../../shared/tests/features/registration.feature'),
+  path.join(
+    __dirname,
+    '../../../../packages/shared/tests/features/registration.feature',
+  ),
   { tagFilter: '@frontend' },
 );
 

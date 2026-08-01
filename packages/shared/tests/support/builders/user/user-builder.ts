@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 
 import { CreateUserInput } from '../../../../src/api/users';
-import { dbClient } from '../../../../../backend/src/shared/bootstrap';
+import { dbClient } from '../../../../../../apps/backend/src/shared/bootstrap';
 
 export class UserBuilder {
   private props: CreateUserInput;

@@ -1,7 +1,7 @@
 import { CompositionRoot } from '../../src/shared/composition-root';
 import { Config } from '../../src/shared/config';
-import { CreateUserInputBuilder } from '../../../shared/tests/support/builders/user';
-import { ValidatedUserBuilder } from '../../../shared/tests/support/builders/user/validatedUserBuilder';
+import { CreateUserInputBuilder } from '../../../../packages/shared/tests/support/builders/user';
+import { ValidatedUserBuilder } from '../../../../packages/shared/tests/support/builders/user/validatedUserBuilder';
 import WebServer from '../../src/shared/server';
 import { IApplication } from '../../src/shared/application/application-interface';
 import { createApiClient } from '@forumate/shared/api';

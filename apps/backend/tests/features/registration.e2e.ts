@@ -8,11 +8,11 @@ import WebServer from '../../src/shared/server';
 import { Database } from '../../src/shared/database';
 import { ErrorException } from '../../src/shared/errors/error-exception-types';
 
-import { resetDatabase } from '../../../shared/tests/support/fixtures/reset';
+import { resetDatabase } from '../../../../packages/shared/tests/support/fixtures/reset';
 import {
   CreateUserInputBuilder,
   UserBuilder,
-} from '../../../shared/tests/support/builders/user';
+} from '../../../../packages/shared/tests/support/builders/user';
 import { createApiClient } from '@forumate/shared/api';
 import type { AddEmailToListResponse } from '@forumate/shared/api/marketing';
 import type {
@@ -23,7 +23,7 @@ import type {
 const feature = loadFeature(
   path.resolve(
     __dirname,
-    '../../../shared/tests/features/registration.feature',
+    '../../../../packages/shared/tests/features/registration.feature',
   ),
 );
 
