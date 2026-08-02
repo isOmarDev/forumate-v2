@@ -2,25 +2,27 @@
   "name": "@forumate/shared",
   "version": "1.0.0",
   "private": true,
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
     },
     "./api": {
-      "types": "./dist/api/index.d.ts",
-      "default": "./dist/api/index.js"
+      "types": "./src/api/index.ts",
+      "default": "./src/api/index.ts"
     },
     "./api/*": {
-      "types": "./dist/api/*.d.ts",
-      "default": "./dist/api/*.js"
+      "types": "./src/api/*.ts",
+      "default": "./src/api/*.ts"
     }
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.9.0",
+    "axios": "^1.6.2"
   }
 }

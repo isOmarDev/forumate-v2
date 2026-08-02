@@ -1,0 +1,50 @@
+{
+  "name": "@forumate/backend",
+  "version": "1.0.0",
+  "scripts": {
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "build": "tsc",
+    "dev": "pnpm db:sync && tsx prepareEnv.ts nodemon",
+    "start": "node --import tsx dist/index.js",
+    "db:sync": "pnpm db:migrate && pnpm db:generate",
+    "db:setup": "pnpm db:sync && pnpm db:seed",
+    "db:reset:full": "pnpm db:reset && pnpm db:setup",
+    "db:generate": "tsx prepareEnv.ts prisma generate",
+    "db:migrate": "tsx prepareEnv.ts prisma migrate dev",
+    "db:seed": "tsx prepareEnv.ts prisma db seed",
+    "db:reset": "tsx prepareEnv.ts prisma migrate reset",
+    "db:studio": "prisma studio",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:dev": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
+    "test:e2e": "cross-env NODE_OPTIONS=--experimental-vm-modules jest -c jest.config.e2e.ts",
+    "test:infra": "cross-env NODE_OPTIONS=--experimental-vm-modules jest -c jest.config.infra.ts",
+    "test:unit": "cross-env NODE_OPTIONS=--experimental-vm-modules jest -c jest.config.unit.ts",
+    "start:db": "docker-compose up -d",
+    "stop:db": "docker-compose down",
+    "stop:db:volumes": "docker-compose down -v",
+    "db:logs": "docker-compose logs -f"
+  },
+  "dependencies": {
+    "@forumate/shared": "workspace:*",
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.4",
+    "express": "^5.2.1",
+    "pg": "^8.18.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/pg": "^8.16.0",
+    "@types/supertest": "^6.0.3",
+    "cross-env": "^10.1.0",
+    "dotenv-cli": "^11.0.0",
+    "nodemon": "^3.1.11",
+    "onchange": "^7.1.0",
+    "prisma": "^7.3.0",
+    "supertest": "^7.2.2",
+    "tsx": "^4.21.0"
+  }
+}

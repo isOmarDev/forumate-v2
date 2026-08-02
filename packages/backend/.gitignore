@@ -1,8 +1,0 @@
-# dotenv environment variable files
-.env
-.env.*
-!.env.example
-
-# database
-generated
-migration_lock.toml
