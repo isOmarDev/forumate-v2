@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { ValidatedUser } from '../../../../src/api/users';
+import { ValidatedUser } from '../../../../src/users';
 
 export class ValidatedUserBuilder {
   private props: ValidatedUser;

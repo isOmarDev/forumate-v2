@@ -15,13 +15,13 @@ import { InvalidRequestBodyException } from '../../src/shared/errors/exceptions'
 import {
   UserBuilder,
   CreateUserInputBuilder,
-} from '../../../../packages/shared/tests/support/builders/user';
-import { CreateUserInput, User } from '@forumate/shared/api/users';
+} from '../../../../packages/api/tests/support/builders/user';
+import { CreateUserInput, User } from '@forumate/api/users';
 
 const feature = loadFeature(
   path.resolve(
     __dirname,
-    '../../../../packages/shared/tests/features/registration.feature',
+    '../../../../packages/api/tests/features/registration.feature',
   ),
 );
 

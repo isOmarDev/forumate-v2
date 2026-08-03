@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { ApiResponse, GenericErrors } from '.';
+import { ApiResponse, GenericErrors } from './index';
 
 export type EmailSubscriber = { email: string };
 

@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
 
-import { CreateUserInput } from '../../../../src/api/users';
-import { CreateUserCommand } from '../../../../../../apps/backend/src/modules/user/user-command';
+import { CreateUserInput } from '../../../../src/users';
+import { dbClient } from '../../../../../../apps/backend/src/shared/bootstrap';
 
-export class CreateUserInputBuilder {
+export class UserBuilder {
   private props: CreateUserInput;
 
   constructor() {
@@ -16,27 +16,27 @@ export class CreateUserInputBuilder {
     };
   }
 
-  public withEmail(email: string = faker.internet.email()) {
+  withEmail(email: string = faker.internet.email()) {
     this.props.email = email;
     return this;
   }
 
-  public withUsername(username: string = faker.internet.username()) {
+  withUsername(username: string = faker.internet.username()) {
     this.props.username = username;
     return this;
   }
 
-  public withFirstName(firstName: string = faker.person.firstName()) {
+  withFirstName(firstName: string = faker.person.firstName()) {
     this.props.firstName = firstName;
     return this;
   }
 
-  public withLastName(lastName: string = faker.person.lastName()) {
+  withLastName(lastName: string = faker.person.lastName()) {
     this.props.lastName = lastName;
     return this;
   }
 
-  public withPassword(
+  withPassword(
     password?: string,
     options?: Parameters<typeof faker.internet.password>[0],
   ) {
@@ -44,11 +44,9 @@ export class CreateUserInputBuilder {
     return this;
   }
 
-  public build() {
-    return this.props;
-  }
-
-  public buildCommand() {
-    return CreateUserCommand.validateRequest(this.props);
+  public async build() {
+    const user = await dbClient.user.create({ data: this.props });
+    const { password, ...restUser } = user;
+    return restUser;
   }
 }

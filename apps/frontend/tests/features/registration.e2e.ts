@@ -7,14 +7,14 @@ import { AppNotifications } from '../support/components';
 import {
   CreateUserInputBuilder,
   UserBuilder,
-} from '../../../../packages/shared/tests/support/builders/user';
-import { resetDatabase } from '../../../../packages/shared/tests/support/fixtures/reset';
-import { CreateUserInput } from '@forumate/shared/api/users';
+} from '../../../../packages/api/tests/support/builders/user';
+import { resetDatabase } from '../../../../packages/api/tests/support/fixtures/reset';
+import { CreateUserInput } from '@forumate/api/users';
 
 const feature = loadFeature(
   path.join(
     __dirname,
-    '../../../../packages/shared/tests/features/registration.feature',
+    '../../../../packages/api/tests/features/registration.feature',
   ),
   { tagFilter: '@frontend' },
 );

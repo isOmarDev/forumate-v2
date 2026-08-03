@@ -8,22 +8,22 @@ import WebServer from '../../src/shared/server';
 import { Database } from '../../src/shared/database';
 import { ErrorException } from '../../src/shared/errors/error-exception-types';
 
-import { resetDatabase } from '../../../../packages/shared/tests/support/fixtures/reset';
+import { resetDatabase } from '../../../../packages/api/tests/support/fixtures/reset';
 import {
   CreateUserInputBuilder,
   UserBuilder,
-} from '../../../../packages/shared/tests/support/builders/user';
-import { createApiClient } from '@forumate/shared/api';
-import type { AddEmailToListResponse } from '@forumate/shared/api/marketing';
+} from '../../../../packages/api/tests/support/builders/user';
+import { createApiClient } from '@forumate/api';
+import type { AddEmailToListResponse } from '@forumate/api/marketing';
 import type {
   CreateUserInput,
   CreateUserResponse,
-} from '@forumate/shared/api/users';
+} from '@forumate/api/users';
 
 const feature = loadFeature(
   path.resolve(
     __dirname,
-    '../../../../packages/shared/tests/features/registration.feature',
+    '../../../../packages/api/tests/features/registration.feature',
   ),
 );
 

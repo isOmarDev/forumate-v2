@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { ApiResponse, ServerError } from '.';
+import { ApiResponse, ServerError } from './index';
 import { User } from './users';
 
 type GetPostsSortOption = 'recent';

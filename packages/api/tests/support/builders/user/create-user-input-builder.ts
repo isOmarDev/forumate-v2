@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
 
-import { CreateUserInput } from '../../../../src/api/users';
-import { dbClient } from '../../../../../../apps/backend/src/shared/bootstrap';
+import { CreateUserInput } from '../../../../src/users';
+import { CreateUserCommand } from '../../../../../../apps/backend/src/modules/user/user-command';
 
-export class UserBuilder {
+export class CreateUserInputBuilder {
   private props: CreateUserInput;
 
   constructor() {
@@ -16,27 +16,27 @@ export class UserBuilder {
     };
   }
 
-  withEmail(email: string = faker.internet.email()) {
+  public withEmail(email: string = faker.internet.email()) {
     this.props.email = email;
     return this;
   }
 
-  withUsername(username: string = faker.internet.username()) {
+  public withUsername(username: string = faker.internet.username()) {
     this.props.username = username;
     return this;
   }
 
-  withFirstName(firstName: string = faker.person.firstName()) {
+  public withFirstName(firstName: string = faker.person.firstName()) {
     this.props.firstName = firstName;
     return this;
   }
 
-  withLastName(lastName: string = faker.person.lastName()) {
+  public withLastName(lastName: string = faker.person.lastName()) {
     this.props.lastName = lastName;
     return this;
   }
 
-  withPassword(
+  public withPassword(
     password?: string,
     options?: Parameters<typeof faker.internet.password>[0],
   ) {
@@ -44,9 +44,11 @@ export class UserBuilder {
     return this;
   }
 
-  public async build() {
-    const user = await dbClient.user.create({ data: this.props });
-    const { password, ...restUser } = user;
-    return restUser;
+  public build() {
+    return this.props;
+  }
+
+  public buildCommand() {
+    return CreateUserCommand.validateRequest(this.props);
   }
 }

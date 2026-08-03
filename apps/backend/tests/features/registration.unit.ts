@@ -13,13 +13,13 @@ import { IApplication } from '../../src/shared/application/application-interface
 import { CompositionRoot } from '../../src/shared/composition-root';
 import { Config } from '../../src/shared/config';
 
-import { CreateUserInputBuilder } from '../../../../packages/shared/tests/support/builders/user/create-user-input-builder';
-import { CreateUserInput, User } from '@forumate/shared/api/users';
+import { CreateUserInputBuilder } from '../../../../packages/api/tests/support/builders/user/create-user-input-builder';
+import { CreateUserInput, User } from '@forumate/api/users';
 
 const feature = loadFeature(
   path.resolve(
     __dirname,
-    '../../../../packages/shared/tests/features/registration.feature',
+    '../../../../packages/api/tests/features/registration.feature',
   ),
 );
 

@@ -1,6 +1,6 @@
 import { InvalidRequestBodyException } from '../../shared/errors/exceptions';
 import { isMissingKeys } from '../../shared/utils/utils';
-import { CreateUserInput } from '@forumate/shared/api/users';
+import { CreateUserInput } from '@forumate/api/users';
 
 export class CreateUserCommand {
   private constructor(public props: CreateUserInput) {}

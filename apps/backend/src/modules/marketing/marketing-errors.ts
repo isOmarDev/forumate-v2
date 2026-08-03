@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 
 import { EmailNotAddedToMailListException } from './marketing-exceptions';
-import { MarketingResponse } from '@forumate/shared/api/marketing';
+import { MarketingResponse } from '@forumate/api/marketing';
 
 export const marketingErrorCodes = {
   EmailNotAddedToMailList: 'EmailNotAddedToMailList',

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { appSelectors, toClass } from '../shared/selectors';
-import { CreateUserInput } from '@forumate/shared/api/users';
+import { CreateUserInput } from '@forumate/api/users';
 
 interface RegistrationFormProps {
   onSubmit: (

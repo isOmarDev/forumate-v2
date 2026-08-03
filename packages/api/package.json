@@ -1,5 +1,5 @@
 {
-  "name": "@forumate/shared",
+  "name": "@forumate/api",
   "version": "1.0.0",
   "private": true,
   "exports": {
@@ -7,13 +7,17 @@
       "types": "./src/index.ts",
       "default": "./src/index.ts"
     },
-    "./api": {
-      "types": "./src/api/index.ts",
-      "default": "./src/api/index.ts"
+    "./users": {
+      "types": "./src/users.ts",
+      "default": "./src/users.ts"
     },
-    "./api/*": {
-      "types": "./src/api/*.ts",
-      "default": "./src/api/*.ts"
+    "./posts": {
+      "types": "./src/posts.ts",
+      "default": "./src/posts.ts"
+    },
+    "./marketing": {
+      "types": "./src/marketing.ts",
+      "default": "./src/marketing.ts"
     }
   },
   "scripts": {

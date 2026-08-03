@@ -53,9 +53,9 @@ importers:
 
   apps/backend:
     dependencies:
-      '@forumate/shared':
+      '@forumate/api':
         specifier: workspace:*
-        version: link:../../packages/shared
+        version: link:../../packages/api
       '@prisma/adapter-pg':
         specifier: ^7.3.0
         version: 7.9.1
@@ -120,9 +120,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.11.0
         version: 11.14.1(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1)(supports-color@5.5.0))(@types/react@18.3.31)(react@18.3.1)(supports-color@5.5.0)
-      '@forumate/shared':
+      '@forumate/api':
         specifier: workspace:*
-        version: link:../../packages/shared
+        version: link:../../packages/api
       axios:
         specifier: ^1.6.2
         version: 1.18.1(debug@4.4.3(supports-color@5.5.0))(supports-color@5.5.0)
@@ -173,7 +173,7 @@ importers:
         specifier: ^5.0.0
         version: 5.4.21(@types/node@25.9.5)
 
-  packages/shared:
+  packages/api:
     dependencies:
       '@faker-js/faker':
         specifier: ^9.9.0

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { ApiResponse, GenericErrors, ServerError } from '.';
+import { ApiResponse, GenericErrors, ServerError } from './index';
 
 export type CreateUserInput = {
   email: string;
