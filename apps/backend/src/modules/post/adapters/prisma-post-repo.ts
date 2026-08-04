@@ -1,4 +1,4 @@
-import { Post, PrismaClient } from '../../../shared/database';
+import { Post, PrismaClient } from '@forumate/database';
 import { IPostRepository } from '../ports/post-repository';
 
 export class PrismaPostRepo implements IPostRepository {

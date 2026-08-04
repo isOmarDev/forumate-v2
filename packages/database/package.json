@@ -1,0 +1,30 @@
+{
+  "name": "@forumate/database",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "generate": "tsx prepareEnv.ts prisma generate",
+    "migrate": "tsx prepareEnv.ts prisma migrate dev",
+    "seed": "tsx prepareEnv.ts prisma db seed",
+    "reset": "tsx prepareEnv.ts prisma migrate reset",
+    "studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
+    "dotenv": "^17.2.4"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^11.0.0",
+    "prisma": "^7.3.0",
+    "rimraf": "^6.1.2",
+    "tsx": "^4.21.0"
+  }
+}

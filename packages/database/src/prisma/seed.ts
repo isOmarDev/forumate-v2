@@ -1,5 +1,7 @@
 import { User, Post, Vote, Comment } from './generated/client';
-import { dbClient } from '../../bootstrap';
+import { Database } from '../database';
+
+const dbClient = new Database().getClient();
 
 const initialUsers: User[] = [
   {

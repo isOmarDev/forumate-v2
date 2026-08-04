@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';
 
 import { CreateUserInput } from '../../../../src/users';
-import { dbClient } from '../../../../../../apps/backend/src/shared/bootstrap';
+import { Database } from '@forumate/database';
+
+const dbClient = new Database().getClient();
 
 export class UserBuilder {
   private props: CreateUserInput;

@@ -1,5 +1,5 @@
 import { PrismaPostRepo } from '../adapters/prisma-post-repo';
-import { Database } from '../../../shared/database';
+import { Database } from '@forumate/database';
 
 describe('post repository', () => {
   const database = new Database();

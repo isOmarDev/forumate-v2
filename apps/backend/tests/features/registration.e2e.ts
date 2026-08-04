@@ -5,7 +5,7 @@ import { userErrorCodes } from '../../src/modules/user/user-errors';
 import { Config } from '../../src/shared/config';
 import { CompositionRoot } from '../../src/shared/composition-root';
 import WebServer from '../../src/shared/server';
-import { Database } from '../../src/shared/database';
+import { Database } from '@forumate/database';
 import { ErrorException } from '../../src/shared/errors/error-exception-types';
 
 import { resetDatabase } from '../../../../packages/api/tests/support/fixtures/reset';

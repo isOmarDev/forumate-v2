@@ -17,6 +17,8 @@ const binPath =
 const jestBin = path.resolve(path.dirname(jestPkgJsonPath), binPath);
 
 // Keep the modern node --env-file loader (cannot be set via NODE_OPTIONS)
+// The backend env file provides app config (API_URL, NODE_ENV).
+// The database env (DATABASE_URL) is loaded by the @forumate/database package.
 const envFile = process.env.TEST_ENV_FILE || '.env.test';
 const nodeOptions =
   process.env.NODE_OPTIONS != null

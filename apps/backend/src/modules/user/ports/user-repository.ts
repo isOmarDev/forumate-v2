@@ -1,4 +1,4 @@
-import { User } from '../../../shared/database';
+import { User } from '@forumate/database';
 import { CreateUserInput } from '@forumate/api/users';
 
 export interface IUserRepository {

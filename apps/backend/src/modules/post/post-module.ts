@@ -4,7 +4,7 @@ import { PostErrors } from './post-errors';
 import { IPostRepository } from './ports/post-repository';
 import { PrismaPostRepo } from './adapters/prisma-post-repo';
 import WebServer from '../../shared/server';
-import { Database } from '../../shared/database';
+import { Database } from '@forumate/database';
 import { Config } from '../../shared/config';
 import { ApplicationModule } from '../../shared/modules/application-module';
 

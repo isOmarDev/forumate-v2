@@ -1,4 +1,4 @@
-import { Post } from '../../../shared/database';
+import { Post } from '@forumate/database';
 
 export interface IPostRepository {
   findAll(filters?: object): Promise<Post[]>;

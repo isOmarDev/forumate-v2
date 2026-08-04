@@ -6,7 +6,7 @@ import { InMemoryUserRepoSpy } from './adapters/in-memory-user-repo-spy';
 import { IUserRepository } from './ports/user-repository';
 import { ITransactionalEmailApi } from '../notification/ports/transactional-email-api';
 import WebServer from '../../shared/server';
-import { Database } from '../../shared/database';
+import { Database } from '@forumate/database';
 import { Config } from '../../shared/config';
 import { ApplicationModule } from '../../shared/modules/application-module';
 

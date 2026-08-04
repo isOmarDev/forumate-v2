@@ -1,6 +1,6 @@
 import WebServer from '../server';
 import { Config } from '../config';
-import { Database } from '../database/database';
+import { Database } from '@forumate/database';
 import { IApplication } from '../application/application-interface';
 import GlobalErrorHandler from '../errors/global-error-handler';
 import { UserModule } from '../../modules/user';

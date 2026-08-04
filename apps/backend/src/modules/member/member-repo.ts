@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../shared/database';
+import { PrismaClient } from '@forumate/database';
 
 export class MemberRepo {
   constructor(private prisma: PrismaClient) {}

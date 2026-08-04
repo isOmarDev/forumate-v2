@@ -3,10 +3,12 @@ services:
     image: postgres:17-alpine
     container_name: forumate-postgres
     restart: unless-stopped
-    env_file:
-      - apps/backend/.env.development
     ports:
       - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: forumate
     volumes:
       - pgdata:/var/lib/postgresql/data
 

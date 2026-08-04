@@ -2,7 +2,7 @@ import path from 'path';
 
 import { defineConfig, env } from 'prisma/config';
 
-const PRISMA_DIR = path.join(__dirname, 'src/shared/database/prisma');
+const PRISMA_DIR = path.join(__dirname, 'src/prisma');
 
 export default defineConfig({
   schema: path.join(PRISMA_DIR, 'schema.prisma'),

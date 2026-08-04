@@ -1,5 +1,5 @@
 import { IUserRepository } from '../ports/user-repository';
-import { User } from '../../../shared/database';
+import { User } from '@forumate/database';
 import { Spy } from '../../../shared/test-doubles/spy';
 import { CreateUserInput } from '@forumate/api/users';
 

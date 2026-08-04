@@ -8,7 +8,7 @@ import {
 } from '../../src/modules/user/user-exceptions';
 import { IApplication } from '../../src/shared/application/application-interface';
 import { CompositionRoot } from '../../src/shared/composition-root';
-import { Database } from '../../src/shared/database';
+import { Database } from '@forumate/database';
 import { Config } from '../../src/shared/config';
 import { InvalidRequestBodyException } from '../../src/shared/errors/exceptions';
 
