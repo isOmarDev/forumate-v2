@@ -25,7 +25,7 @@ export const createMarketingApi = (apiUrl: string) => {
         if (axios.isAxiosError(error) && error.response) {
           return error.response.data as AddEmailToListResponse;
         }
-        throw new Error('Network or server unreachable');
+        throw new Error('Network or server unreachable', { cause: error });
       }
     },
   };

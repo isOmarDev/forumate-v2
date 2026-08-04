@@ -1,5 +1,4 @@
-// UserContext.tsx
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState } from 'react';
 
 // Define the shape of your user data
 interface SpinnerData {
@@ -7,7 +6,7 @@ interface SpinnerData {
 }
 
 // Create a context with initial data
-const SpinnerContext = createContext<{
+export const SpinnerContext = createContext<{
   spinner: SpinnerData;
   activate: React.Dispatch<React.SetStateAction<void>>;
   deactivate: React.Dispatch<React.SetStateAction<void>>;
@@ -16,11 +15,6 @@ const SpinnerContext = createContext<{
   activate: () => null,
   deactivate: () => null,
 });
-
-// Custom hook to access the user context
-export const useSpinner = () => {
-  return useContext(SpinnerContext);
-};
 
 // Context provider component
 export const SpinnerProvider = ({ children }: React.PropsWithChildren) => {

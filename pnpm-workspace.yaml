@@ -7,3 +7,5 @@ allowBuilds:
   prisma: true
   puppeteer: true
   unrs-resolver: true
+minimumReleaseAgeExclude:
+  - globals@17.9.0

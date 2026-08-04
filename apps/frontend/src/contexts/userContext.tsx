@@ -1,10 +1,4 @@
-// UserContext.tsx
-import React, {
-  createContext,
-  useState,
-  useContext,
-  ReactNode,
-} from 'react';
+import React, { createContext, useState, ReactNode } from 'react';
 
 // Define the shape of your user data
 export interface UserData {
@@ -13,18 +7,13 @@ export interface UserData {
 }
 
 // Create a context with initial data
-const UserContext = createContext<{
+export const UserContext = createContext<{
   user: UserData | null;
   setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
 }>({
   user: null,
   setUser: () => null,
 });
-
-// Custom hook to access the user context
-export const useUser = () => {
-  return useContext(UserContext);
-};
 
 // Context provider component
 export const UserProvider: React.FC<{ children: ReactNode }> = ({

@@ -59,7 +59,7 @@ export const createUsersApi = (apiUrl: string) => {
         if (axios.isAxiosError(error) && error.response) {
           return error.response.data as CreateUserResponse;
         }
-        throw new Error('Network or server unreachable');
+        throw new Error('Network or server unreachable', { cause: error });
       }
     },
     getUsers: async (query: GetUsersQuery) => {
@@ -70,7 +70,7 @@ export const createUsersApi = (apiUrl: string) => {
         if (axios.isAxiosError(error) && error.response) {
           return error.response.data as GetUsersResponse;
         }
-        throw new Error('Network or server unreachable');
+        throw new Error('Network or server unreachable', { cause: error });
       }
     },
   };

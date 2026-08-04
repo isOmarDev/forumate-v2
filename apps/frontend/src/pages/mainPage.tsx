@@ -8,18 +8,26 @@ import { Post } from '@forumate/api/posts';
 export const MainPage = () => {
   const [posts, setPosts] = useState<Post[]>([]);
 
-  const loadPosts = async () => {
-    try {
-      const response = await api.posts.getPosts();
-
-      setPosts(response.data!.posts);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
+    let isMounted = true;
+
+    const loadPosts = async () => {
+      try {
+        const response = await api.posts.getPosts();
+
+        if (isMounted) {
+          setPosts(response.data!.posts);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     loadPosts();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (

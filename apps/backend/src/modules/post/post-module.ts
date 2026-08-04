@@ -13,7 +13,10 @@ export class PostModule extends ApplicationModule {
   private postService: PostService;
   private postController: PostController;
 
-  private constructor(private db: Database, config: Config) {
+  private constructor(
+    private db: Database,
+    config: Config,
+  ) {
     super(config);
     this.postRepo = this.createPostRepo();
     this.postService = this.createPostService();

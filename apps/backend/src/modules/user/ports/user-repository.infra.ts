@@ -8,7 +8,7 @@ import { resetDatabase } from '../../../../../../packages/api/tests/support/fixt
 describe('user repository', () => {
   const database = new Database();
   const dbClient = database.getClient();
-  let userRepositories = [
+  const userRepositories = [
     new PrismaUserRepo(dbClient),
     new InMemoryUserRepoSpy(),
   ];

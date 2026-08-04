@@ -4,8 +4,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import { api } from '../api';
 import { Layout } from '../components/layout';
 import { RegistrationForm } from '../components/registrationForm';
-import { useUser } from '../contexts/userContext';
-import { useSpinner } from '../contexts/spinnerContext';
+import { useUser } from '../contexts/useUser';
+import { useSpinner } from '../contexts/useSpinner';
 import { OverlaySpinner } from '../components/overlaySpinner';
 import { CreateUserInput } from '@forumate/api/users';
 
@@ -52,7 +52,9 @@ export const RegisterPage = () => {
           case 'EmailAlreadyInUse':
             return toast.error(
               'This email is already in use. Perhaps you want to log in?',
-              { toastId: FAILURE_TOAST_ID },
+              {
+                toastId: FAILURE_TOAST_ID,
+              },
             );
           case 'UsernameAlreadyTaken':
             return toast.error(
@@ -85,7 +87,7 @@ export const RegisterPage = () => {
       setTimeout(() => {
         navigate('/');
       }, 3000);
-    } catch (err) {
+    } catch {
       spinner.deactivate();
       return toast.error('Some backend error occurred', {
         toastId: FAILURE_TOAST_ID,

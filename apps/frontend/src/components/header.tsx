@@ -1,6 +1,7 @@
 import logo from '../assets/dddforumlogo.png';
 import { Link, useLocation } from 'react-router-dom';
-import { UserData, useUser } from '../contexts/userContext';
+import { UserData } from '../contexts/userContext';
+import { useUser } from '../contexts/useUser';
 
 const Logo = () => (
   <div id="app-logo">

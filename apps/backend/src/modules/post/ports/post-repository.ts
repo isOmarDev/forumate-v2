@@ -1,5 +1,5 @@
 import { Post } from '../../../shared/database';
 
 export interface IPostRepository {
-  findAll(filters?: {}): Promise<Post[]>;
+  findAll(filters?: object): Promise<Post[]>;
 }

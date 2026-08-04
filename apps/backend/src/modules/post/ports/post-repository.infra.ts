@@ -4,7 +4,7 @@ import { Database } from '../../../shared/database';
 describe('post repository', () => {
   const database = new Database();
   const dbClient = database.getClient();
-  let postRepositories = [new PrismaPostRepo(dbClient)];
+  const postRepositories = [new PrismaPostRepo(dbClient)];
 
   afterAll(async () => {
     await database.disconnect();

@@ -26,7 +26,7 @@ export class UserService {
       throw new UsernameAlreadyTakenException();
     }
 
-    const { password, ...user } = await this.repo.create(dto.props);
+    const { password: _password, ...user } = await this.repo.create(dto.props);
 
     await this.emailApi.sendMail({
       to: user.email,
@@ -44,7 +44,7 @@ export class UserService {
       throw new UserNotFoundException(email);
     }
 
-    const { password, ...result } = user;
+    const { password: _password, ...result } = user;
 
     return result;
   }
@@ -52,7 +52,7 @@ export class UserService {
   async getUsers(filters?: { email?: string }) {
     const users = await this.repo.findAll(filters);
     return users.map((user) => {
-      const { password, ...restUser } = user;
+      const { password: _password, ...restUser } = user;
       return restUser;
     });
   }

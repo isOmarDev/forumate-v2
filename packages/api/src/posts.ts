@@ -49,7 +49,7 @@ export const createPostsApi = (apiURL: string) => {
         if (axios.isAxiosError(error) && error.response) {
           return error.response.data as GetPostsResponse;
         }
-        throw new Error('Network or server unreachable');
+        throw new Error('Network or server unreachable', { cause: error });
       }
     },
   };

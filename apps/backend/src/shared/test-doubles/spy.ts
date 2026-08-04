@@ -3,7 +3,7 @@ type ValidMethodNames<T> = keyof T;
 interface Call<T> {
   methodName: ValidMethodNames<T>;
   args: unknown[];
-  context: any;
+  context: unknown;
 }
 
 type Calls<T> = Call<T>[];
@@ -18,7 +18,7 @@ export abstract class Spy<T> {
   protected addCall<MethodName extends ValidMethodNames<T>>(
     methodName: MethodName,
     args: unknown[],
-    context?: any,
+    context?: unknown,
   ) {
     this.calls.push({ methodName, args, context });
   }

@@ -7,9 +7,7 @@ export class InvalidRequestBodyException extends Error {
 export class InvalidRequestParamsException extends Error {
   constructor(missingKeys: string[]) {
     super(
-      `Missing required param${
-        missingKeys.length > 1 ? 's' : ''
-      }: ${missingKeys.join(', ')}`,
+      `Missing required param${missingKeys.length > 1 ? 's' : ''}: ${missingKeys.join(', ')}`,
     );
   }
 }
@@ -17,9 +15,7 @@ export class InvalidRequestParamsException extends Error {
 export class InvalidRequestQueryException extends Error {
   constructor(missingKeys: string[]) {
     super(
-      `Missing required query param${
-        missingKeys.length > 1 ? 's' : ''
-      }: ${missingKeys.join(', ')}`,
+      `Missing required query param${missingKeys.length > 1 ? 's' : ''}: ${missingKeys.join(', ')}`,
     );
   }
 }

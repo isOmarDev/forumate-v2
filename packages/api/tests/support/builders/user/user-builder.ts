@@ -46,7 +46,7 @@ export class UserBuilder {
 
   public async build() {
     const user = await dbClient.user.create({ data: this.props });
-    const { password, ...restUser } = user;
+    const { password: _password, ...restUser } = user;
     return restUser;
   }
 }

@@ -15,10 +15,7 @@ import {
 } from '../../../../packages/api/tests/support/builders/user';
 import { createApiClient } from '@forumate/api';
 import type { AddEmailToListResponse } from '@forumate/api/marketing';
-import type {
-  CreateUserInput,
-  CreateUserResponse,
-} from '@forumate/api/users';
+import type { CreateUserInput, CreateUserResponse } from '@forumate/api/users';
 
 const feature = loadFeature(
   path.resolve(
@@ -28,7 +25,7 @@ const feature = loadFeature(
 );
 
 defineFeature(feature, (test) => {
-  let config: Config = new Config('test:e2e');
+  const config: Config = new Config('test:e2e');
 
   const apiClient = createApiClient(config.apiUrl);
 

@@ -15,7 +15,7 @@ export class AppNotifications extends Component {
     try {
       await this.elements.get('success').wait();
       return true;
-    } catch (err) {
+    } catch {
       return false;
     }
   }
@@ -24,7 +24,7 @@ export class AppNotifications extends Component {
     try {
       await this.elements.get('failure').wait();
       return true;
-    } catch (err) {
+    } catch {
       return false;
     }
   }

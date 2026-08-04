@@ -67,9 +67,8 @@ defineFeature(feature, (test) => {
     when(
       'I register with valid account details accepting marketing emails',
       async () => {
-        createUserResponse = await application.user.createUser(
-          createUserCommand,
-        );
+        createUserResponse =
+          await application.user.createUser(createUserCommand);
 
         addEmailToListResponse = await application.marketing.addEmailToList({
           email: createUserCommand.email,
@@ -112,9 +111,8 @@ defineFeature(feature, (test) => {
     when(
       'I register with valid account details declining marketing emails',
       async () => {
-        createUserResponse = await application.user.createUser(
-          createUserCommand,
-        );
+        createUserResponse =
+          await application.user.createUser(createUserCommand);
       },
     );
 

@@ -7,7 +7,7 @@
     "clean": "rimraf dist tsconfig.tsbuildinfo",
     "build": "tsc && vite build",
     "dev": "vite",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --max-warnings 0",
     "preview": "vite preview",
     "test:e2e": "jest -c jest.config.e2e.ts --detectOpenHandles"
   },
@@ -29,8 +29,6 @@
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@vitejs/plugin-react": "^4.2.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.4",
     "puppeteer": "^24.42.0",
     "vite": "^5.0.0"
   }
