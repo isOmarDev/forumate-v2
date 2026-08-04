@@ -18,11 +18,7 @@
     "test:dev": "tsx run-jest.ts --watchAll",
     "test:e2e": "tsx run-jest.ts -c jest.config.e2e.ts",
     "test:infra": "tsx run-jest.ts -c jest.config.infra.ts",
-    "test:unit": "tsx run-jest.ts -c jest.config.unit.ts",
-    "start:db": "docker-compose up -d",
-    "stop:db": "docker-compose down",
-    "stop:db:volumes": "docker-compose down -v",
-    "db:logs": "docker-compose logs -f"
+    "test:unit": "tsx run-jest.ts -c jest.config.unit.ts"
   },
   "dependencies": {
     "@forumate/api": "workspace:*",
