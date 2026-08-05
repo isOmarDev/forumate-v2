@@ -1,7 +1,7 @@
+export { CustomError } from './custom';
+export { ApplicationErrors, type ApplicationEntity } from './application';
+export { ServerErrors } from './server';
 
-// TODO: Lets call this an ApplicationError
-
-
-// export type GenericApplicationOrServerError = 
-//   ApplicationErrors.AnyApplicationError
-// | ServerErrors.AnyServerError;
+export type GenericApplicationOrServerError =
+  | import('./application').ApplicationErrors.AnyApplicationError
+  | import('./server').ServerErrors.AnyServerError;
