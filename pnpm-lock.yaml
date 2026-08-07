@@ -197,6 +197,9 @@ importers:
 
   packages/database:
     dependencies:
+      '@forumate/config':
+        specifier: workspace:*
+        version: link:../config
       '@prisma/adapter-pg':
         specifier: ^7.3.0
         version: 7.9.1
