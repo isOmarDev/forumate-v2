@@ -1,8 +1,8 @@
-// import { Config } from '@forumate/config';
-import { Database } from '../src';
+import '../scripts/load-environment';
 
-// const config = Config();
-const database = new Database();
+import { PrismaDatabase } from '../src';
+
+const database = new PrismaDatabase();
 const prisma = database.getClient();
 
 async function main() {

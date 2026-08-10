@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-import { ApiResponse, GenericErrors } from './index';
+import { ApiResponse, GenericErrors } from '.';
 
 export type EmailSubscriber = { email: string };
 
 type EmailNotAddedToMailListError = 'EmailNotAddedToMailList';
+
 export type AddEmailToListErrors = EmailNotAddedToMailListError | GenericErrors;
 export type AddEmailToListResponse = ApiResponse<
   { subscription: EmailSubscriber },
@@ -25,7 +26,15 @@ export const createMarketingApi = (apiUrl: string) => {
         if (axios.isAxiosError(error) && error.response) {
           return error.response.data as AddEmailToListResponse;
         }
-        throw new Error('Network or server unreachable', { cause: error });
+
+        return {
+          data: null,
+          error: {
+            message: 'Network or server unreachable',
+            code: 'NetworkError',
+          },
+          success: false,
+        };
       }
     },
   };

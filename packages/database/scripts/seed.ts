@@ -1,10 +1,9 @@
-// import { Config } from '@forumate/config';
-import { Database } from '../src';
+import '../scripts/load-environment';
 
-// const config = Config();
-const database = new Database();
+import { PrismaDatabase } from '../src';
+
+const database = new PrismaDatabase();
 const prisma = database.getClient();
-
 async function main() {
   console.log('Starting seed...');
 
@@ -12,8 +11,8 @@ async function main() {
   const [member1, member2, member3] = await Promise.all([
     prisma.member.create({
       data: {
-        id: 1,
-        userId: 1,
+        id: 'seed-member-1',
+        userId: 'auth0|seed-user-1',
         username: 'seeduser',
         reputationLevel: 'Level1',
         lastUpdated: new Date(),
@@ -21,8 +20,8 @@ async function main() {
     }),
     prisma.member.create({
       data: {
-        id: 2,
-        userId: 2,
+        id: 'seed-member-2',
+        userId: 'auth0|seed-user-2',
         username: 'alice_ddd',
         reputationLevel: 'Level1',
         lastUpdated: new Date(),
@@ -30,8 +29,8 @@ async function main() {
     }),
     prisma.member.create({
       data: {
-        id: 3,
-        userId: 3,
+        id: 'seed-member-3',
+        userId: 'auth0|seed-user-3',
         username: 'bob_developer',
         reputationLevel: 'Level1',
         lastUpdated: new Date(),
@@ -48,7 +47,7 @@ async function main() {
   const posts = await Promise.all([
     prisma.post.create({
       data: {
-        id: 1,
+        id: 'seed-post-1',
         memberId: member1.id,
         postType: 'text',
         title: 'Introduction to Domain-Driven Design',
@@ -67,7 +66,7 @@ async function main() {
     }),
     prisma.post.create({
       data: {
-        id: 2,
+        id: 'seed-post-2',
         memberId: member1.id,
         postType: 'text',
         title: 'How to implement Value Objects?',
@@ -86,7 +85,7 @@ async function main() {
     }),
     prisma.post.create({
       data: {
-        id: 3,
+        id: 'seed-post-3',
         memberId: member1.id,
         postType: 'link',
         title: 'Great Article on Aggregate Design',
@@ -105,7 +104,7 @@ async function main() {
     }),
     prisma.post.create({
       data: {
-        id: 4,
+        id: 'seed-post-4',
         memberId: member1.id,
         postType: 'text',
         title: 'Event Sourcing vs Traditional Architecture',
@@ -124,7 +123,7 @@ async function main() {
     }),
     prisma.post.create({
       data: {
-        id: 5,
+        id: 'seed-post-5',
         memberId: member1.id,
         postType: 'text',
         title: 'Best Practices for Domain Events',

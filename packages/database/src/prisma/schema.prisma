@@ -8,64 +8,111 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id        Int    @id @default(autoincrement())
-  email     String @unique
-  firstName String
-  lastName  String
-  username  String
-  password  String
+enum MemberReputationLevel {
+  Level1 @map("Level 1")
+  Level2 @map("Level 2")
+  Level3 @map("Level 3")
+}
 
-  // Define a one-to-one relationship with Member
-  member Member?
+enum PostType {
+  text @map("text")
+  link @map("link")
 }
 
 model Member {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
 
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   Int       @unique // relation scalar field (used in the `@relation` attribute above)
-  posts    Post[]
-  votes    Vote[]
-  comments Comment[]
+  userId          String                @unique // relation scalar field (used in the `@relation` attribute above)
+  posts           Post[]
+  postVotes       PostVote[]
+  commentVotes    CommentVote[]
+  comments        Comment[]
+  username        String                @unique
+  reputationScore Int                   @default(0)
+  reputationLevel MemberReputationLevel @default(Level1)
+
+  dateCreated DateTime @default(now())
+  lastUpdated DateTime @updatedAt
 }
 
 model Post {
-  id             Int       @id @default(autoincrement())
-  memberPostedBy Member    @relation(fields: [memberId], references: [id])
-  memberId       Int // Foreign key to the Member table
-  postType       String // 'Text' or 'Link'
+  id             String     @id @default(uuid())
+  memberPostedBy Member     @relation(fields: [memberId], references: [id])
+  memberId       String // Foreign key to the Member table
+  postType       PostType
   title          String
-  content        String
+  content        String?
+  link           String?
   comments       Comment[]
-  dateCreated    DateTime  @default(now())
-  votes          Vote[]
+  dateCreated    DateTime   @default(now())
+  lastUpdated    DateTime   @updatedAt
+  postVotes      PostVote[]
+  voteScore      Int        @default(0)
+  slug           String
 }
 
 model Comment {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
 
   // Foreign key relation to the Post table
-  postId Int // Foreign key to the Post table
+  postId String // Foreign key to the Post table
   post   Post   @relation(fields: [postId], references: [id])
   text   String
 
-  memberId       Int // Foreign key to the Member table
+  memberId       String // Foreign key to the Member table
   memberPostedBy Member @relation(fields: [memberId], references: [id])
 
-  parentCommentId Int?
+  parentCommentId String?
   parentComment   Comment?  @relation("Replies", fields: [parentCommentId], references: [id])
   replyComments   Comment[] @relation("Replies")
+
+  dateCreated  DateTime      @default(now())
+  lastUpdated  DateTime      @updatedAt
+  commentVotes CommentVote[]
+  voteScore    Int           @default(0)
 }
 
-model Vote {
-  id Int @id @default(autoincrement())
+model PostVote {
+  id String @id @default(uuid())
 
-  postId        Int // Foreign key to the Post table
-  postBelongsTo Post @relation(fields: [postId], references: [id])
+  postId        String // Foreign key to the Post table
+  postBelongsTo Post   @relation(fields: [postId], references: [id])
 
-  memberId       Int // Foreign key to the Member table
+  memberId       String // Foreign key to the Member table
   memberPostedBy Member @relation(fields: [memberId], references: [id])
 
-  voteType String // 'Upvote' or 'Downvote'
+  value Int @default(0)
+
+  dateCreated DateTime @default(now())
+  lastUpdated DateTime @updatedAt
+
+  @@unique([memberId, postId])
+}
+
+model CommentVote {
+  id String @id @default(uuid())
+
+  commentId        String // Foreign key to the Comment table
+  commentBelongsTo Comment @relation(fields: [commentId], references: [id])
+
+  memberId       String // Foreign key to the Member table
+  memberPostedBy Member @relation(fields: [memberId], references: [id])
+
+  value Int @default(0)
+
+  dateCreated DateTime @default(now())
+  lastUpdated DateTime @updatedAt
+
+  @@unique([memberId, commentId])
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  aggregateId String
+  name        String
+  status      String   @default("INITIAL")
+  retries     Int      @default(0)
+  data        String
+  dateCreated DateTime @default(now())
+  lastUpdated DateTime @updatedAt
 }

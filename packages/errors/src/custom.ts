@@ -15,8 +15,10 @@ type ErrorType =
   | 'GenericServerError';
 
 export class CustomError extends Error {
-  public type: ErrorType;
-  constructor(message: string, type: ErrorType = 'CustomError') {
+  constructor(
+    message: string,
+    public type: ErrorType = 'CustomError',
+  ) {
     super(message);
     this.type = type;
   }

@@ -10,11 +10,12 @@
   },
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",
-    "generate": "tsx prepareEnv.ts prisma generate",
-    "migrate": "tsx prepareEnv.ts prisma migrate dev",
-    "seed": "tsx prepareEnv.ts prisma db seed",
-    "reset": "tsx prepareEnv.ts prisma migrate reset",
-    "studio": "prisma studio"
+    "generate": "tsx scripts/generate-prisma.ts",
+    "migrate": "tsx scripts/migrate-prisma.ts",
+    "seed": "tsx scripts/seed",
+    "reset": "tsx scripts/reset.ts",
+    "migrate:reset": "tsx scripts/migrate-reset-prisma.ts",
+    "studio": "tsx scripts/prisma-studio.ts"
   },
   "dependencies": {
     "@forumate/config": "workspace:*",

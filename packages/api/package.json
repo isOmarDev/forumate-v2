@@ -18,6 +18,18 @@
     "./marketing": {
       "types": "./src/marketing.ts",
       "default": "./src/marketing.ts"
+    },
+    "./members": {
+      "types": "./src/members.ts",
+      "default": "./src/members.ts"
+    },
+    "./comments": {
+      "types": "./src/comments.ts",
+      "default": "./src/comments.ts"
+    },
+    "./votes": {
+      "types": "./src/votes.ts",
+      "default": "./src/votes.ts"
     }
   },
   "scripts": {
@@ -28,6 +40,9 @@
   "dependencies": {
     "@faker-js/faker": "^9.9.0",
     "@forumate/database": "workspace:*",
-    "axios": "^1.6.2"
+    "@forumate/core": "workspace:*",
+    "@forumate/errors": "workspace:*",
+    "axios": "^1.6.2",
+    "zod": "^3.25.76"
   }
 }

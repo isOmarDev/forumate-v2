@@ -166,12 +166,21 @@ importers:
       '@faker-js/faker':
         specifier: ^9.9.0
         version: 9.9.0
+      '@forumate/core':
+        specifier: workspace:*
+        version: link:../core
       '@forumate/database':
         specifier: workspace:*
         version: link:../database
+      '@forumate/errors':
+        specifier: workspace:*
+        version: link:../errors
       axios:
         specifier: ^1.6.2
         version: 1.18.1(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
 
   packages/config:
     dependencies:

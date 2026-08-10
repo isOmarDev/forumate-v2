@@ -1,6 +1,9 @@
-import { createUsersApi } from './users';
+import { createCommentsApi } from './comments';
 import { createMarketingApi } from './marketing';
+import { createMembersApi } from './members';
 import { createPostsApi } from './posts';
+import { createUsersApi } from './users';
+import { createVotesApi } from './votes';
 
 export type Error<U> = {
   message: string;
@@ -24,5 +27,24 @@ export const createApiClient = (apiUrl: string) => {
     users: createUsersApi(apiUrl),
     posts: createPostsApi(apiUrl),
     marketing: createMarketingApi(apiUrl),
+    members: createMembersApi(apiUrl),
+    comments: createCommentsApi(apiUrl),
+    votes: createVotesApi(apiUrl),
   };
 };
+
+export const getAuthHeaders = (token?: string) => ({
+  headers: token
+    ? {
+        Authorization: `Bearer ${token}`,
+      }
+    : {},
+});
+
+export type ApiClient = ReturnType<typeof createApiClient>;
+
+export * from './users';
+export * from './marketing';
+export * from './posts';
+export * from './members';
+export * from './comments';
