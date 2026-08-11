@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import { CommentPosted } from './commentPosted';
+import { CommentPosted } from './comment-posted';
 import { AggregateRoot } from '@forumate/core';
 import { Comment as CommentModel } from '@forumate/database';
 import { ValidationError } from '@forumate/errors/application';

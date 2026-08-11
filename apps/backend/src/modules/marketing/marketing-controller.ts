@@ -1,5 +1,5 @@
 import express from 'express';
-import { MarketingService } from './application/marketingService';
+import { MarketingService } from './application/marketing-service';
 import { ErrorHandler } from '../../shared/errors';
 import { AddEmailToListResponse } from '@forumate/api';
 

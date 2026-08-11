@@ -6,8 +6,8 @@ import {
   setupLevel1Member,
   setupLevel2Member,
 } from '../../fixtures/e2e/members';
+import { Config } from '../../../src/shared/config';
 import { createApiClient } from '@forumate/api';
-import { Config } from '@forumate/config';
 
 jest.setTimeout(30000);
 
@@ -15,9 +15,9 @@ describe('posts', () => {
   let databaseFixture: DatabaseFixture;
   const apiClient = createApiClient('http://localhost:3000');
   let appComposition: CompositionRoot;
-  const config: Config = Config();
 
   beforeAll(async () => {
+    const config: Config = new Config('test:e2e');
     appComposition = CompositionRoot.createCompositionRoot(config);
     databaseFixture = new DatabaseFixture(appComposition);
     await appComposition.start();

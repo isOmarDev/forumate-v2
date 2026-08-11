@@ -1,10 +1,10 @@
 import { WebServer } from '../../shared/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
-import { ContactListAPISpy } from './adapters/contactListAPI/contactListSpy';
-import { MailchimpContactList } from './adapters/contactListAPI/mailChimpContactList';
+import { ContactListAPISpy } from './adapters/contact-list-api/contact-list-spy';
+import { MailchimpContactList } from './adapters/contact-list-api/mail-chimp-contact-list';
 import { MarketingController } from './marketing-controller';
 import { marketingErrorHandler } from './marketing-errors';
-import { MarketingService } from './application/marketingService';
+import { MarketingService } from './application/marketing-service';
 import { ContactListApi } from './ports/contact-list-api';
 import { Config } from '../../shared/config';
 

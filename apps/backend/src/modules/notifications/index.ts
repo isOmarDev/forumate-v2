@@ -1,1 +1,1 @@
-export * from './notificationsModule';
+export * from './notifications-module';

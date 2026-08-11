@@ -1,11 +1,11 @@
-import { CommentRepository } from '../repos/ports/commentRepository';
+import { CommentRepository } from '../repos/ports/comment-repository';
 import {
   PostComment,
   PostCommentError,
-} from './use-cases/postComment/postComment';
+} from './use-cases/post-comment/post-comment';
 import { Comment } from '../domain/comment';
-import { PostsRepository } from '../../posts/repos/ports/postsRepository';
-import { MembersRepository } from '../../members/repos/ports/membersRepository';
+import { PostsRepository } from '../../posts/repos/ports/posts-repository';
+import { MembersRepository } from '../../members/repos/ports/members-repository';
 import { Result } from '@forumate/core';
 import { PostCommentCommand } from '@forumate/api';
 import { EventBus } from '@forumate/bus';

@@ -1,7 +1,7 @@
-import { CommentsModule } from '../../modules/comments/commentsModule';
-import { MembersModule } from '../../modules/members/membersModule';
-import { VotesModule } from '../../modules/votes/votesModule';
-import { Application } from '../application/applicationInterface';
+import { CommentsModule } from '../../modules/comments/comments-module';
+import { MembersModule } from '../../modules/members/members-module';
+import { VotesModule } from '../../modules/votes/votes-module';
+import { Application } from '../application/application-interface';
 import { WebServer } from '../http';
 import {
   MarketingModule,

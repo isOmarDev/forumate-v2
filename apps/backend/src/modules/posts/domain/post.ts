@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 
-import { PostCreated } from './postCreated';
-import { PostSlug } from './postSlug';
+import { PostCreated } from './post-created';
+import { PostSlug } from './post-slug';
 import { AggregateRoot } from '@forumate/core';
 import { CreatePostInput, PostType } from '@forumate/api/posts';
 import { ValidationError } from '@forumate/errors/application';
