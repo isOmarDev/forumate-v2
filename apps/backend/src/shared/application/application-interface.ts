@@ -1,9 +1,13 @@
-import { MarketingService } from '../../modules/marketing/marketing-service';
-import { PostService } from '../../modules/post/post-service';
-import { UserService } from '../../modules/user/user-service';
+import { MarketingService } from '../../modules/marketing/application/marketingService';
+import { NotificationsService } from '../../modules/notifications/application/notificationsService';
+import { PostsService } from '../../modules/posts/application/postsService';
+import { UserIdentityService } from '../../modules/users/application/userIdentityService';
+import { VotesService } from '../../modules/votes/application/votesService';
 
-export interface IApplication {
-  user: UserService;
+export interface Application {
+  users: UserIdentityService;
+  posts: PostsService;
   marketing: MarketingService;
-  post: PostService;
+  notifications: NotificationsService;
+  votes: VotesService;
 }

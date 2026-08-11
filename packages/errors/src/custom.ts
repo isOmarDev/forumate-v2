@@ -17,9 +17,9 @@ type ErrorType =
 export class CustomError extends Error {
   constructor(
     message: string,
-    public type: ErrorType = 'CustomError',
+    public code: ErrorType = 'CustomError',
   ) {
     super(message);
-    this.type = type;
+    this.code = code;
   }
 }

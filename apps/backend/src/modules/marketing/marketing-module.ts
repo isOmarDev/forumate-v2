@@ -1,21 +1,21 @@
-import { MarketingService } from './marketing-service';
-import { MarketingController } from './marketing-controller';
-import { MarketingErrors } from './marketing-errors';
-import { IContactListApi } from './ports/contact-list-api';
-import { MailchimpContactList } from './adapters/mailchimp-contact-list';
-import { ContactListApiSpy } from './adapters/contact-list-api-spy';
-import WebServer from '../../shared/server';
+import { WebServer } from '../../shared/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
+import { ContactListAPISpy } from './adapters/contactListAPI/contactListSpy';
+import { MailchimpContactList } from './adapters/contactListAPI/mailChimpContactList';
+import { MarketingController } from './marketing-controller';
+import { marketingErrorHandler } from './marketing-errors';
+import { MarketingService } from './application/marketingService';
+import { ContactListApi } from './ports/contact-list-api';
 import { Config } from '../../shared/config';
 
 export class MarketingModule extends ApplicationModule {
-  private contactListApi: IContactListApi;
   private marketingService: MarketingService;
   private marketingController: MarketingController;
+  private contactListAPI: ContactListApi;
 
   private constructor(config: Config) {
     super(config);
-    this.contactListApi = this.createContactListApi();
+    this.contactListAPI = this.buildContactListAPI();
     this.marketingService = this.createMarketingService();
     this.marketingController = this.createMarketingController();
   }
@@ -24,34 +24,37 @@ export class MarketingModule extends ApplicationModule {
     return new MarketingModule(config);
   }
 
-  private createContactListApi() {
+  private createMarketingService() {
+    return new MarketingService(this.contactListAPI);
+  }
+
+  private createMarketingController() {
+    return new MarketingController(
+      this.marketingService,
+      marketingErrorHandler,
+    );
+  }
+
+  private buildContactListAPI() {
     if (this.config.script === 'test:unit') {
-      return new ContactListApiSpy();
+      return new ContactListAPISpy();
     }
     return new MailchimpContactList();
   }
 
-  private createMarketingService() {
-    return new MarketingService(this.contactListApi);
-  }
-
-  private createMarketingController() {
-    return new MarketingController(this.marketingService, MarketingErrors);
-  }
-
-  getContactListApi() {
-    return this.contactListApi;
-  }
-
-  getMarketingService() {
-    return this.marketingService;
-  }
-
-  getMarketingController() {
+  public getMarketingController() {
     return this.marketingController;
   }
 
-  mountRouter(server: WebServer) {
-    server.mountRouter('/marketing', this.marketingController.getRouter());
+  public mountRouter(webServer: WebServer) {
+    webServer.mountRouter('/marketing', this.marketingController.getRouter());
+  }
+
+  public getMarketingService() {
+    return this.marketingService;
+  }
+
+  public getContactListAPI() {
+    return this.contactListAPI;
   }
 }

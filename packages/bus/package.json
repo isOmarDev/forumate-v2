@@ -1,5 +1,5 @@
 {
-  "name": "@forumate/api",
+  "name": "@forumate/bus",
   "description": "Event bus to subscribe and write to.",
   "private": true,
   "version": "1.0.0",

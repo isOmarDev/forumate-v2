@@ -1,3 +1,3 @@
-export interface IContactListApi {
-  addEmailToList(email: string): Promise<string>;
+export interface ContactListApi {
+  addEmailToList(email: string): Promise<boolean>;
 }

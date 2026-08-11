@@ -219,8 +219,9 @@ export const createPostsApi = (apiURL: string) => {
         if (axios.isAxiosError(error) && error.response) {
           return error.response.data as GetPostsApiResponse;
         }
+
         return {
-          data: [],
+          data: null,
           error: { code: '', message: '' },
           success: false,
         };

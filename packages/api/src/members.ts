@@ -19,6 +19,14 @@ export const ReputationLevel = {
 export type ReputationLevel =
   (typeof ReputationLevel)[keyof typeof ReputationLevel];
 
+// Inputs
+export type CreateMemberInput = {
+  username: string;
+  email: string;
+  userId: string;
+};
+
+// DTOs
 export type MemberDTO = {
   userId: string;
   memberId: string;
@@ -27,12 +35,7 @@ export type MemberDTO = {
   reputationScore: number;
 };
 
-export type CreateMemberInput = {
-  username: string;
-  email: string;
-  userId: string;
-};
-
+// Commands
 export class CreateMemberCommand {
   private constructor(public readonly props: CreateMemberInput) {}
 
@@ -73,24 +76,26 @@ export class CreateMemberCommand {
   }
 }
 
+// Errors
 export type UsernameAlreadyTakenError = 'UsernameAlreadyTaken';
 
 export type CreateMemberError = UsernameAlreadyTakenError;
 
 export type AnyMemberError =
-  CreateMemberError | AnyApplicationError['type'] | AnyServerError['type'];
+  CreateMemberError | AnyApplicationError['code'] | AnyServerError['code'];
 
 export type CreateMemberApiResponse = ApiResponse<
   MemberDTO,
   CreateMemberError | 'NetworkError'
 >;
 
+// Api responses
 export type GetMemberDetailsApiResponse = ApiResponse<
   MemberDTO,
   AnyMemberError
 >;
 
-export type AnyMemberAPIResponse = CreateMemberApiResponse;
+export type AnyMemberApiResponse = CreateMemberApiResponse;
 
 export const createMembersApi = (apiURL: string) => {
   return {

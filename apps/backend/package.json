@@ -14,7 +14,11 @@
   },
   "dependencies": {
     "@forumate/api": "workspace:*",
+    "@forumate/bus": "workspace:*",
+    "@forumate/config": "workspace:*",
+    "@forumate/core": "workspace:*",
     "@forumate/database": "workspace:*",
+    "@forumate/errors": "workspace:*",
     "cors": "^2.8.6",
     "express": "^5.2.1"
   },

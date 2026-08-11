@@ -24,4 +24,14 @@ export class Config {
   get apiUrl() {
     return this._apiUrl;
   }
+
+  get auth0() {
+    // Todo: build the env check abstraction
+    return {
+      domain: process.env.AUTH0_DOMAIN as string,
+      clientId: process.env.AUTH0_CLIENT_ID as string,
+      clientSecret: process.env.AUTH0_CLIENT_SECRET as string,
+      audience: process.env.AUTH0_AUDIENCE as string,
+    };
+  }
 }

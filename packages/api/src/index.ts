@@ -10,11 +10,17 @@ export type Error<U> = {
   code: U;
 };
 
-export type ApiResponse<T, U extends string> = {
-  success: boolean;
-  data: T | null;
-  error: Error<U> | undefined;
-};
+export type ApiResponse<T, U extends string> =
+  | {
+      success: true;
+      data: T;
+      error: null;
+    }
+  | {
+      success: false;
+      data: null;
+      error: Error<U>;
+    };
 
 export type ValidationError = 'ValidationError';
 export type ServerError = 'ServerError';
@@ -48,3 +54,4 @@ export * from './marketing';
 export * from './posts';
 export * from './members';
 export * from './comments';
+export * from './votes';

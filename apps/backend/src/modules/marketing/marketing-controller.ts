@@ -1,44 +1,46 @@
-import express, { Request, Response, NextFunction, Router } from 'express';
-
-import { AddEmailToListDTO } from './marketing-dto';
-import { MarketingService } from './marketing-service';
-import { MarketingErrors } from './marketing-errors';
+import express from 'express';
+import { MarketingService } from './application/marketingService';
+import { ErrorHandler } from '../../shared/errors';
+import { AddEmailToListResponse } from '@forumate/api';
 
 export class MarketingController {
-  private readonly router: Router;
+  private router: express.Router;
 
   constructor(
     private marketingService: MarketingService,
-    private marketingErrors: typeof MarketingErrors,
+    private errorHandler: ErrorHandler,
   ) {
     this.router = express.Router();
     this.setupRoutes();
-    this.setupErrorExceptionHandler();
-  }
-
-  private setupRoutes() {
-    this.router.post('/', this.addEmailToList.bind(this));
-  }
-
-  private setupErrorExceptionHandler() {
-    this.router.use(this.marketingErrors.handle);
+    this.setupErrorHandler();
   }
 
   getRouter() {
     return this.router;
   }
 
-  async addEmailToList(req: Request, res: Response, next: NextFunction) {
-    const body = AddEmailToListDTO.validateRequest(req.body);
+  private setupRoutes() {
+    this.router.post('/new', this.addEmailToList.bind(this));
+  }
 
-    await this.marketingService.addEmailToList(body);
+  private setupErrorHandler() {
+    this.router.use(this.errorHandler);
+  }
 
+  private async addEmailToList(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) {
     try {
-      return res.status(201).json({
-        error: undefined,
-        data: { subscription: { email: body.email } },
+      const email = req.body.email;
+      const result = await this.marketingService.addEmailToList(email);
+      const response: AddEmailToListResponse = {
         success: true,
-      });
+        data: result,
+        error: {},
+      };
+      return res.status(201).json(response);
     } catch (error) {
       next(error);
     }
