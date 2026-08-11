@@ -38,7 +38,7 @@ export class MailjetTransactionalEmail implements TransactionalEmailApi {
       });
 
       return true;
-    } catch (err) {
+    } catch (err: unknown) {
       return false;
     }
   }
