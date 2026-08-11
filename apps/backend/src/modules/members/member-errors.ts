@@ -12,7 +12,7 @@ export function membersErrorHandler(
 ): Response<AnyMemberApiResponse> {
   // Updated return type
 
-  const errorType = (error as AnyApplicationError).type;
+  const errorType = (error as AnyApplicationError).code;
 
   switch (errorType) {
     case 'PermissionError':

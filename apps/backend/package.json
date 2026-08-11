@@ -10,7 +10,8 @@
     "test:dev": "tsx run-jest.ts --watchAll",
     "test:e2e": "tsx run-jest.ts -c jest.config.e2e.ts",
     "test:infra": "tsx run-jest.ts -c jest.config.infra.ts",
-    "test:unit": "tsx run-jest.ts -c jest.config.unit.ts"
+    "test:unit": "tsx run-jest.ts -c jest.config.unit.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@forumate/api": "workspace:*",
@@ -40,4 +41,3 @@
     "tsx": "^4.21.0"
   }
 }
-  

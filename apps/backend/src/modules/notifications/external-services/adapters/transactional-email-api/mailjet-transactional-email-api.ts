@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import {
   SendMailInput,
   TransactionalEmailApi,
-} from '../../ports/transactional-email-Api';
+} from '../../ports/transactional-email-api';
 
 const mailSettings = {
   service: process.env.MAIL_SENDER_SERVICE || 'gmail',

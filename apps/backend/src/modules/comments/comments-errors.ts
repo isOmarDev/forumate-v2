@@ -9,7 +9,7 @@ export function commentsErrorHandler(
   res: Response,
   _next: NextFunction,
 ): Response<GetCommentsByPostIdApiResponse> {
-  const errorType = (error as AnyApplicationError).type;
+  const errorType = (error as AnyApplicationError).code;
 
   switch (errorType) {
     case 'PermissionError':

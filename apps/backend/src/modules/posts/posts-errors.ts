@@ -12,7 +12,7 @@ export function postsErrorHandler(
   res: Response,
   _next: NextFunction,
 ): Response<AnyPostsApiResponse> {
-  const errorType = (error as AnyApplicationError).type;
+  const errorType = (error as AnyApplicationError).code;
 
   switch (errorType) {
     case 'PermissionError':

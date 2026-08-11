@@ -1,4 +1,4 @@
-import { PostComment } from '../../../src/modules/comments/application/use-cases/postComment/postComment';
+import { PostComment } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment';
 import { Post } from '../../../src/modules/posts/domain/post';
 
 export function withExistingPostByRandomMember(useCase: PostComment) {

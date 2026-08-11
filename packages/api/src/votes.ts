@@ -89,7 +89,7 @@ export class VoteOnPostCommand {
 // Api Responses
 export type VoteOnPostApiResponse = ApiResponse<
   PostVoteDTO,
-  VoteErrors['type']
+  VoteErrors['code']
 >;
 
 export type AnyVotesApiResponse = VoteOnPostApiResponse;

@@ -112,7 +112,7 @@ export type CreateUserErrors =
   | AnyServerError;
 
 // Api Responses
-export type CreateUserResponse = ApiResponse<UserDTO, CreateUserErrors['type']>;
+export type CreateUserResponse = ApiResponse<UserDTO, CreateUserErrors['code']>;
 
 export type UserNotFoundError = 'UserNotFound';
 export type GetUserByEmailErrors = UserNotFoundError;
@@ -122,7 +122,7 @@ export type GetUserErrors = GetUserByEmailErrors;
 
 export type UserResponse = ApiResponse<
   CreateUserResponse | GetUserByEmailResponse | null,
-  GetUserErrors | AnyServerError['type'] | AnyApplicationError['type']
+  GetUserErrors | AnyServerError['code'] | AnyApplicationError['code']
 >;
 
 type AuthenticateResponse = any;

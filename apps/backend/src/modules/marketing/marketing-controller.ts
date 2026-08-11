@@ -36,9 +36,9 @@ export class MarketingController {
       const email = req.body.email;
       const result = await this.marketingService.addEmailToList(email);
       const response: AddEmailToListResponse = {
-        success: true,
         data: result,
-        error: {},
+        success: true,
+        error: null,
       };
       return res.status(201).json(response);
     } catch (error) {

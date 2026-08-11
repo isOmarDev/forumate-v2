@@ -28,8 +28,8 @@ export function userErrorHandler(
 
   // Handle validation errors
   if (
-    error.type === 'InvalidRequestBodyError' ||
-    error.type === 'InvalidParamsError'
+    error.code === 'InvalidRequestBodyError' ||
+    error.code === 'InvalidParamsError'
   ) {
     return res.status(400).json({
       success: false,
@@ -46,10 +46,7 @@ export function userErrorHandler(
     responseBody = {
       success: false,
       data: null,
-      error: {
-        message: 'not found',
-        code: new NotFoundError(error.missingEntityType || 'user'),
-      },
+      error: new NotFoundError(error.missingEntityType || 'user'),
     };
     return res.status(404).json(responseBody);
   }
@@ -59,10 +56,7 @@ export function userErrorHandler(
     responseBody = {
       success: false,
       data: null,
-      error: {
-        message: 'Email Already In Use Exception',
-        code: new ConflictError('user', error.message),
-      },
+      error: new ConflictError('user', error.message),
     };
     return res.status(409).json(responseBody);
   }
@@ -71,10 +65,7 @@ export function userErrorHandler(
     responseBody = {
       success: false,
       data: null,
-      error: {
-        message: 'User Not Found',
-        code: new NotFoundError('user', error.message),
-      },
+      error: new NotFoundError('user', error.message),
     };
     return res.status(404).json(responseBody);
   }
@@ -83,10 +74,7 @@ export function userErrorHandler(
   responseBody = {
     success: false,
     data: null,
-    error: {
-      message: 'server error',
-      code: new GenericServerError(error.message),
-    },
+    error: new GenericServerError(error.message),
   };
 
   return res.status(500).json(responseBody);

@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import { auth } from 'firebase-admin';
 import { initializeApp, cert } from 'firebase-admin/app';
@@ -15,10 +16,15 @@ export class FirebaseAuth implements IdentityServiceApi {
   }
 
   initialize() {
-    initializeApp({
-      credential: cert(
-        import(path.join(__dirname, '../../../../../service-key.json')),
+    const serviceAccount = JSON.parse(
+      fs.readFileSync(
+        path.join(__dirname, '../../../../../service-key.json'),
+        'utf8',
       ),
+    );
+
+    initializeApp({
+      credential: cert(serviceAccount),
     });
   }
 
@@ -32,7 +38,7 @@ export class FirebaseAuth implements IdentityServiceApi {
         name: userRecord.displayName || '',
       };
     } catch (error) {
-      if ((error as any).code === 'auth/user-not-found') {
+      if ((error as { code?: string }).code === 'auth/user-not-found') {
         return new NotFoundError('user');
       }
       throw error;
@@ -49,7 +55,7 @@ export class FirebaseAuth implements IdentityServiceApi {
         name: userRecord.displayName || '',
       };
     } catch (error) {
-      if ((error as any).code === 'auth/user-not-found') {
+      if ((error as { code?: string }).code === 'auth/user-not-found') {
         return new NotFoundError('user');
       }
       throw error;

@@ -82,8 +82,9 @@ export class PostsController {
       );
 
       const response: CreatePostApiResponse = {
-        success: true,
         data: postDetails?.toDTO(),
+        success: true,
+        error: null,
       };
 
       return res.status(200).json(response);
