@@ -70,7 +70,7 @@ importers:
     dependencies:
       '@forumate/api':
         specifier: workspace:*
-        version: link:../../packages/api
+        version: link:../../packages/bus
       '@forumate/database':
         specifier: workspace:*
         version: link:../../packages/database
@@ -116,7 +116,7 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@18.3.31)(react@18.3.1)(supports-color@5.5.0))(@types/react@18.3.31)(react@18.3.1)(supports-color@5.5.0)
       '@forumate/api':
         specifier: workspace:*
-        version: link:../../packages/api
+        version: link:../../packages/bus
       axios:
         specifier: ^1.6.2
         version: 1.18.1(debug@4.4.3(supports-color@5.5.0))(supports-color@5.5.0)
@@ -181,6 +181,15 @@ importers:
       zod:
         specifier: ^3.25.76
         version: 3.25.76
+
+  packages/bus:
+    dependencies:
+      '@forumate/core':
+        specifier: workspace:*
+        version: link:../core
+      nats:
+        specifier: ^2.29.2
+        version: 2.29.3
 
   packages/config:
     dependencies:
@@ -3151,6 +3160,11 @@ packages:
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
     hasBin: true
 
+  nats@2.29.3:
+    resolution: {integrity: sha512-tOQCRCwC74DgBTk4pWZ9V45sk4d7peoE2njVprMRCBXrhJ5q5cYM7i6W+Uvw2qUrcfOSnuisrX7bEx3b3Wx4QA==}
+    engines: {node: '>= 14.0.0'}
+    deprecated: Package moved. Use @nats-io/transport-node from https://github.com/nats-io/nats.js
+
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
@@ -3164,6 +3178,10 @@ packages:
   netmask@2.1.1:
     resolution: {integrity: sha512-eonl3sLUha+S1GzTPxychyhnUzKyeQkZ7jLjKrBagJgPla13F+uQ71HgpFefyHgqrjEbCPkDArxYsjY8/+gLKA==}
     engines: {node: '>= 0.4.0'}
+
+  nkeys.js@1.1.0:
+    resolution: {integrity: sha512-tB/a0shZL5UZWSwsoeyqfTszONTt4k2YS0tuQioMOD180+MbombYVgzDUYHlx+gejYK6rgf08n/2Df99WY0Sxg==}
+    engines: {node: '>=10.0.0'}
 
   node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
@@ -3894,6 +3912,9 @@ packages:
   turbo@2.10.7:
     resolution: {integrity: sha512-GHx6WExIFSKNJ5qMlzDpXBXlu9ApxaMjqxAVrCNcW94xf/+uqgIz41SAuRUMbXva2ExNAaY/h8V0q90SWSzmRw==}
     hasBin: true
+
+  tweetnacl@1.0.3:
+    resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==}
 
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -7340,6 +7361,10 @@ snapshots:
 
   napi-postinstall@0.3.4: {}
 
+  nats@2.29.3:
+    dependencies:
+      nkeys.js: 1.1.0
+
   natural-compare@1.4.0: {}
 
   negotiator@1.0.0: {}
@@ -7347,6 +7372,10 @@ snapshots:
   neo-async@2.6.2: {}
 
   netmask@2.1.1: {}
+
+  nkeys.js@1.1.0:
+    dependencies:
+      tweetnacl: 1.0.3
 
   node-int64@0.4.0: {}
 
@@ -8166,6 +8195,8 @@ snapshots:
       '@turbo/linux-arm64': 2.10.7
       '@turbo/windows-64': 2.10.7
       '@turbo/windows-arm64': 2.10.7
+
+  tweetnacl@1.0.3: {}
 
   type-check@0.4.0:
     dependencies:
