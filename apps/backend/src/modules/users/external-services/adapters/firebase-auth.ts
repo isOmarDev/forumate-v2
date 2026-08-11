@@ -3,10 +3,10 @@ import { auth } from 'firebase-admin';
 import { initializeApp, cert } from 'firebase-admin/app';
 
 import { User } from '../../domain/user';
-import { IdentityServiceAPI } from '../ports/identity-service-api';
+import { IdentityServiceApi } from '../ports/identity-service-api';
 import { NotFoundError } from '@forumate/errors/application';
 
-export class FirebaseAuth implements IdentityServiceAPI {
+export class FirebaseAuth implements IdentityServiceApi {
   private firebaseAuth: auth.Auth;
 
   constructor() {

@@ -1,6 +1,6 @@
 import { UserIdentityService } from './application/user-identity-service';
 import { ApplicationModule } from '../../shared/modules/application-module';
-import { IdentityServiceAPI } from './external-services/ports/identity-service-api';
+import { IdentityServiceApi } from './external-services/ports/identity-service-api';
 
 import { WebServer } from '../../shared/http';
 import { UsersController } from './users-controller';
@@ -10,23 +10,23 @@ import { Config } from '../../shared/config';
 
 export class UsersModule extends ApplicationModule {
   private usersService: UserIdentityService;
-  private identityServiceAPI: IdentityServiceAPI;
+  private identityServiceApi: IdentityServiceApi;
   private usersController: UsersController;
 
   private constructor(config: Config) {
     super(config);
     // Build external services + repos, then services, then controllers
-    this.identityServiceAPI = this.createIdentityServiceAPI(config);
+    this.identityServiceApi = this.createIdentityServiceApi(config);
     this.usersService = this.createUsersService();
     this.usersController = this.createUsersController(config);
   }
 
-  private createIdentityServiceAPI(config: Config) {
+  private createIdentityServiceApi(config: Config) {
     return new FirebaseAuth();
   }
 
   private createUsersService() {
-    return new UserIdentityService(this.identityServiceAPI);
+    return new UserIdentityService(this.identityServiceApi);
   }
 
   private createUsersController(config: Config) {

@@ -1,12 +1,12 @@
-import { GenericServerError } from '@forumate/errors/server';
 import { ContactListApi } from '../ports/contact-list-api';
+import { GenericServerError } from '@forumate/errors/server';
 
 export class MarketingService {
-  constructor(private contactListAPI: ContactListApi) {}
+  constructor(private contactListApi: ContactListApi) {}
 
   async addEmailToList(email: string) {
     try {
-      const result = await this.contactListAPI.addEmailToList(email);
+      const result = await this.contactListApi.addEmailToList(email);
       return result;
     } catch (err) {
       throw new GenericServerError();

@@ -1,5 +1,5 @@
 import { SendNotificationCommand } from '../../../notification-commands';
-import { TransactionalEmailAPI } from '../../../external-services/ports/transactional-email-api';
+import { TransactionalEmailApi } from '../../../external-services/ports/transactional-email-Api';
 import { Result, UseCase } from '@forumate/core';
 import { NotFoundError } from '@forumate/errors/application';
 import { AnyServerError } from '@forumate/errors/server';
@@ -10,7 +10,7 @@ export class SendNotification implements UseCase<
   SendNotificationCommand,
   Result<void, SendNotificationError>
 > {
-  constructor(transactionalEmailAPI: TransactionalEmailAPI) {}
+  constructor(transactionalEmailApi: TransactionalEmailApi) {}
 
   async execute(
     request: SendNotificationCommand,

@@ -165,12 +165,12 @@ export class CompositionRoot {
     };
   }
 
-  getTransactionalEmailAPI() {
-    return this.notificationsModule.getTransactionalEmailAPI();
+  getTransactionalEmailApi() {
+    return this.notificationsModule.getTransactionalEmailApi();
   }
 
-  getContactListAPI() {
-    return this.marketingModule.getContactListAPI();
+  getContactListApi() {
+    return this.marketingModule.getContactListApi();
   }
 
   getModule(

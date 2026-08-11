@@ -1,14 +1,14 @@
 import { ApplicationModule } from '../../shared/modules/application-module';
 import { NotificationsService } from './application/notifications-service';
 import { NotificationsSubscriptions } from './application/notification-subscriptions';
-import { TransactionalEmailAPISpy } from './external-services/adapters/transactional-email-api/transactional-email-api-spy';
-import { TransactionalEmailAPI } from './external-services/ports/transactional-email-api';
+import { TransactionalEmailApiSpy } from './external-services/adapters/transactional-email-api/transactional-email-api-spy';
+import { TransactionalEmailApi } from './external-services/ports/transactional-email-api';
 import { MailjetTransactionalEmail } from './external-services/adapters/transactional-email-api/mailjet-transactional-email-api';
 import { Config } from '../../shared/config';
 import { EventBus } from '@forumate/bus';
 
 export class NotificationsModule extends ApplicationModule {
-  private transactionalEmailAPI: TransactionalEmailAPI;
+  private transactionalEmailApi: TransactionalEmailApi;
   private notificationsService: NotificationsService;
   private notificationsSubscriptions: NotificationsSubscriptions;
 
@@ -17,7 +17,7 @@ export class NotificationsModule extends ApplicationModule {
     config: Config,
   ) {
     super(config);
-    this.transactionalEmailAPI = this.createTransactionalEmailAPI();
+    this.transactionalEmailApi = this.createTransactionalEmailApi();
     this.notificationsService = this.createNotificationsService();
     this.notificationsSubscriptions = this.createNotificationSubscriptions();
   }
@@ -34,20 +34,20 @@ export class NotificationsModule extends ApplicationModule {
   }
 
   private createNotificationsService() {
-    return new NotificationsService(this.transactionalEmailAPI);
+    return new NotificationsService(this.transactionalEmailApi);
   }
 
   public getNotificationsService() {
     return this.notificationsService;
   }
 
-  public getTransactionalEmailAPI() {
-    return this.transactionalEmailAPI;
+  public getTransactionalEmailApi() {
+    return this.transactionalEmailApi;
   }
 
-  private createTransactionalEmailAPI() {
+  private createTransactionalEmailApi() {
     if (this.config.script === 'test:unit') {
-      return new TransactionalEmailAPISpy();
+      return new TransactionalEmailApiSpy();
     }
     return new MailjetTransactionalEmail();
   }

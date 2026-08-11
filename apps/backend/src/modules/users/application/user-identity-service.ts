@@ -1,14 +1,14 @@
 import { UserNotFoundException } from '../users-exceptions';
 import { UserDetails } from '../domain/user-details';
-import { IdentityServiceAPI } from '../external-services/ports/identity-service-api';
+import { IdentityServiceApi } from '../external-services/ports/identity-service-api';
 import { NotFoundError } from '@forumate/errors/application';
 
 export class UserIdentityService {
-  constructor(private identityServiceAPI: IdentityServiceAPI) {}
+  constructor(private identityServiceApi: IdentityServiceApi) {}
 
   async getUserById(userId: string) {
     try {
-      const user = await this.identityServiceAPI.getUserById(userId);
+      const user = await this.identityServiceApi.getUserById(userId);
       if (user) {
         return user;
       }
@@ -22,7 +22,7 @@ export class UserIdentityService {
   }
 
   async getUserByEmail(email: string) {
-    const prismaUser = await this.identityServiceAPI.findUserByEmail(email);
+    const prismaUser = await this.identityServiceApi.findUserByEmail(email);
     if (!prismaUser) {
       throw new UserNotFoundException(email);
     }
@@ -30,7 +30,7 @@ export class UserIdentityService {
   }
 
   async getUserDetailsByEmail(email: string) {
-    const userModel = await this.identityServiceAPI.findUserByEmail(email);
+    const userModel = await this.identityServiceApi.findUserByEmail(email);
     if (!userModel) {
       throw new UserNotFoundException(email);
     }
