@@ -7,7 +7,9 @@ export class MarketingService {
   async addEmailToList(email: string) {
     try {
       const result = await this.contactListApi.addEmailToList(email);
-      return result;
+      return {
+        subscription: result,
+      };
     } catch (err) {
       throw new GenericServerError();
     }
