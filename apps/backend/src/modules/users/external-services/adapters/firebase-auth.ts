@@ -8,27 +8,37 @@ import { IdentityServiceApi } from '../ports/identity-service-api';
 import { NotFoundError } from '@forumate/errors/application';
 
 export class FirebaseAuth implements IdentityServiceApi {
-  private firebaseAuth: auth.Auth;
+  private firebaseAuth: auth.Auth | null = null;
 
   constructor() {
     this.initialize();
-    this.firebaseAuth = auth();
   }
 
   initialize() {
-    const serviceAccount = JSON.parse(
-      fs.readFileSync(
-        path.join(__dirname, '../../../../../service-key.json'),
-        'utf8',
-      ),
+    const serviceKeyPath = path.join(
+      __dirname,
+      '../../../../../service-key.json',
     );
+
+    if (!fs.existsSync(serviceKeyPath)) {
+      console.warn(
+        'service-key.json not found. Firebase auth will not be initialized.',
+      );
+      return;
+    }
+
+    const serviceAccount = JSON.parse(fs.readFileSync(serviceKeyPath, 'utf8'));
 
     initializeApp({
       credential: cert(serviceAccount),
     });
+    this.firebaseAuth = auth();
   }
 
   async getUserById(userId: string): Promise<User | NotFoundError> {
+    if (!this.firebaseAuth) {
+      return new NotFoundError('user');
+    }
     try {
       const userRecord = await this.firebaseAuth.getUser(userId);
       return {
@@ -46,6 +56,9 @@ export class FirebaseAuth implements IdentityServiceApi {
   }
 
   async findUserByEmail(email: string): Promise<User | NotFoundError> {
+    if (!this.firebaseAuth) {
+      return new NotFoundError('user');
+    }
     try {
       const userRecord = await this.firebaseAuth.getUserByEmail(email);
       return {

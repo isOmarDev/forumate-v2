@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { Server } from 'http';
 import { ProcessService } from '../processes/process-service';
-import { Config } from '@forumate/config';
+import { Config } from '../config';
 
 export class WebServer {
   private express: express.Express;

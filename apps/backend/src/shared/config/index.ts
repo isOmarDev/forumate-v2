@@ -6,11 +6,13 @@ export class Config {
   private readonly _env: Environment;
   private readonly _script: Script;
   private readonly _apiUrl: string;
+  private readonly _port: number;
 
   constructor(script: Script) {
     this._env = (process.env.NODE_ENV as Environment) || 'development';
     this._script = script;
     this._apiUrl = process.env.API_URL || 'http://localhost:3000';
+    this._port = Number(process.env.PORT) || 3000;
   }
 
   get environment() {
@@ -23,6 +25,12 @@ export class Config {
 
   get apiUrl() {
     return this._apiUrl;
+  }
+
+  get webserver() {
+    return {
+      port: this._port,
+    };
   }
 
   get auth0() {

@@ -1,8 +1,8 @@
-import express from 'express';
+import express, { ErrorRequestHandler } from 'express';
+
 import { MemberService } from './application/members-service';
-import { ErrorRequestHandler } from 'express';
+import { Config } from '../../shared/config';
 import { CreateMemberApiResponse, CreateMemberCommand } from '@forumate/api';
-import { Config } from '@forumate/config';
 
 export class MembersController {
   private router: express.Router;

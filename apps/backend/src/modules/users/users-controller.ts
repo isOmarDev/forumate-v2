@@ -3,7 +3,7 @@ import { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
 import { randomUUID } from 'node:crypto';
 
 import { CreateUserCommand, CreateUserResponse, UserDTO } from '@forumate/api';
-import { Config } from '@forumate/config';
+import { Config } from '../../shared/config';
 
 export class UsersController {
   private router: Router;
@@ -50,9 +50,9 @@ export class UsersController {
       };
 
       const response: CreateUserResponse = {
-        success: true,
         data: temporaryUserResponseDTO,
-        error: {},
+        success: true,
+        error: null,
       };
       return res.status(201).json(response);
     } catch (error) {

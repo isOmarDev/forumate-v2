@@ -11,7 +11,7 @@ import {
 } from '../../modules';
 import { InMemoryEventBus, EventBus } from '@forumate/bus';
 import { PrismaDatabase } from '@forumate/database';
-import { Config } from '@forumate/config';
+import { Config } from '../config';
 
 export class CompositionRoot {
   private static instance: CompositionRoot | null = null;
@@ -147,8 +147,7 @@ export class CompositionRoot {
   }
 
   private createDBConnection() {
-    const config = this.config;
-    const dbConnection = new PrismaDatabase(config);
+    const dbConnection = new PrismaDatabase();
     if (!this.dbConnection) {
       this.dbConnection = dbConnection;
     }
