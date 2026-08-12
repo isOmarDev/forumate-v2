@@ -1,18 +1,6 @@
 import axios from 'axios';
 
-import { ApiResponse, GenericErrors } from '.';
-
-export type EmailSubscriber = { email: string };
-
-type EmailNotAddedToMailListError = 'EmailNotAddedToMailList';
-
-export type AddEmailToListErrors = EmailNotAddedToMailListError | GenericErrors;
-export type AddEmailToListResponse = ApiResponse<
-  { subscription: EmailSubscriber },
-  AddEmailToListErrors
->;
-
-export type MarketingResponse = AddEmailToListResponse;
+import { AddEmailToListResponse } from './responses';
 
 export const createMarketingApi = (apiUrl: string) => {
   return {

@@ -8,28 +8,28 @@
       "default": "./src/index.ts"
     },
     "./users": {
-      "types": "./src/users.ts",
-      "default": "./src/users.ts"
+      "types": "./src/users/index.ts",
+      "default": "./src/users/index.ts"
     },
     "./posts": {
-      "types": "./src/posts.ts",
-      "default": "./src/posts.ts"
+      "types": "./src/posts/index.ts",
+      "default": "./src/posts/index.ts"
     },
     "./marketing": {
-      "types": "./src/marketing.ts",
-      "default": "./src/marketing.ts"
+      "types": "./src/marketing/index.ts",
+      "default": "./src/marketing/index.ts"
     },
     "./members": {
-      "types": "./src/members.ts",
-      "default": "./src/members.ts"
+      "types": "./src/members/index.ts",
+      "default": "./src/members/index.ts"
     },
     "./comments": {
-      "types": "./src/comments.ts",
-      "default": "./src/comments.ts"
+      "types": "./src/comments/index.ts",
+      "default": "./src/comments/index.ts"
     },
     "./votes": {
-      "types": "./src/votes.ts",
-      "default": "./src/votes.ts"
+      "types": "./src/votes/index.ts",
+      "default": "./src/votes/index.ts"
     }
   },
   "scripts": {
