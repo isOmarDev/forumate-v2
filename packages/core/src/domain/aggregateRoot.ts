@@ -1,9 +1,8 @@
-
-import { DomainEvent } from "./domainEvent";
+import { DomainEvent } from './domainEvent';
 
 export abstract class AggregateRoot {
   protected domainEvents: DomainEvent[] = [];
-  getDomainEvents () {
+  getDomainEvents() {
     return this.domainEvents;
   }
 

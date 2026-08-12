@@ -21,7 +21,6 @@ export enum MemberReputationLevel {
   Level3 = 'Level 3',
 }
 
-
 interface CreateMemberInput {
   userId: string;
   username: string;

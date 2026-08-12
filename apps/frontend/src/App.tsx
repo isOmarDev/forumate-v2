@@ -1,27 +1,40 @@
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
-
 import { BrowserRouter } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
-import { MainPage } from './pages/mainPage';
-import { RegisterPage } from './pages/registerPage';
-import { UserProvider } from './contexts/userContext';
-import { SpinnerProvider } from './contexts/spinnerContext';
+import { ErrorBoundary } from './shared/error/errorBoundary';
+import { StoreProvider } from './shared/store/storesContext';
+import { PresenterProvider } from './shared/presenters/presentersContext';
+import { RegisterPage } from './pages/join/registerPage';
+import { HomePage } from './pages/home/homePage';
+import { PostPage } from './pages/post/postPage';
+import { presenters, stores } from './main';
+import { SpinnerProvider } from './shared/spinner/spinnerContext';
+import { NavigationProvider } from './shared/navigation/navigationProvider';
+import { ToastContainer } from 'react-toastify';
 
-function App() {
+const App = () => {
   return (
-    <SpinnerProvider>
-      <UserProvider>
-        <BrowserRouter>
-          <meta name="color-scheme" content="light only"></meta>
-          <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/join" element={<RegisterPage />} />
-          </Routes>
-        </BrowserRouter>
-      </UserProvider>
-    </SpinnerProvider>
+    <ErrorBoundary>
+      <StoreProvider stores={stores}>
+        <SpinnerProvider>
+          <PresenterProvider presenters={presenters}>
+            <BrowserRouter>
+              <NavigationProvider>
+                <ToastContainer />
+                <Routes>
+                  {/* Public routes */}
+                  <Route path="/join" element={<RegisterPage />} />
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/posts/:slug" element={<PostPage />} />
+                </Routes>
+              </NavigationProvider>
+            </BrowserRouter>
+          </PresenterProvider>
+        </SpinnerProvider>
+      </StoreProvider>
+    </ErrorBoundary>
   );
-}
+};
 
 export default App;

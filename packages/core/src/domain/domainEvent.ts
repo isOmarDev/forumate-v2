@@ -1,13 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
-import { EventModel } from "./eventModel";
+import { EventModel } from './eventModel';
 
 export type DomainEventStatus = 'INITIAL' | 'RETRYING' | 'PUBLISHED' | 'FAILED';
 
 // Define the expected structure instead of importing from Prisma
 
-
 export class DomainEvent {
-
   constructor(
     public readonly aggregateId: string,
     public readonly data: any,
@@ -15,20 +13,18 @@ export class DomainEvent {
     public readonly id: string = uuidv4(),
     private retries: number = 0,
     private status: DomainEventStatus = 'INITIAL',
-    public readonly createdAt: string = new Date().toISOString()
-  ) {
+    public readonly createdAt: string = new Date().toISOString(),
+  ) {}
 
-  }
-  
-  getStatus () { 
+  getStatus() {
     return this.status;
   }
 
-  markPublished () {
-    return this.status = 'PUBLISHED';
+  markPublished() {
+    return (this.status = 'PUBLISHED');
   }
 
-  recordFailureToProcess () {
+  recordFailureToProcess() {
     this.retries++;
     if (this.retries === 3) {
       this.status = 'FAILED';
@@ -38,7 +34,7 @@ export class DomainEvent {
     this.status = 'RETRYING';
   }
 
-  getRetries () {
+  getRetries() {
     return this.retries;
   }
 
@@ -58,10 +54,7 @@ export class DomainEvent {
       eventModel.id,
       eventModel.retries,
       eventModel.status as DomainEventStatus,
-      eventModel.dateCreated.toISOString()
+      eventModel.dateCreated.toISOString(),
     );
   }
 }
-
-
-

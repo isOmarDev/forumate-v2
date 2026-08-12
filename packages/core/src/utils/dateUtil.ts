@@ -1,4 +1,3 @@
-
 export class DateUtil {
   static createFromRelativeDaysAgo(daysAgo: number): string {
     const date = new Date();

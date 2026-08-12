@@ -1,9 +1,8 @@
-
 export class TextUtil {
   public static createRandomText(length: number): string {
     const charset =
-      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=_+";
-    let text = "";
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=_+';
+    let text = '';
 
     for (let i = 0; i < length; i++) {
       const randomIndex = Math.floor(Math.random() * charset.length);
@@ -13,7 +12,7 @@ export class TextUtil {
     return text;
   }
 
-  public static kebabCase (value: string): string {
+  public static kebabCase(value: string): string {
     return value
       .toLowerCase()
       .trim()
@@ -32,9 +31,8 @@ export class TextUtil {
     }
     return false;
   }
-  
+
   public static isBetweenLength(str: string, min: number, max: number) {
     return str.length >= min && str.length <= max;
   }
-  
 }

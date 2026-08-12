@@ -1,4 +1,4 @@
-export interface UseCase<Request, Response> { 
+export interface UseCase<Request, Response> {
   execute(request: Request): Promise<Response>;
 }
 
@@ -17,11 +17,11 @@ export type UseCaseResponse<T, E> = SuccessResponse<T> | FailureResponse<E>;
 export class Result<T, E> {
   protected constructor(protected readonly response: UseCaseResponse<T, E>) {}
 
-  public isSuccess(): this is { getValue(): T, getError(): never } {
+  public isSuccess(): this is { getValue(): T; getError(): never } {
     return this.response.success;
   }
 
-  public isFailure(): this is { getError(): E, getValue(): never } {
+  public isFailure(): this is { getError(): E; getValue(): never } {
     return !this.response.success;
   }
 
