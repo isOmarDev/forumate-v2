@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
-import { DomainEvent } from '@forumate/core';
 import { ReputationLevel } from '@forumate/api';
+import { DomainEvent } from '@forumate/core';
 
 export class MemberReputationLevelUpgraded extends DomainEvent {
   constructor(

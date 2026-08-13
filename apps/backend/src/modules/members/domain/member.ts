@@ -1,11 +1,12 @@
 import { randomUUID } from 'node:crypto';
 
+import { MemberDTO, ReputationLevel } from '@forumate/api';
+import { AggregateRoot, fail,Result, success } from '@forumate/core';
+import { Member as MemberModel } from '@forumate/database';
+import { ValidationError } from '@forumate/errors/application';
+
 import { MemberReputationLevelUpgraded } from './member-reputation-level-upgraded';
 import { MemberUsername } from './member-username';
-import { AggregateRoot, Result, success, fail } from '@forumate/core';
-import { ValidationError } from '@forumate/errors/application';
-import { Member as MemberModel } from '@forumate/database';
-import { MemberDTO, ReputationLevel } from '@forumate/api';
 
 interface MemberProps {
   id: string;

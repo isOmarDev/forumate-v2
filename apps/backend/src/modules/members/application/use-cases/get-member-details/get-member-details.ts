@@ -1,7 +1,8 @@
-import { MembersRepository } from '../../../repos/ports/members-repository';
-import { Member } from '../../../domain/member';
 import { Result, UseCase } from '@forumate/core';
 import { NotFoundError } from '@forumate/errors/application';
+
+import { Member } from '../../../domain/member';
+import { MembersRepository } from '../../../repos/ports/members-repository';
 
 export type GetMemberDetailsError = NotFoundError;
 

@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 import { PostViewModel } from '../application/viewModels/postViewModel';
+
 import { VoteToggle } from '@/shared/components/voteToggle';
+
 
 // Improvement - we should move these messages to view models. they should not pollute the UI layer.
 

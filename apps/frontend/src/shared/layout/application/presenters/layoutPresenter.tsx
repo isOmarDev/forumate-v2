@@ -1,7 +1,10 @@
 import { makeAutoObservable, reaction } from 'mobx';
+
+import { NavLayoutVm } from '../viewModels/navLayoutVm';
+
 import { AuthStore } from '@/modules/auth/stores/authStore';
 import { NavigationStore } from '@/shared/navigation/navigationStore';
-import { NavLayoutVm } from '../viewModels/navLayoutVm';
+
 
 export class LayoutPresenter {
   public navLayoutVm: NavLayoutVm | null;

@@ -1,8 +1,10 @@
 import { makeAutoObservable } from 'mobx';
 
-import { IPostsStore } from './postsStore';
-import { PostDm } from '../domain/postDm';
 import { CreatePostInput, GetPostsQuery, PostDTO } from '@forumate/api';
+
+import { PostDm } from '../domain/postDm';
+
+import { IPostsStore } from './postsStore';
 
 export class FakePostsStore implements IPostsStore {
   postsDm: PostDm[] = [];

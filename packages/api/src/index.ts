@@ -49,9 +49,9 @@ export const getAuthHeaders = (token?: string) => ({
 
 export type ApiClient = ReturnType<typeof createApiClient>;
 
-export * from './users';
-export * from './marketing';
-export * from './posts';
-export * from './members';
 export * from './comments';
+export * from './marketing';
+export * from './members';
+export * from './posts';
+export * from './users';
 export * from './votes';

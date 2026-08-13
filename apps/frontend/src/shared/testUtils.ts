@@ -1,6 +1,6 @@
 import { MemberDm } from '@/modules/auth/domain/memberDm';
-import { AuthStore } from '@/modules/auth/stores/authStore';
 import { UserDm } from '@/modules/auth/domain/userDm';
+import { AuthStore } from '@/modules/auth/stores/authStore';
 
 export function setupAuthStoreWithAuthenticatedUser(
   authStore: AuthStore,

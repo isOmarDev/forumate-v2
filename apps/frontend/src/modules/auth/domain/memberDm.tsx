@@ -1,5 +1,6 @@
-import { UserDm } from './userDm';
 import { ReputationLevel } from '@forumate/api';
+
+import { UserDm } from './userDm';
 
 interface MemberDmProps {
   id: string;

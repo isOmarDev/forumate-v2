@@ -1,17 +1,17 @@
-import { PostComment } from './post-comment';
-import { ProductionPostsRepository } from '../../../../posts/repos/adapters/production-posts-repository';
-
-import { ProductionMembersRepository } from '../../../../members/repos/adapters/production-members-repository';
-import { ProductionCommentsRepository } from '../../../repos/adapters/production-comment-repository';
-import { setupTestWithLevel1Member } from '../../../../../../tests/fixtures/unit/members';
-import { CommentPosted } from '../../../domain/comment-posted';
-import { withExistingPostByRandomMember } from '../../../../../../tests/fixtures/unit/posts';
-import { Comment } from '../../../domain/comment';
-import { Config } from '../../../../../shared/config';
-
-import { PrismaDatabase } from '@forumate/database';
-import { InMemoryEventBus } from '@forumate/bus';
 import { PostCommentCommand } from '@forumate/api';
+import { InMemoryEventBus } from '@forumate/bus';
+import { PrismaDatabase } from '@forumate/database';
+
+import { setupTestWithLevel1Member } from '../../../../../../tests/fixtures/unit/members';
+import { withExistingPostByRandomMember } from '../../../../../../tests/fixtures/unit/posts';
+import { Config } from '../../../../../shared/config';
+import { ProductionMembersRepository } from '../../../../members/repos/adapters/production-members-repository';
+import { ProductionPostsRepository } from '../../../../posts/repos/adapters/production-posts-repository';
+import { Comment } from '../../../domain/comment';
+import { CommentPosted } from '../../../domain/comment-posted';
+import { ProductionCommentsRepository } from '../../../repos/adapters/production-comment-repository';
+
+import { PostComment } from './post-comment';
 
 describe('postComment', () => {
   const config = new Config('test:unit');

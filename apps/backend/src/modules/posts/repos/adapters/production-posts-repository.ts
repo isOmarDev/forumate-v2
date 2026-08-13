@@ -1,15 +1,16 @@
-import { PostsRepository } from '../ports/posts-repository';
-import { Post } from '../../domain/post';
-import { PostReadModel } from '../../domain/post-read-model';
-import { MemberReadModel } from '../../../members/domain/member-read-model';
+import { GetPostsQuery } from '@forumate/api/posts';
 import {
   Database,
-  Prisma,
-  Post as PostModel,
   Member as MemberModel,
+  Post as PostModel,
+  Prisma,
 } from '@forumate/database';
 import { DatabaseError } from '@forumate/errors/server';
-import { GetPostsQuery } from '@forumate/api/posts';
+
+import { MemberReadModel } from '../../../members/domain/member-read-model';
+import { Post } from '../../domain/post';
+import { PostReadModel } from '../../domain/post-read-model';
+import { PostsRepository } from '../ports/posts-repository';
 
 type PostModelWithMember = PostModel & {
   memberPostedBy: MemberModel;

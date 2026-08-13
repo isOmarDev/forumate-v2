@@ -1,6 +1,7 @@
-import { MemberReadModel } from '../../members/domain/member-read-model';
-import { Post as PostModel } from '@forumate/database';
 import { PostDTO, PostType } from '@forumate/api';
+import { Post as PostModel } from '@forumate/database';
+
+import { MemberReadModel } from '../../members/domain/member-read-model';
 
 interface PostReadModelProps {
   id: string;

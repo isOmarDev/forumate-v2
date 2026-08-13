@@ -1,5 +1,5 @@
+import { NextFunction,Request, Response } from 'express';
 import { auth } from 'firebase-admin';
-import { Request, Response, NextFunction } from 'express';
 
 import { Config } from '../../../../shared/config';
 

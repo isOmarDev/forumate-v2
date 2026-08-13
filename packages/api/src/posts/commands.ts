@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 import { Request, Result } from '@forumate/core';
-import { MissingRequestParamsError } from '@forumate/errors/server';
 import { ValidationError } from '@forumate/errors/application';
+import { MissingRequestParamsError } from '@forumate/errors/server';
 
 import { CreatePostInput } from './inputs';
 

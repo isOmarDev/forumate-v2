@@ -1,4 +1,5 @@
 import { ApiResponse } from '..';
+
 import { CommentDTO } from './dtos';
 
 export type GetCommentsByPostIdApiResponse = ApiResponse<

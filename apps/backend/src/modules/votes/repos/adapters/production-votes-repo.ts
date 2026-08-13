@@ -1,9 +1,10 @@
-import { VoteRepository } from '../ports/vote-repository';
+import { Database, Prisma } from '@forumate/database';
+
+import { CommentVote } from '../../domain/comment-vote';
 import { MemberCommentVotesRoundup } from '../../domain/member-comment-votes-roundup';
 import { MemberPostVotesRoundup } from '../../domain/member-post-votes-roundup';
-import { CommentVote } from '../../domain/comment-vote';
 import { PostVote } from '../../domain/post-vote';
-import { Database, Prisma } from '@forumate/database';
+import { VoteRepository } from '../ports/vote-repository';
 
 export class ProductionVotesRepository implements VoteRepository {
   constructor(private database: Database) {}

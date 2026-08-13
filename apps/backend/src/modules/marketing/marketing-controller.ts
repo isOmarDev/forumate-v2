@@ -1,7 +1,10 @@
 import express from 'express';
-import { MarketingService } from './application/marketing-service';
-import { ErrorHandler } from '../../shared/errors';
+
 import { AddEmailToListResponse } from '@forumate/api';
+
+import { ErrorHandler } from '../../shared/errors';
+
+import { MarketingService } from './application/marketing-service';
 
 export class MarketingController {
   private router: express.Router;

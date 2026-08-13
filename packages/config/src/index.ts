@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
+
 import { z } from 'zod';
 
 export type Environment = 'development' | 'production' | 'staging' | 'ci';

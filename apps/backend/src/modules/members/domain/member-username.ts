@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { ValidationError } from '@forumate/errors/application';
 import { ValueObject } from '@forumate/core';
+import { ValidationError } from '@forumate/errors/application';
 
 // Note: It's debatable whether you should validate the commands or validate the
 // value objects in the use cases.

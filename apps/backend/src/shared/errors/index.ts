@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+
 import { CustomError } from '@forumate/errors/custom';
 
 export type ErrorHandler = (

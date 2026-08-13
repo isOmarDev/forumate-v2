@@ -1,5 +1,6 @@
-import { UserDTO } from '@forumate/api';
 import { makeAutoObservable } from 'mobx';
+
+import { UserDTO } from '@forumate/api';
 
 // Unify all props in one interface
 interface UserDmProps {

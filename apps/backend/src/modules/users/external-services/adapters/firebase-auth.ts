@@ -1,11 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+
 import { auth } from 'firebase-admin';
-import { initializeApp, cert } from 'firebase-admin/app';
+import { cert,initializeApp } from 'firebase-admin/app';
+
+import { NotFoundError } from '@forumate/errors/application';
 
 import { User } from '../../domain/user';
 import { IdentityServiceApi } from '../ports/identity-service-api';
-import { NotFoundError } from '@forumate/errors/application';
 
 export class FirebaseAuth implements IdentityServiceApi {
   private firebaseAuth: auth.Auth | null = null;

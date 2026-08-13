@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { getAuthHeaders } from '..';
+
 import { CreateMemberInput } from './inputs';
 import {
   CreateMemberApiResponse,

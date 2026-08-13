@@ -1,11 +1,13 @@
+import { EventBus } from '@forumate/bus';
+
+import { Config } from '../../shared/config';
 import { ApplicationModule } from '../../shared/modules/application-module';
-import { NotificationsService } from './application/notifications-service';
+
 import { NotificationsSubscriptions } from './application/notification-subscriptions';
+import { NotificationsService } from './application/notifications-service';
+import { MailjetTransactionalEmail } from './external-services/adapters/transactional-email-api/mailjet-transactional-email-api';
 import { TransactionalEmailApiSpy } from './external-services/adapters/transactional-email-api/transactional-email-api-spy';
 import { TransactionalEmailApi } from './external-services/ports/transactional-email-api';
-import { MailjetTransactionalEmail } from './external-services/adapters/transactional-email-api/mailjet-transactional-email-api';
-import { Config } from '../../shared/config';
-import { EventBus } from '@forumate/bus';
 
 export class NotificationsModule extends ApplicationModule {
   private transactionalEmailApi: TransactionalEmailApi;

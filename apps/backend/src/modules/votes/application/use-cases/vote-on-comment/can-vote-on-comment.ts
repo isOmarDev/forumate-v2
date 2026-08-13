@@ -1,6 +1,7 @@
+import {} from '@forumate/api/members';
+
 import { Comment } from '../../../../comments/domain/comment';
 import { Member } from '../../../../members/domain/member';
-import {} from '@forumate/api/members';
 
 export class CanVoteOnCommentPolicy {
   public static isAllowed(member: Member, comment: Comment): boolean {

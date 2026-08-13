@@ -1,5 +1,6 @@
-import { PostDm } from '../domain/postDm';
 import { CreatePostInput, GetPostsQuery } from '@forumate/api';
+
+import { PostDm } from '../domain/postDm';
 
 export interface IPostsStore {
   postsDm: PostDm[];

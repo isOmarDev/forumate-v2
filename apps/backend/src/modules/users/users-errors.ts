@@ -1,9 +1,5 @@
-import {
-  EmailAlreadyInUseException,
-  UsernameAlreadyTakenException,
-  UserNotFoundException,
-} from './users-exceptions';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction,Request, Response } from 'express';
+
 import { UserResponse } from '@forumate/api/users';
 import {
   ApplicationEntity,
@@ -11,8 +7,14 @@ import {
   NotFoundError,
   ValidationError,
 } from '@forumate/errors/application';
-import { GenericServerError } from '@forumate/errors/server';
 import { CustomError } from '@forumate/errors/custom';
+import { GenericServerError } from '@forumate/errors/server';
+
+import {
+  EmailAlreadyInUseException,
+  UsernameAlreadyTakenException,
+  UserNotFoundException,
+} from './users-exceptions';
 
 interface ErrorWithEntity extends CustomError {
   missingEntityType?: ApplicationEntity;

@@ -1,5 +1,6 @@
-import { auth } from 'firebase-admin';
 import { randomUUID } from 'node:crypto';
+
+import { auth } from 'firebase-admin';
 
 /**
  * Creates a fake Firebase auth token for testing purposes.

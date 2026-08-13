@@ -1,4 +1,10 @@
+import { CreateMemberCommand } from '@forumate/api';
+import { EventBus } from '@forumate/bus';
+import { Result } from '@forumate/core';
+
+import { Member } from '../domain/member';
 import { MembersRepository } from '../repos/ports/members-repository';
+
 import {
   CreateMember,
   CreateMemberError,
@@ -7,10 +13,6 @@ import {
   GetMemberDetails,
   GetMemberDetailsError,
 } from './use-cases/get-member-details/get-member-details';
-import { Member } from '../domain/member';
-import { CreateMemberCommand } from '@forumate/api';
-import { Result } from '@forumate/core';
-import { EventBus } from '@forumate/bus';
 
 export class MemberService {
   constructor(

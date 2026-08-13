@@ -1,12 +1,14 @@
 import { makeAutoObservable } from 'mobx';
 
+
+import { IPostsStore } from '../../stores/postsStore';
+import { PostViewModel } from '../viewModels/postViewModel';
 import {
   PostsFilterValue,
   SearchFilterViewModel,
 } from '../viewModels/searchFilterViewModel';
+
 import { AuthStore } from '@/modules/auth/stores/authStore';
-import { PostViewModel } from '../viewModels/postViewModel';
-import { IPostsStore } from '../../stores/postsStore';
 
 export class PostsPresenter {
   postVMs: PostViewModel[];

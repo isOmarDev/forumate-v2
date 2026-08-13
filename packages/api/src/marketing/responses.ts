@@ -1,4 +1,5 @@
 import { ApiResponse, GenericErrors } from '..';
+
 import { EmailSubscriber } from './dtos';
 
 type EmailNotAddedToMailListError = 'EmailNotAddedToMailList';

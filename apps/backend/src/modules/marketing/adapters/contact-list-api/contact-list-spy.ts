@@ -1,5 +1,5 @@
-import { ContactListApi } from '../../ports/contact-list-api';
 import { Spy } from '../../../../shared/test-doubles/spy';
+import { ContactListApi } from '../../ports/contact-list-api';
 
 export class ContactListApiSpy
   extends Spy<ContactListApi>

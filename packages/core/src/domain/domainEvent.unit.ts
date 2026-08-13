@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+
 import { DomainEvent } from './domainEvent';
 import { DomainEventStatus } from './domainEvent';
 import { EventModel } from './eventModel';
@@ -45,7 +46,7 @@ export class TestEvent extends DomainEvent {
 }
 
 describe('domainEvent', () => {
-  let aggregateId = randomUUID();
+  const aggregateId = randomUUID();
 
   it('should be able to create a domain event', () => {
     const event = TestEvent.create({ testDataField: 'John', aggregateId });

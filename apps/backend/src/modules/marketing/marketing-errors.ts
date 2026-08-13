@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction,Request, Response } from 'express';
 
-import { GenericServerError } from '@forumate/errors/server';
-import { ValidationError } from '@forumate/errors/application';
 import { MarketingResponse } from '@forumate/api/marketing';
+import { ValidationError } from '@forumate/errors/application';
 import { CustomError } from '@forumate/errors/custom';
+import { GenericServerError } from '@forumate/errors/server';
 
 export function marketingErrorHandler(
   error: CustomError,

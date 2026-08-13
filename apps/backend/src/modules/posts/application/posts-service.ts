@@ -1,8 +1,10 @@
-import { MembersRepository } from '../../members/repos/ports/members-repository';
-import { PostsRepository } from '../repos/ports/posts-repository';
-import { CreatePost } from './use-cases/create-post/create-post';
 import { CreatePostCommand, GetPostsQuery } from '@forumate/api/posts';
 import { EventBus } from '@forumate/bus';
+
+import { MembersRepository } from '../../members/repos/ports/members-repository';
+import { PostsRepository } from '../repos/ports/posts-repository';
+
+import { CreatePost } from './use-cases/create-post/create-post';
 
 export class PostsService {
   constructor(

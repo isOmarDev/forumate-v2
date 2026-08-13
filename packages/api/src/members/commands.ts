@@ -1,7 +1,8 @@
-import { Request, Result, fail, success } from '@forumate/core';
+import { fail, Request, Result, success } from '@forumate/core';
 import { MissingRequestParamsError } from '@forumate/errors/server';
 
 import { DecodedIdToken } from '../users';
+
 import { CreateMemberInput } from './inputs';
 
 export class CreateMemberCommand {

@@ -1,11 +1,15 @@
-import { PostsPresenter } from './postsPresenter';
+import { createApiClient } from '@forumate/api';
+
+
 import { fakePostsData } from '../../__tests__/fakePostsData';
-import { PostViewModel } from '../viewModels/postViewModel';
 import { FakePostsStore } from '../../stores/fakePostsStore';
+import { PostViewModel } from '../viewModels/postViewModel';
 import { SearchFilterViewModel } from '../viewModels/searchFilterViewModel';
+
+import { PostsPresenter } from './postsPresenter';
+
 import { AuthStore } from '@/modules/auth/stores/authStore';
 import { setupAuthStoreWithMember } from '@/shared/testUtils';
-import { createApiClient } from '@forumate/api';
 
 describe('PostsPresenter', () => {
   const stubbedAPI = createApiClient('');

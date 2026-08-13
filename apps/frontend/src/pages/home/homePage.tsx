@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
 
-import { PostsViewSwitcher } from '../../modules/posts/components/postsViewSwitcher';
+
 import { PostsList } from '../../modules/posts/components/postsList';
+import { PostsViewSwitcher } from '../../modules/posts/components/postsViewSwitcher';
 import { usePresenters } from '../../shared/presenters/presentersContext';
+
 import { LayoutContainer } from '@/shared/layout/layoutContainer';
 
 export const HomePage = observer(() => {

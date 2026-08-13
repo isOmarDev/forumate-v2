@@ -1,13 +1,15 @@
+import { EventBus } from '@forumate/bus';
+import { Database } from '@forumate/database';
+
+import { Config } from '../../shared/config';
 import { WebServer } from '../../shared/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
+
 import { MemberService } from './application/members-service';
 import { membersErrorHandler } from './member-errors';
 import { MembersController } from './members-controller';
 import { ProductionMembersRepository } from './repos/adapters/production-members-repository';
 import { MembersRepository } from './repos/ports/members-repository';
-import { Config } from '../../shared/config';
-import { EventBus } from '@forumate/bus';
-import { Database } from '@forumate/database';
 
 export class MembersModule extends ApplicationModule {
   private membersRepository: MembersRepository;

@@ -1,7 +1,8 @@
-import { ApiResponse } from '..';
-import { AnyServerError } from '@forumate/errors/server';
 import { AnyApplicationError } from '@forumate/errors/application';
 import { ConflictError, ValidationError } from '@forumate/errors/application';
+import { AnyServerError } from '@forumate/errors/server';
+
+import { ApiResponse } from '..';
 
 import { UserDTO } from './dtos';
 

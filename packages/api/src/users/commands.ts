@@ -1,6 +1,6 @@
-import { Result, TextUtil, fail, success } from '@forumate/core';
-import { InvalidRequestBodyError } from '@forumate/errors/server';
+import { fail, Result, success,TextUtil } from '@forumate/core';
 import { ValidationError } from '@forumate/errors/application';
+import { InvalidRequestBodyError } from '@forumate/errors/server';
 
 import { CreateUserInput } from './inputs';
 

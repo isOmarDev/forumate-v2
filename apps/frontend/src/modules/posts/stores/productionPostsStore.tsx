@@ -1,10 +1,14 @@
 import { makeAutoObservable } from 'mobx';
 
-import { PostDm } from '../domain/postDm';
-import { IPostsStore } from './postsStore';
-import { AuthStore } from '@/modules/auth/stores/authStore';
 import { CreatePostInput, GetPostsQuery } from '@forumate/api';
 import { ApiClient } from '@forumate/api';
+
+
+import { PostDm } from '../domain/postDm';
+
+import { IPostsStore } from './postsStore';
+
+import { AuthStore } from '@/modules/auth/stores/authStore';
 
 export class PostsStore implements IPostsStore {
   public postsDm: PostDm[];

@@ -1,8 +1,10 @@
-import express from 'express';
-import cors from 'cors';
 import { Server } from 'http';
-import { ProcessService } from '../processes/process-service';
+
+import cors from 'cors';
+import express from 'express';
+
 import { Config } from '../config';
+import { ProcessService } from '../processes/process-service';
 
 export class WebServer {
   private express: express.Express;

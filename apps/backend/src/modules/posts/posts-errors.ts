@@ -1,9 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction,Request, Response } from 'express';
 
-// Todo: clean these custom exceptions
-
-import { AnyApplicationError } from '@forumate/errors/application';
 import { AnyPostsApiResponse } from '@forumate/api';
+// Todo: clean these custom exceptions
+import { AnyApplicationError } from '@forumate/errors/application';
 import { CustomError } from '@forumate/errors/custom';
 
 export function postsErrorHandler(

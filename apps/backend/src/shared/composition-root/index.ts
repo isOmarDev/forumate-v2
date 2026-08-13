@@ -1,17 +1,18 @@
-import { CommentsModule } from '../../modules/comments/comments-module';
-import { MembersModule } from '../../modules/members/members-module';
-import { VotesModule } from '../../modules/votes/votes-module';
-import { Application } from '../application/application-interface';
-import { WebServer } from '../http';
+import { EventBus,InMemoryEventBus } from '@forumate/bus';
+import { PrismaDatabase } from '@forumate/database';
+
 import {
   MarketingModule,
   NotificationsModule,
   PostsModule,
   UsersModule,
 } from '../../modules';
-import { InMemoryEventBus, EventBus } from '@forumate/bus';
-import { PrismaDatabase } from '@forumate/database';
+import { CommentsModule } from '../../modules/comments/comments-module';
+import { MembersModule } from '../../modules/members/members-module';
+import { VotesModule } from '../../modules/votes/votes-module';
+import { Application } from '../application/application-interface';
 import { Config } from '../config';
+import { WebServer } from '../http';
 
 export class CompositionRoot {
   private static instance: CompositionRoot | null = null;

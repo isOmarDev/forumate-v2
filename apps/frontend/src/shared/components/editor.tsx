@@ -35,8 +35,8 @@ class Editor extends React.Component<EditorProps, EditorState> {
   };
 
   handleChange(html: string) {
-    var limit = this.props.maxLength;
-    var quill = this.quillRef;
+    const limit = this.props.maxLength;
+    const quill = this.quillRef;
 
     quill.on('text-change', function (delta: any, old: any, source: any) {
       if (quill.getLength() > limit) {

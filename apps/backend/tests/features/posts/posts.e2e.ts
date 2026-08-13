@@ -1,13 +1,14 @@
+import { createApiClient } from '@forumate/api';
+
 import { CompositionRoot } from '../../../src/shared/composition-root';
-import { setupPost } from '../../fixtures/e2e/posts';
-import { createFakeAuthTokenAndUser } from '../../fixtures/e2e/users';
+import { Config } from '../../../src/shared/config';
 import { DatabaseFixture } from '../../fixtures/e2e/database';
 import {
   setupLevel1Member,
   setupLevel2Member,
 } from '../../fixtures/e2e/members';
-import { Config } from '../../../src/shared/config';
-import { createApiClient } from '@forumate/api';
+import { setupPost } from '../../fixtures/e2e/posts';
+import { createFakeAuthTokenAndUser } from '../../fixtures/e2e/users';
 
 jest.setTimeout(30000);
 

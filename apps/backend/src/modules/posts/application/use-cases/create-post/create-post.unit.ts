@@ -1,23 +1,24 @@
-import { CreatePost } from './create-post';
-import { ProductionMembersRepository } from '../../../../members/repos/adapters/production-members-repository';
-import { ProductionPostsRepository } from '../../../repos/adapters/production-posts-repository';
-import { Config } from '../../../../../shared/config';
-import { PrismaDatabase } from '@forumate/database';
-import { InMemoryEventBus } from '@forumate/bus';
 import { Commands } from '@forumate/api/posts';
+import { InMemoryEventBus } from '@forumate/bus';
+import { PrismaDatabase } from '@forumate/database';
 
 import {
   setupTestWithLevel1Member,
   setupTestWithLevel2Member,
 } from '../../../../../../tests/fixtures/unit/members';
+import { Config } from '../../../../../shared/config';
+import { ProductionMembersRepository } from '../../../../members/repos/adapters/production-members-repository';
+import { ProductionPostsRepository } from '../../../repos/adapters/production-posts-repository';
+
+import { CreatePost } from './create-post';
 
 describe('createPost', () => {
-  let config = new Config('test:unit');
-  let database = new PrismaDatabase(config);
+  const config = new Config('test:unit');
+  const database = new PrismaDatabase(config);
 
-  let membersRepo = new ProductionMembersRepository(database);
-  let postsRepo = new ProductionPostsRepository(database);
-  let eventBus = new InMemoryEventBus();
+  const membersRepo = new ProductionMembersRepository(database);
+  const postsRepo = new ProductionPostsRepository(database);
+  const eventBus = new InMemoryEventBus();
 
   const useCase = new CreatePost(postsRepo, membersRepo, eventBus);
 

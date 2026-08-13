@@ -1,23 +1,21 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
 import './index.css';
 
 import { configure } from 'mobx';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+
+import { createApiClient } from '@forumate/api';
 
 import App from './App';
-import { Presenters } from './shared/presenters/presenters';
-import { Stores } from './shared/store/stores';
-
 import { RegistrationPresenter } from './modules/auth/application/presenters/registrationPresenter';
-import { PostsPresenter } from './modules/posts/application/presenters/postsPresenter';
-
-import { ToastAPI } from './shared/toast/toastAPI';
-
-import { NavigationStore } from './shared/navigation/navigationStore';
 import { AuthStore } from './modules/auth/stores/authStore';
+import { PostsPresenter } from './modules/posts/application/presenters/postsPresenter';
 import { PostsStore } from './modules/posts/stores/productionPostsStore';
 import { LayoutPresenter } from './shared/layout/application/presenters/layoutPresenter';
-import { createApiClient } from '@forumate/api';
+import { NavigationStore } from './shared/navigation/navigationStore';
+import { Presenters } from './shared/presenters/presenters';
+import { Stores } from './shared/store/stores';
+import { ToastAPI } from './shared/toast/toastAPI';
 
 configure({ enforceActions: 'never' });
 
@@ -58,9 +56,8 @@ createRoot(document.getElementById('root')!).render(
 
 export {
   apiClient,
-  toastAPI,
-
+  presenters,
   // Bundle it all up and export
   stores,
-  presenters,
+  toastAPI,
 };

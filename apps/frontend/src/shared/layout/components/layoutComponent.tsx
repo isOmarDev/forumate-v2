@@ -1,5 +1,6 @@
-import logo from '../../../shared/assets/dddforumlogo.png';
 import { Link } from 'react-router-dom';
+
+import logo from '../../../shared/assets/dddforumlogo.png';
 import { appSelectors, toClass } from '../../selectors';
 import { NavLayoutVm } from '../application/viewModels/navLayoutVm';
 

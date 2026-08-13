@@ -1,5 +1,6 @@
-import { Member } from '../../../../members/domain/member';
 import {} from '@forumate/api/members';
+
+import { Member } from '../../../../members/domain/member';
 
 export class CanVoteOnPostPolicy {
   public static isAllowed(member: Member): boolean {

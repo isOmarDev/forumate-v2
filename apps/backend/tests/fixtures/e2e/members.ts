@@ -1,6 +1,7 @@
-import { DatabaseFixture } from './database';
-import { NumberUtil } from '@forumate/core';
 import { ApiClient, MemberDTO } from '@forumate/api';
+import { NumberUtil } from '@forumate/core';
+
+import { DatabaseFixture } from './database';
 
 export async function setupLevel1Member(
   apiClient: ApiClient,

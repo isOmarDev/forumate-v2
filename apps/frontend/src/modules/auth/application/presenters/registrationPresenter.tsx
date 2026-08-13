@@ -1,10 +1,13 @@
 import { makeAutoObservable } from 'mobx';
+
+import { CreateUserErrors, CreateUserInput, UserDTO } from '@forumate/api';
+import { fail, Result, success } from '@forumate/core';
+
 import { RegistrationVm } from '../viewModels/registrationVm';
+
 import { AuthStore } from '@/modules/auth/stores/authStore';
 import { NavigationStore } from '@/shared/navigation/navigationStore';
 import { ToastAPI } from '@/shared/toast/toastAPI';
-import { Result, success, fail } from '@forumate/core';
-import { CreateUserErrors, CreateUserInput, UserDTO } from '@forumate/api';
 
 export class RegistrationPresenter {
   public vm: RegistrationVm = new RegistrationVm();

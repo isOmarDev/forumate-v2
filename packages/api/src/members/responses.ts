@@ -1,6 +1,7 @@
-import { ApiResponse } from '..';
 import { AnyApplicationError } from '@forumate/errors/application';
 import { AnyServerError } from '@forumate/errors/server';
+
+import { ApiResponse } from '..';
 
 import { MemberDTO } from './dtos';
 

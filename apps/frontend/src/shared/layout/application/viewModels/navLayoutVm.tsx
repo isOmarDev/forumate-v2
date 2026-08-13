@@ -1,6 +1,7 @@
+import { makeAutoObservable } from 'mobx';
+
 import { MemberDm } from '@/modules/auth/domain/memberDm';
 import { UserDm } from '@/modules/auth/domain/userDm';
-import { makeAutoObservable } from 'mobx';
 
 interface NavLayoutVmProps {
   isAuthenticated: boolean;

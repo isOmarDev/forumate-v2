@@ -1,9 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
-import { NavLayoutVm } from './application/viewModels/navLayoutVm';
+
 import { usePresenters } from '../presenters/presentersContext';
-import { LayoutComponent } from './components/layoutComponent';
 import { OverlaySpinner } from '../spinner/overlaySpinner';
+
+import { NavLayoutVm } from './application/viewModels/navLayoutVm';
+import { LayoutComponent } from './components/layoutComponent';
 
 // All components which use observables must use 'observer'
 export const LayoutContainer = observer(({ children }: any) => {
@@ -14,10 +16,10 @@ export const LayoutContainer = observer(({ children }: any) => {
     layout.load((navLayoutVm) => {
       setVmToLocalState(navLayoutVm);
     });
-  }, [layout.navLayoutVm]); // We observe the view model in the presenter
+  }, [layout, layout.navLayoutVm]); // We observe the view model in the presenter
 
   // Start here!
-  if (!vm) return <OverlaySpinner isActive={true} />;
+  if (!vm) return <OverlaySpinner isActive={false} />;
 
   return (
     <LayoutComponent vm={vm} signOut={layout.signOut}>

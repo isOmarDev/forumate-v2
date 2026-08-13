@@ -1,13 +1,14 @@
-import { MembersRepository } from '../../../repos/ports/members-repository';
-import { Member } from '../../../domain/member';
+import { CreateMemberCommand } from '@forumate/api/members';
+import { EventBus } from '@forumate/bus';
+import { fail,Result, success, UseCase } from '@forumate/core';
 import {
   ConflictError,
   NotFoundError,
   ValidationError,
 } from '@forumate/errors/application';
-import { Result, UseCase, success, fail } from '@forumate/core';
-import { CreateMemberCommand } from '@forumate/api/members';
-import { EventBus } from '@forumate/bus';
+
+import { Member } from '../../../domain/member';
+import { MembersRepository } from '../../../repos/ports/members-repository';
 
 export type CreateMemberError = ValidationError | NotFoundError | ConflictError;
 

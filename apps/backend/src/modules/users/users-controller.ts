@@ -1,8 +1,10 @@
-import { Router } from 'express';
-import { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
 import { randomUUID } from 'node:crypto';
 
+import { Router } from 'express';
+import { ErrorRequestHandler, NextFunction,Request, Response } from 'express';
+
 import { CreateUserCommand, CreateUserResponse, UserDTO } from '@forumate/api';
+
 import { Config } from '../../shared/config';
 
 export class UsersController {

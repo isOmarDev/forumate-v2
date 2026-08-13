@@ -1,5 +1,6 @@
-import { Member } from './member';
 import { ReputationLevel } from '@forumate/api';
+
+import { Member } from './member';
 
 describe('member', () => {
   test('a new member should start out at level 1 reputation level', () => {

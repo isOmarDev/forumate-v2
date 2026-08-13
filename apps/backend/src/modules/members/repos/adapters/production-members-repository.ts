@@ -1,6 +1,7 @@
+import { Database, Prisma } from '@forumate/database';
+
 import { Member } from '../../domain/member';
 import { MembersRepository } from '../ports/members-repository';
-import { Database, Prisma } from '@forumate/database';
 
 export class ProductionMembersRepository implements MembersRepository {
   constructor(private database: Database) {}

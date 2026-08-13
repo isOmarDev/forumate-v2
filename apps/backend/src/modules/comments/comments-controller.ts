@@ -1,7 +1,10 @@
 import express from 'express';
-import { ErrorHandler } from '../../shared/errors';
-import { CommentsService } from './application/comments-service';
+
 import { PostCommentCommand } from '@forumate/api';
+
+import { ErrorHandler } from '../../shared/errors';
+
+import { CommentsService } from './application/comments-service';
 
 export class CommentsController {
   private router: express.Router;

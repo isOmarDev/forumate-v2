@@ -1,14 +1,15 @@
 import { makeAutoObservable } from 'mobx';
 
-import { UserDm } from '../domain/userDm';
-import { MemberDm } from '../domain/memberDm';
-import { AuthState } from '../domain/authState';
 import {
   ApiClient,
   CreateUserInput,
   CreateUserResponse,
   UserDTO,
 } from '@forumate/api';
+
+import { AuthState } from '../domain/authState';
+import { MemberDm } from '../domain/memberDm';
+import { UserDm } from '../domain/userDm';
 
 export class AuthStore {
   public authState = new AuthState();

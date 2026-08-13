@@ -1,9 +1,10 @@
 import { randomUUID } from 'node:crypto';
 
-import { CommentUpvoted } from './comment-upvoted';
-import { CommentDownvoted } from './comment-downvoted';
 import { VoteType } from '@forumate/api/votes';
 import { AggregateRoot } from '@forumate/core';
+
+import { CommentDownvoted } from './comment-downvoted';
+import { CommentUpvoted } from './comment-upvoted';
 
 type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
 

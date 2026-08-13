@@ -4,6 +4,7 @@ import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import prettier from 'eslint-config-prettier';
+import importPlugin from 'eslint-plugin-import';
 
 export default tseslint.config(
   {
@@ -29,10 +30,39 @@ export default tseslint.config(
         ...globals.jest,
       },
     },
+    plugins: {
+      import: importPlugin,
+    },
     rules: {
       '@typescript-eslint/no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+      'import/order': [
+        'error',
+        {
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
+          ],
+          pathGroups: [
+            {
+              pattern: '@forumate/**',
+              group: 'internal',
+              position: 'before',
+            },
+          ],
+          pathGroupsExcludedImportTypes: ['builtin'],
+          'newlines-between': 'always',
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
+          },
+        },
       ],
     },
   },

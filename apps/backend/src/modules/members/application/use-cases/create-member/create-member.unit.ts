@@ -1,18 +1,20 @@
-import { Member } from '../../../domain/member';
-import { CreateMember } from './create-member';
-import { ProductionMembersRepository } from '../../../repos/adapters/production-members-repository';
-import { PrismaDatabase } from '@forumate/database';
 import {} from '@forumate/api/members';
 import * as Users from '@forumate/api/users';
-import { InMemoryEventBus } from '@forumate/bus';
-import { Config } from '../../../../../shared/config';
 import { DecodedIdToken } from '@forumate/api/users';
+import { InMemoryEventBus } from '@forumate/bus';
+import { PrismaDatabase } from '@forumate/database';
+
+import { Config } from '../../../../../shared/config';
+import { Member } from '../../../domain/member';
+import { ProductionMembersRepository } from '../../../repos/adapters/production-members-repository';
+
+import { CreateMember } from './create-member';
 
 describe('createMember', () => {
-  let config = new Config('test:unit');
-  let database = new PrismaDatabase(config);
-  let membersRepo = new ProductionMembersRepository(database);
-  let eventBus = new InMemoryEventBus();
+  const config = new Config('test:unit');
+  const database = new PrismaDatabase(config);
+  const membersRepo = new ProductionMembersRepository(database);
+  const eventBus = new InMemoryEventBus();
 
   const useCase = new CreateMember(membersRepo, eventBus);
 

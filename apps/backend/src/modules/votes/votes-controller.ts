@@ -1,8 +1,10 @@
 import express from 'express';
 
-import { ErrorHandler } from '../../shared/errors';
-import { VotesService } from './application/votes-service';
 import { VoteOnPostApiResponse, VoteOnPostCommand } from '@forumate/api/votes';
+
+import { ErrorHandler } from '../../shared/errors';
+
+import { VotesService } from './application/votes-service';
 
 export class VotesController {
   private router: express.Router;

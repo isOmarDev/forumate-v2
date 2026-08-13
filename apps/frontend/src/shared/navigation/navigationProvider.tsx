@@ -1,6 +1,7 @@
-import { useLocation, useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { useStore } from '@/shared/store/storesContext';
 
 interface NavigationProviderProps {
@@ -19,13 +20,13 @@ export const NavigationProvider = observer(
 
     useEffect(() => {
       navigation.setNavigateFunction(navigate);
-    }, [navigate]);
+    }, [navigate, navigation]);
 
     useEffect(() => {
       if (navigation.currentPath !== location.pathname) {
         navigation.updateCurrentPath(location.pathname);
       }
-    }, [location.pathname]);
+    }, [location.pathname, navigation]);
 
     return <>{children}</>;
   },

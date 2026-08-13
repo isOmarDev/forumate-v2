@@ -1,6 +1,8 @@
-import { EventBus } from './eventBus';
-import { InMemoryEventBus } from '../adapters/inMemoryEventBus';
 import { DomainEvent } from '@forumate/core';
+
+import { InMemoryEventBus } from '../adapters/inMemoryEventBus';
+
+import { EventBus } from './eventBus';
 
 class TestEvent extends DomainEvent {
   constructor(public data: string) {

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction,Request, Response } from 'express';
 
 import { AnyMemberApiResponse } from '@forumate/api';
 import { AnyApplicationError } from '@forumate/errors/application';

@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 import { getAuthHeaders } from '..';
+
 import { PostCommentInput } from './inputs';
-import { PostCommentApiResponse, GetCommentsByPostIdApiResponse } from './responses';
+import { GetCommentsByPostIdApiResponse,PostCommentApiResponse } from './responses';
 
 export const createCommentsApi = (apiURL: string) => {
   return {

@@ -1,12 +1,12 @@
-import { UserIdentityService } from './application/user-identity-service';
-import { ApplicationModule } from '../../shared/modules/application-module';
-import { IdentityServiceApi } from './external-services/ports/identity-service-api';
-
+import { Config } from '../../shared/config';
 import { WebServer } from '../../shared/http';
+import { ApplicationModule } from '../../shared/modules/application-module';
+
+import { UserIdentityService } from './application/user-identity-service';
+import { FirebaseAuth } from './external-services/adapters/firebase-auth';
+import { IdentityServiceApi } from './external-services/ports/identity-service-api';
 import { UsersController } from './users-controller';
 import { userErrorHandler } from './users-errors'; // You'll need to create this
-import { FirebaseAuth } from './external-services/adapters/firebase-auth';
-import { Config } from '../../shared/config';
 
 export class UsersModule extends ApplicationModule {
   private usersService: UserIdentityService;

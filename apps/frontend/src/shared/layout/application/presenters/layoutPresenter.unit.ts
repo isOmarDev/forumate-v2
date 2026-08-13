@@ -1,9 +1,13 @@
-import { LayoutPresenter } from './layoutPresenter';
+import { createApiClient } from '@forumate/api';
+
 import { NavLayoutVm } from '../viewModels/navLayoutVm';
+
+import { LayoutPresenter } from './layoutPresenter';
+
 import { AuthStore } from '@/modules/auth/stores/authStore';
 import { NavigationStore } from '@/shared/navigation/navigationStore';
 import { setupAuthStoreWithMember } from '@/shared/testUtils';
-import { createApiClient } from '@forumate/api';
+
 
 describe('LayoutPresenter', () => {
   let presenter: LayoutPresenter;

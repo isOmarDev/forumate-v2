@@ -1,16 +1,18 @@
-import { UpdateMemberReputationScore } from './use-cases/update-member-reputation/update-member-reputation-score';
-import { VoteOnPost } from './use-cases/vote-on-post/vote-on-post';
-import { VoteOnComment } from './use-cases/vote-on-comment/vote-on-comment';
-import { CommentRepository } from '../../comments/repos/ports/comment-repository';
-import { MembersRepository } from '../../members/repos/ports/members-repository';
-import { PostsRepository } from '../../posts/repos/ports/posts-repository';
-import { VoteRepository } from '../repos/ports/vote-repository';
 import {
   UpdateMemberReputationScoreCommand,
   VoteOnCommentCommand,
   VoteOnPostCommand,
 } from '@forumate/api/votes';
 import { EventBus } from '@forumate/bus';
+
+import { CommentRepository } from '../../comments/repos/ports/comment-repository';
+import { MembersRepository } from '../../members/repos/ports/members-repository';
+import { PostsRepository } from '../../posts/repos/ports/posts-repository';
+import { VoteRepository } from '../repos/ports/vote-repository';
+
+import { UpdateMemberReputationScore } from './use-cases/update-member-reputation/update-member-reputation-score';
+import { VoteOnComment } from './use-cases/vote-on-comment/vote-on-comment';
+import { VoteOnPost } from './use-cases/vote-on-post/vote-on-post';
 
 export class VotesService {
   constructor(

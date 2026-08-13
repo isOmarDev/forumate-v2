@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import { useEffect, useState } from 'react';
+
+import { CreateUserInput } from '@forumate/api';
 
 import { usePresenters } from '../../shared/presenters/presentersContext';
-import { OverlaySpinner } from '@/shared/spinner/overlaySpinner';
-import { LayoutContainer } from '@/shared/layout/layoutContainer';
-import { RegistrationForm } from '@/modules/auth/components/registrationForm';
+
 import { RegistrationVm } from '@/modules/auth/application/viewModels/registrationVm';
-import { CreateUserInput } from '@forumate/api';
+import { RegistrationForm } from '@/modules/auth/components/registrationForm';
+import { LayoutContainer } from '@/shared/layout/layoutContainer';
+import { OverlaySpinner } from '@/shared/spinner/overlaySpinner';
+
 
 export const RegisterPage = observer(() => {
   const { registration } = usePresenters();

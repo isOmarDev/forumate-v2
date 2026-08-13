@@ -1,7 +1,5 @@
 import express from 'express';
 
-import { ErrorHandler } from '../../shared/errors';
-import { PostsService } from './application/posts-service';
 import {
   CreatePostApiResponse,
   CreatePostCommand,
@@ -10,6 +8,10 @@ import {
   GetPostsApiResponse,
   GetPostsQuery,
 } from '@forumate/api';
+
+import { ErrorHandler } from '../../shared/errors';
+
+import { PostsService } from './application/posts-service';
 
 export class PostsController {
   private router: express.Router;

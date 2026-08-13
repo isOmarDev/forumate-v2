@@ -1,5 +1,6 @@
-import { User, Post, Vote, Comment } from './generated/client';
 import { Database } from '../database';
+
+import { Comment,Post, User, Vote } from './generated/client';
 
 const dbClient = new Database().getClient();
 

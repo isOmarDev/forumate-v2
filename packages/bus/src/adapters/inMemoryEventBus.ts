@@ -1,5 +1,6 @@
-import { EventBus } from '../ports/eventBus';
 import { DomainEvent } from '@forumate/core';
+
+import { EventBus } from '../ports/eventBus';
 
 type EventHandler<T extends DomainEvent> = (event: T) => void;
 

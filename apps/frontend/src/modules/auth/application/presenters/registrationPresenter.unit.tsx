@@ -1,8 +1,12 @@
-import { NavigationStore } from '@/shared/navigation/navigationStore';
-import { RegistrationPresenter } from './registrationPresenter';
-import { AuthStore } from '../../stores/authStore';
-import { ToastAPI } from '@/shared/toast/toastAPI';
 import { createApiClient } from '@forumate/api';
+
+import { AuthStore } from '../../stores/authStore';
+
+import { RegistrationPresenter } from './registrationPresenter';
+
+import { NavigationStore } from '@/shared/navigation/navigationStore';
+import { ToastAPI } from '@/shared/toast/toastAPI';
+
 
 function setupSuccessfulRegistration(presenter: RegistrationPresenter) {
   const mockUserDTO = {
@@ -22,10 +26,10 @@ function setupSuccessfulRegistration(presenter: RegistrationPresenter) {
 
 describe('registrationPresenter', () => {
   const apiClient = createApiClient('http://localhost:3000');
-  let toastAPI = new ToastAPI();
-  let authStore = new AuthStore(apiClient);
-  let navigationStore = new NavigationStore();
-  let registrationPresenter = new RegistrationPresenter(
+  const toastAPI = new ToastAPI();
+  const authStore = new AuthStore(apiClient);
+  const navigationStore = new NavigationStore();
+  const registrationPresenter = new RegistrationPresenter(
     navigationStore,
     authStore,
     toastAPI,

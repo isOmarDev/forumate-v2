@@ -1,18 +1,19 @@
-import { ApplicationModule } from '../../shared/modules/application-module';
-import { VoteRepository } from './repos/ports/vote-repository';
-import { VotesService } from './application/votes-service';
-import { ProductionVotesRepository } from './repos/adapters/production-votes-repo';
-import { MembersRepository } from '../members/repos/ports/members-repository';
-import { CommentRepository } from '../comments/repos/ports/comment-repository';
-import { PostsRepository } from '../posts/repos/ports/posts-repository';
-import { VotesSubscriptions } from './application/votes-subscriptions';
+import { EventBus } from '@forumate/bus';
+import { Database } from '@forumate/database';
 
+import { Config } from '../../shared/config';
+import { WebServer } from '../../shared/http';
+import { ApplicationModule } from '../../shared/modules/application-module';
+import { CommentRepository } from '../comments/repos/ports/comment-repository';
+import { MembersRepository } from '../members/repos/ports/members-repository';
+import { PostsRepository } from '../posts/repos/ports/posts-repository';
+
+import { VotesService } from './application/votes-service';
+import { VotesSubscriptions } from './application/votes-subscriptions';
+import { ProductionVotesRepository } from './repos/adapters/production-votes-repo';
+import { VoteRepository } from './repos/ports/vote-repository';
 import { VotesController } from './votes-controller';
 import { votesErrorHandler } from './votes-errors';
-import { WebServer } from '../../shared/http';
-import { Config } from '../../shared/config';
-import { Database } from '@forumate/database';
-import { EventBus } from '@forumate/bus';
 
 export class VotesModule extends ApplicationModule {
   private votesRepository: VoteRepository;

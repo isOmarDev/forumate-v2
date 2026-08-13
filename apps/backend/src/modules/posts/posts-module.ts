@@ -1,14 +1,16 @@
+import { EventBus } from '@forumate/bus';
+import { Database, PrismaDatabase } from '@forumate/database';
+
+import { Config } from '../../shared/config';
 import { WebServer } from '../../shared/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
+import { MembersRepository } from '../members/repos/ports/members-repository';
+
+import { PostsService } from './application/posts-service';
 import { PostsController } from './posts-controller';
 import { postsErrorHandler } from './posts-errors';
 import { ProductionPostsRepository } from './repos/adapters/production-posts-repository';
 import { PostsRepository } from './repos/ports/posts-repository';
-import { MembersRepository } from '../members/repos/ports/members-repository';
-import { PostsService } from './application/posts-service';
-import { Config } from '../../shared/config';
-import { Database, PrismaDatabase } from '@forumate/database';
-import { EventBus } from '@forumate/bus';
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: PostsRepository;

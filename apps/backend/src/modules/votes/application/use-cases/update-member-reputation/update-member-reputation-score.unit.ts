@@ -1,17 +1,19 @@
 import { randomUUID } from 'node:crypto';
 
-import { UpdateMemberReputationScore } from './update-member-reputation-score';
+import { ReputationLevel } from '@forumate/api/members';
+import { UpdateMemberReputationScoreCommand } from '@forumate/api/votes';
+import { InMemoryEventBus } from '@forumate/bus';
+import { PrismaDatabase } from '@forumate/database';
+
+import { Config } from '../../../../../shared/config';
+import { Member } from '../../../../members/domain/member';
+import { MemberUsername } from '../../../../members/domain/member-username';
+import { ProductionMembersRepository } from '../../../../members/repos/adapters/production-members-repository';
 import { MemberCommentVotesRoundup } from '../../../../votes/domain/member-comment-votes-roundup';
 import { MemberPostVotesRoundup } from '../../../../votes/domain/member-post-votes-roundup';
 import { ProductionVotesRepository } from '../../../../votes/repos/adapters/production-votes-repo';
-import { MemberUsername } from '../../../../members/domain/member-username';
-import { Member } from '../../../../members/domain/member';
-import { ProductionMembersRepository } from '../../../../members/repos/adapters/production-members-repository';
-import { Config } from '../../../../../shared/config';
-import { PrismaDatabase } from '@forumate/database';
-import { InMemoryEventBus } from '@forumate/bus';
-import { UpdateMemberReputationScoreCommand } from '@forumate/api/votes';
-import { ReputationLevel } from '@forumate/api/members';
+
+import { UpdateMemberReputationScore } from './update-member-reputation-score';
 
 function setupTest({
   useCase,
@@ -62,12 +64,12 @@ function setupTest({
 }
 
 describe('updateMemberReputationScore', () => {
-  let config = new Config('test:unit');
-  let database = new PrismaDatabase(config);
+  const config = new Config('test:unit');
+  const database = new PrismaDatabase(config);
 
-  let membersRepo = new ProductionMembersRepository(database);
-  let votesRepo = new ProductionVotesRepository(database);
-  let eventBus = new InMemoryEventBus();
+  const membersRepo = new ProductionMembersRepository(database);
+  const votesRepo = new ProductionVotesRepository(database);
+  const eventBus = new InMemoryEventBus();
 
   const useCase = new UpdateMemberReputationScore(
     membersRepo,

@@ -1,10 +1,12 @@
-import { CommentUpvoted } from '../domain/comment-upvoted';
+import { UpdateMemberReputationScoreCommand } from '@forumate/api/votes';
+import { EventBus } from '@forumate/bus';
+
 import { CommentDownvoted } from '../domain/comment-downvoted';
-import { VotesService } from './votes-service';
+import { CommentUpvoted } from '../domain/comment-upvoted';
 import { PostDownvoted } from '../domain/post-downvoted';
 import { PostUpvoted } from '../domain/post-upvoted';
-import { EventBus } from '@forumate/bus';
-import { UpdateMemberReputationScoreCommand } from '@forumate/api/votes';
+
+import { VotesService } from './votes-service';
 
 export class VotesSubscriptions {
   constructor(

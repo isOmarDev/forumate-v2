@@ -1,17 +1,18 @@
-import { ApplicationModule } from '../../shared/modules/application-module';
-
-import { CommentRepository } from './repos/ports/comment-repository';
-import { ProductionCommentsRepository } from './repos/adapters/production-comment-repository';
-import { CommentsService } from './application/comments-service';
-import { WebServer } from '../../shared/http';
-import { CommentsController } from './comments-controller';
-import { commentsErrorHandler } from './comments-errors';
-import { PostsRepository } from '../posts/repos/ports/posts-repository';
-import { ProductionPostsRepository } from '../posts/repos/adapters/production-posts-repository';
-import { MembersRepository } from '../members/repos/ports/members-repository';
 import { EventBus } from '@forumate/bus';
 import { Database } from '@forumate/database';
+
 import { Config } from '../../shared/config';
+import { WebServer } from '../../shared/http';
+import { ApplicationModule } from '../../shared/modules/application-module';
+import { MembersRepository } from '../members/repos/ports/members-repository';
+import { ProductionPostsRepository } from '../posts/repos/adapters/production-posts-repository';
+import { PostsRepository } from '../posts/repos/ports/posts-repository';
+
+import { CommentsService } from './application/comments-service';
+import { CommentsController } from './comments-controller';
+import { commentsErrorHandler } from './comments-errors';
+import { ProductionCommentsRepository } from './repos/adapters/production-comment-repository';
+import { CommentRepository } from './repos/ports/comment-repository';
 
 export class CommentsModule extends ApplicationModule {
   private commentsRepository: CommentRepository;

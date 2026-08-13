@@ -1,12 +1,13 @@
 import axios from 'axios';
 
 import { getAuthHeaders } from '..';
+
 import { CreatePostInput } from './inputs';
 import { GetPostsQueryInput } from './queries';
 import {
   CreatePostApiResponse,
-  GetPostsApiResponse,
   GetPostByIdApiResponse,
+  GetPostsApiResponse,
 } from './responses';
 
 export const createPostsApi = (apiURL: string) => {
