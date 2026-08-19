@@ -1,20 +1,8 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.test.node.json",
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "target": "es2022",
-    "lib": ["ES2022"],
-    "types": ["node", "jest", "jest-cucumber", "@faker-js/faker"],
-
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "composite": true,
-
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo"
+    "noEmit": true,
+    "composite": false
   },
-  "include": ["./src"],
-  "exclude": ["**/*.spec.ts", "**/*.infra.ts", "**/*.test.ts", "**/*.e2e.ts"]
+  "include": ["./src/**/*.ts", "./tests/**/*.ts"]
 }

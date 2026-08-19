@@ -1,12 +1,8 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.node.json",
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "target": "es2022",
-    "lib": ["ES2022"],
-    "types": ["node"],
-    "skipLibCheck": true
+    "noEmit": true
   },
-  "include": ["src", "scripts"]
+  "include": ["./src"],
+  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
 }

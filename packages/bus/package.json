@@ -18,5 +18,8 @@
   "dependencies": {
     "@forumate/core": "workspace:*",
     "nats": "^2.29.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0"
   }
 }
