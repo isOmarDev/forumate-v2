@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "dev": "nodemon",
     "start": "node --import tsx dist/index.js",
     "test": "tsx run-jest.ts",
@@ -11,7 +11,7 @@
     "test:e2e": "tsx run-jest.ts -c jest.config.e2e.ts",
     "test:infra": "tsx run-jest.ts -c jest.config.infra.ts",
     "test:unit": "tsx run-jest.ts -c jest.config.unit.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@forumate/api": "workspace:*",
@@ -30,12 +30,12 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@faker-js/faker": "^9.9.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/nodemailer": "^8.0.1",
     "@types/supertest": "^6.0.3",
     "@types/uuid": "^10.0.0",
+    "@faker-js/faker": "^9.9.0",
     "nodemon": "^3.1.11",
     "onchange": "^7.1.0",
     "supertest": "^7.2.2",

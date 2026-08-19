@@ -1,19 +1,8 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.test.node.json",
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "target": "es2022",
-    "lib": ["ES2022"],
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "types": ["node", "jest"],
-    "declaration": true,
-    "declarationMap": true,
-    "skipLibCheck": true,
-    "composite": true,
-    "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo"
+    "noEmit": true
   },
-  "include": ["./src"],
+  "include": ["./src/**/*.unit.ts"],
   "exclude": ["node_modules", "dist"]
 }
