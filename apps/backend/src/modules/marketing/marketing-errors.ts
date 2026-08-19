@@ -1,34 +1,32 @@
-import type { Request, Response, NextFunction } from 'express';
+import { NextFunction,Request, Response } from 'express';
 
-import { EmailNotAddedToMailListException } from './marketing-exceptions';
-import { MarketingResponse } from '@forumate/shared/api/marketing';
+import { MarketingResponse } from '@forumate/api/marketing';
+import { ValidationError } from '@forumate/errors/application';
+import { CustomError } from '@forumate/errors/custom';
+import { GenericServerError } from '@forumate/errors/server';
 
-export const marketingErrorCodes = {
-  EmailNotAddedToMailList: 'EmailNotAddedToMailList',
-} as const;
-
-export class MarketingErrors {
-  static handle(
-    error: Error,
-    _req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
-    let responseBody: MarketingResponse;
-
-    if (error instanceof EmailNotAddedToMailListException) {
-      responseBody = {
-        success: false,
-        data: null,
-        error: {
-          code: 'EmailNotAddedToMailList',
-          message: error.message,
-        },
-      };
-
-      return res.status(400).json(responseBody);
-    }
-
-    next(error);
+export function marketingErrorHandler(
+  error: CustomError,
+  _: Request,
+  res: Response,
+  _next: NextFunction,
+): Response<MarketingResponse> {
+  if (error.name === 'InvalidRequestBodyError') {
+    return res.status(400).json({
+      success: false,
+      data: null,
+      error: {
+        message: error.message,
+        code: new ValidationError(error.message),
+      },
+    });
   }
+
+  return res.status(500).json({
+    success: false,
+    data: null,
+    error: {
+      code: new GenericServerError(),
+    },
+  });
 }

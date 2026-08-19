@@ -1,0 +1,48 @@
+{
+  "name": "@forumate/api",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./users": {
+      "types": "./src/users/index.ts",
+      "default": "./src/users/index.ts"
+    },
+    "./posts": {
+      "types": "./src/posts/index.ts",
+      "default": "./src/posts/index.ts"
+    },
+    "./marketing": {
+      "types": "./src/marketing/index.ts",
+      "default": "./src/marketing/index.ts"
+    },
+    "./members": {
+      "types": "./src/members/index.ts",
+      "default": "./src/members/index.ts"
+    },
+    "./comments": {
+      "types": "./src/comments/index.ts",
+      "default": "./src/comments/index.ts"
+    },
+    "./votes": {
+      "types": "./src/votes/index.ts",
+      "default": "./src/votes/index.ts"
+    }
+  },
+  "scripts": {
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@forumate/database": "workspace:*",
+    "@forumate/core": "workspace:*",
+    "@forumate/errors": "workspace:*",
+    "@faker-js/faker": "^9.9.0",
+    "axios": "^1.6.2",
+    "zod": "^3.25.76"
+  }
+}

@@ -2,14 +2,16 @@ import type { JestConfigWithTsJest } from 'ts-jest';
 
 export default async (): Promise<JestConfigWithTsJest> => ({
   displayName: 'Backend (Infra)',
-  testMatch: ['**/@(src|tests)/**/*.@(infra|api).*'],
+  testMatch: [
+    '**/@(src|tests)/**/*.@(infra|api).*',
+    '**/src/modules/**/**/*.infra.ts',
+  ],
   transform: {
     '^.+\\.(t|j)sx?$': ['ts-jest', { diagnostics: false }],
   },
-   moduleNameMapper: {
+  moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   maxWorkers: 1,
   verbose: true,
-  globalSetup: './tests/support/globalDevEnvTestSetup.ts',
 });

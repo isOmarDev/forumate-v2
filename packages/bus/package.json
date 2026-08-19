@@ -1,0 +1,22 @@
+{
+  "name": "@forumate/bus",
+  "description": "Event bus to subscribe and write to.",
+  "private": true,
+  "version": "1.0.0",
+  "license": "ISC",
+  "scripts": {
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@forumate/core": "workspace:*",
+    "nats": "^2.29.2"
+  }
+}

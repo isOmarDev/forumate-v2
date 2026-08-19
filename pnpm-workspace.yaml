@@ -2,8 +2,12 @@ packages:
   - 'apps/*'
   - 'packages/*'
 allowBuilds:
+  '@firebase/util': true
   '@prisma/engines': true
   esbuild: true
   prisma: true
+  protobufjs: true
   puppeteer: true
   unrs-resolver: true
+minimumReleaseAgeExclude:
+  - globals@17.9.0

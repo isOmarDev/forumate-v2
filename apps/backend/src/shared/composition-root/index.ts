@@ -1,108 +1,203 @@
-import WebServer from '../server';
+import { EventBus,InMemoryEventBus } from '@forumate/bus';
+import { PrismaDatabase } from '@forumate/database';
+
+import {
+  MarketingModule,
+  NotificationsModule,
+  PostsModule,
+  UsersModule,
+} from '../../modules';
+import { CommentsModule } from '../../modules/comments/comments-module';
+import { MembersModule } from '../../modules/members/members-module';
+import { VotesModule } from '../../modules/votes/votes-module';
+import { Application } from '../application/application-interface';
 import { Config } from '../config';
-import { Database } from '../database/database';
-import { IApplication } from '../application/application-interface';
-import GlobalErrorHandler from '../errors/global-error-handler';
-import { UserModule } from '../../modules/user';
-import { PostModule } from '../../modules/post';
-import { MarketingModule } from '../../modules/marketing';
-import { NotificationModule } from '../../modules/notification';
+import { WebServer } from '../http';
 
 export class CompositionRoot {
   private static instance: CompositionRoot | null = null;
-  private webServer: WebServer;
-  private db: Database;
 
-  private userModule: UserModule;
-  private postModule: PostModule;
-  private marketingModule: MarketingModule;
-  private notificationModule: NotificationModule;
+  private eventBus: EventBus;
+  private dbConnection: PrismaDatabase;
+  private config: Config;
+  private webServer!: WebServer;
 
-  private constructor(private config: Config) {
-    this.db = this.createDatabase();
-    this.notificationModule = this.createNotificationModule();
-    this.marketingModule = this.createMarketingModule();
-    this.userModule = this.createUserModule();
-    this.postModule = this.createPostModule();
-    this.webServer = this.createWebServer();
-    this.mountRouters();
-    this.registerGlobalErrorHandler();
-  }
+  private usersModule!: UsersModule;
+  private marketingModule!: MarketingModule;
 
-  static createCompositionRoot(config: Config) {
+  private notificationsModule!: NotificationsModule;
+  private commentsModule!: CommentsModule;
+  private postsModule!: PostsModule;
+  private membersModule!: MembersModule;
+  private votesModule!: VotesModule;
+
+  public static createCompositionRoot(config: Config) {
     if (!CompositionRoot.instance) {
-      CompositionRoot.instance = new CompositionRoot(config);
+      CompositionRoot.instance = new this(config);
     }
-
     return CompositionRoot.instance;
   }
 
-  private createWebServer() {
-    return new WebServer({ port: 3000, env: this.config.environment });
+  private constructor(config: Config) {
+    this.config = config;
+
+    // Create services
+    this.dbConnection = this.createDBConnection();
+    this.eventBus = this.createEventBus();
+    this.webServer = this.createWebServer();
   }
 
-  private createDatabase() {
-    return new Database();
+  async start() {
+    // Start services
+    await this.dbConnection.connect();
+    await this.webServer.start();
+    await this.eventBus.initialize();
+
+    // Connect modules starting with the root modules (generic)
+    this.usersModule = this.createUsersModule();
+    this.notificationsModule = this.createNotificationsModule();
+    this.marketingModule = this.createMarketingModule();
+
+    // Build the core modules
+    this.membersModule = this.createMembersModule();
+    this.commentsModule = this.createCommentsModule();
+    this.postsModule = this.createPostsModule();
+    this.votesModule = this.createVotesModule();
+
+    this.mountRoutes();
   }
 
-  private createUserModule() {
-    return UserModule.build(
-      this.db,
-      this.notificationModule.getTransactionalEmailApi(),
+  async stop() {
+    await this.webServer.stop();
+    await this.eventBus.stop();
+  }
+
+  createCommentsModule() {
+    return CommentsModule.build(
+      this.dbConnection,
+      this.config,
+      this.membersModule.getMembersRepository(),
+      this.eventBus,
+    );
+  }
+
+  createMembersModule() {
+    return MembersModule.build(this.dbConnection, this.eventBus, this.config);
+  }
+
+  createNotificationsModule() {
+    return NotificationsModule.build(this.eventBus, this.config);
+  }
+
+  createMarketingModule() {
+    return MarketingModule.build(this.config);
+  }
+
+  createUsersModule() {
+    return UsersModule.build(this.config);
+  }
+
+  createVotesModule() {
+    return VotesModule.build(
+      this.dbConnection,
+      this.membersModule.getMembersRepository(),
+      this.commentsModule.getCommentsRepository(),
+      this.postsModule.getPostsRepository(),
+      this.eventBus,
       this.config,
     );
   }
 
-  private createPostModule() {
-    return PostModule.build(this.db, this.config);
+  createPostsModule() {
+    return PostsModule.build(
+      this.dbConnection,
+      this.config,
+      this.eventBus,
+      this.membersModule.getMembersRepository(),
+    );
   }
 
-  private createMarketingModule() {
-    return MarketingModule.build(this.config);
+  getDatabase() {
+    if (!this.dbConnection) this.createDBConnection();
+    return this.dbConnection;
   }
 
-  private createNotificationModule() {
-    return NotificationModule.build(this.config);
+  getEventBus() {
+    return this.eventBus;
   }
 
-  private mountRouters() {
-    this.marketingModule.mountRouter(this.webServer);
-    this.userModule.mountRouter(this.webServer);
-    this.postModule.mountRouter(this.webServer);
+  createEventBus() {
+    return new InMemoryEventBus();
   }
 
-  private registerGlobalErrorHandler() {
-    this.webServer.setupGlobalErrorHandler(GlobalErrorHandler.handle);
+  createWebServer() {
+    return new WebServer(this.config);
   }
 
   getWebServer() {
     return this.webServer;
   }
 
-  getDatabase() {
-    return this.db;
+  private mountRoutes() {
+    this.usersModule.mountRouter(this.webServer);
+    this.marketingModule.mountRouter(this.webServer);
+    this.membersModule.mountRouter(this.webServer);
+    this.postsModule.mountRouter(this.webServer);
+    this.votesModule.mountRouter(this.webServer);
+    this.commentsModule.mountRouter(this.webServer);
   }
 
-  getRepositories() {
+  private createDBConnection() {
+    const dbConnection = new PrismaDatabase();
+    if (!this.dbConnection) {
+      this.dbConnection = dbConnection;
+    }
+    return dbConnection;
+  }
+
+  getApplication(): Application {
     return {
-      user: this.userModule.getUserRepository(),
-      post: this.postModule.getPostRepository(),
+      users: this.usersModule.getUsersService(),
+      posts: this.postsModule.getPostsService(),
+      marketing: this.marketingModule.getMarketingService(),
+      notifications: this.notificationsModule.getNotificationsService(),
+      votes: this.votesModule.getVotesService(),
     };
   }
 
   getTransactionalEmailApi() {
-    return this.notificationModule.getTransactionalEmailApi();
+    return this.notificationsModule.getTransactionalEmailApi();
   }
 
   getContactListApi() {
     return this.marketingModule.getContactListApi();
   }
 
-  getApplication(): IApplication {
+  getModule(
+    moduleName:
+      'members' | 'users' | 'votes' | 'posts' | 'notifications' | 'marketing',
+  ) {
+    switch (moduleName) {
+      case 'members':
+        return this.membersModule;
+      case 'users':
+        return this.usersModule;
+      case 'posts':
+        return this.postsModule;
+      case 'votes':
+        return this.votesModule;
+      case 'notifications':
+        return this.notificationsModule;
+      case 'marketing':
+        return this.marketingModule;
+      default:
+        throw new Error(`Module ${moduleName} not found`);
+    }
+  }
+
+  getRepositories() {
     return {
-      user: this.userModule.getUserService(),
-      post: this.postModule.getPostService(),
-      marketing: this.marketingModule.getMarketingService(),
+      posts: this.postsModule.getPostsRepository(),
     };
   }
 }

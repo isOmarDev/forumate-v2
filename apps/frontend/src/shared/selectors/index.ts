@@ -1,46 +1,34 @@
-type ElementType = keyof JSX.IntrinsicElements;
-
-export type PageElementsSelector<T extends ElementType = ElementType> = {
-  selector: string;
-  type: T;
-};
-
-const el = <T extends ElementType>(
-  selector: string,
-  type: T,
-): PageElementsSelector<T> => ({
-  selector,
-  type,
-});
-
 export const appSelectors = {
   registration: {
     registrationForm: {
-      form: el('.registration-form', 'form'),
-      email: el('.registration.email', 'input'),
-      username: el('.registration.username', 'input'),
-      firstname: el('.registration.first-name', 'input'),
-      lastname: el('.registration.last-name', 'input'),
-      password: el('.registration.password', 'input'),
-      marketingCheckbox: el('.registration.marketing-emails', 'input'),
-      submit: el('.registration.submit-button', 'button'),
+      email: { selector: '.registration.email', type: 'input' },
+      username: { selector: '.registration.username', type: 'input' },
+      firstname: { selector: '.registration.first-name', type: 'input' },
+      lastname: { selector: '.registration.last-name', type: 'input' },
+      marketingCheckbox: {
+        selector: '.registration.marketing-emails',
+        type: 'checkbox',
+      },
+      submit: { selector: '.registration.submit-button', type: 'button' },
     },
   },
-  layout: { header: el('.header.username', 'div') },
+  header: { selector: '.header.username', type: 'div' },
   notifications: {
-    failure: el('#failure-toast', 'div'),
-    success: el('#success-toast', 'div'),
+    failure: '#failure-toast',
+    success: '#success-toast',
   },
-} as const;
-
-export const toClass = (input: string): string => {
-  return input.slice(1).replace(/\./g, ' ');
 };
 
-export const toId = (input: string): string => {
+export function toClass(input: string): string {
+  // Remove the leading dot and replace all remaining dots with spaces
+  return input.slice(1).replace(/\./g, ' ');
+}
+
+export function toId(input: string): string {
   if (!input.startsWith('#')) {
     throw new Error('Input string must start with a hash symbol (#).');
   }
 
+  // Remove the leading hash symbol
   return input.slice(1);
-};
+}

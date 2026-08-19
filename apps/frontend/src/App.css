@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap');
+
 html {
   color-scheme: none !important;
   color: unset !important;
@@ -9,6 +11,7 @@ body {
   place-items: center;
   min-width: 100vw;
   min-height: 100vh;
+  font-family: 'Roboto Mono', monospace;
 }
 
 #root {
@@ -16,8 +19,13 @@ body {
   margin: 1rem;
   padding: 2rem;
   background: #f1f1f1;
-  height: 100vh;
+  min-height: 100vh;
   border-radius: 0.2rem;
+}
+
+button {
+  color: white;
+  font-family: 'Roboto Mono', monospace;
 }
 
 #app-logo img {
@@ -28,6 +36,16 @@ body {
   display: flex;
   margin: 2rem;
   flex-direction: column;
+}
+
+.post-content {
+  font-family: 'Roboto Mono';
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.post-item-content {
+  width: 100%;
 }
 
 .post-item-downvote > img {
@@ -108,14 +126,21 @@ h3 {
 }
 
 .post-item-title {
-  font-weight: bold;
+  font-weight: 500;
   font-size: 1.2rem;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.post-in-focus {
+  font-size: 2rem;
 }
 
 .post-item-details {
   display: flex;
   flex-direction: row;
   align-items: center;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.9rem;
 }
 
 .logo {
@@ -129,6 +154,12 @@ h3 {
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+.post-item-upvote,
+.post-item-downvote {
+  cursor: pointer;
+  position: relative;
 }
 
 @keyframes logo-spin {
@@ -188,19 +219,125 @@ h3 {
   box-sizing: border-box;
 }
 
-.marketing-emails-label {
+.submission-form {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.submission-form input,
+.submission-form textarea {
+  display: block;
+  padding: 0.6rem 1rem;
+  border-radius: 3px;
+  border: 3px solid rgba(0, 0, 0, 0.79);
+  width: 100%;
+  margin-bottom: 1rem;
+  color: rgba(0, 0, 0, 0.84);
+  transition: all 0.2s;
+  font-size: 1rem;
+  font-family: 'Roboto Mono', monospace;
+  box-sizing: border-box;
+}
+
+.submission-form textarea {
+  min-height: 200px;
+  resize: vertical;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 1rem;
+}
+
+.submission-form button {
+  background-color: #1a1a1a;
+  color: white;
+  font-weight: bold;
+}
+
+.submission-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Comments */
+.comments-list {
+  margin-top: 2rem;
+}
+
+.comments-empty {
+  margin-top: 2rem;
+  color: #666;
+  font-style: italic;
+}
+
+.comment-item {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  align-items: anchor-center;
+}
+
+.comment-content {
   display: flex;
-  align-items: center;
-  margin-block-start: 10px;
-  margin-block-end: 20px;
-  gap: 10px;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 0.3rem;
+  font-family: 'Roboto Mono';
+  font-weight: 500;
+  border: solid 3px #d9d9d9;
 }
 
-.registration-form .marketing-emails {
-  width: auto;
-  margin: 0;
+.comment-text {
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
-.to-login {
-  margin-top: 20px;
+.comment-metadata {
+  display: flex;
+  gap: 1rem;
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.comment-metadata span {
+  display: inline-block;
+}
+
+.comment-replies {
+  margin-left: 2rem;
+  margin-top: 1rem;
+  border-left: 2px solid #eee;
+}
+
+.comment-replies .comment-item {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.comment-replies .comment-item:last-child {
+  padding-bottom: 1rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.de-selected-post-type {
+  opacity: 0.3;
+}
+
+.post-link-container {
+  background: #646cff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.2rem;
+  border: solid 4px;
+}
+
+.post-link-container > a {
+  color: white;
+  text-decoration: underline;
 }

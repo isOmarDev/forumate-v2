@@ -2,12 +2,16 @@
   "ui": "tui",
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
+    "typecheck": {},
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["clean", "^build"],
       "outputs": ["dist/**", "tsconfig.tsbuildinfo"]
     },
     "clean": {
       "cache": false
+    },
+    "lint": {
+      "outputs": []
     },
     "dev": {
       "cache": false,
