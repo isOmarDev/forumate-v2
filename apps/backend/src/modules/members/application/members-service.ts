@@ -2,7 +2,7 @@ import { CreateMemberCommand } from '@forumate/api';
 import { EventBus } from '@forumate/bus';
 import { Result } from '@forumate/core';
 
-import { Member } from '../domain/member';
+import { Member } from '../domain/entities/member';
 import { MembersRepository } from '../repos/ports/members-repository';
 
 import {

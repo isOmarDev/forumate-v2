@@ -10,10 +10,9 @@ import { DatabaseError } from '@forumate/errors/server';
 
 import { MembersRepository } from '../../../../members/repos/ports/members-repository';
 import { PostsRepository } from '../../../../posts/repos/ports/posts-repository';
-import { PostVote } from '../../../domain/post-vote';
+import { PostVote } from '../../../domain/entities/post-vote';
+import { CanVoteOnPostPolicy } from '../../../domain/policies/can-vote-on-post';
 import { VoteRepository } from '../../../repos/ports/vote-repository';
-
-import { CanVoteOnPostPolicy } from './can-vote-on-post';
 
 type VoteOnPostError =
   ValidationError | PermissionError | NotFoundError | DatabaseError;

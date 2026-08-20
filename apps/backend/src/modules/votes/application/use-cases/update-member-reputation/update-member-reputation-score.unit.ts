@@ -6,12 +6,12 @@ import { InMemoryEventBus } from '@forumate/bus';
 import { PrismaDatabase } from '@forumate/database';
 
 import { Config } from '../../../../../shared/config';
-import { Member } from '../../../../members/domain/member';
-import { MemberUsername } from '../../../../members/domain/member-username';
+import { Member } from '../../../../members/domain/entities/member';
+import { MemberUsername } from '../../../../members/domain/value-objects/member-username';
 import { ProductionMembersRepository } from '../../../../members/repos/adapters/production-members-repository';
-import { MemberCommentVotesRoundup } from '../../../../votes/domain/member-comment-votes-roundup';
-import { MemberPostVotesRoundup } from '../../../../votes/domain/member-post-votes-roundup';
 import { ProductionVotesRepository } from '../../../../votes/repos/adapters/production-votes-repo';
+import { MemberCommentVotesRoundup } from '../../read-models/member-comment-votes-roundup';
+import { MemberPostVotesRoundup } from '../../read-models/member-post-votes-roundup';
 
 import { UpdateMemberReputationScore } from './update-member-reputation-score';
 

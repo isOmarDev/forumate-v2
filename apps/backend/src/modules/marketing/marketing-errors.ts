@@ -1,4 +1,4 @@
-import { NextFunction,Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import { MarketingResponse } from '@forumate/api/marketing';
 import { ValidationError } from '@forumate/errors/application';

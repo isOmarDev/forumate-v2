@@ -1,10 +1,7 @@
 import axios from 'axios';
 
 import { CreateUserInput } from './inputs';
-import {
-  CreateUserResponse,
-  GetUserByEmailResponse,
-} from './responses';
+import { CreateUserResponse, GetUserByEmailResponse } from './responses';
 
 type AuthenticateResponse = any;
 

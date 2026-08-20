@@ -1,4 +1,4 @@
-import { NextFunction,Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { auth } from 'firebase-admin';
 
 import { UnauthorizedError } from '@forumate/errors/application';

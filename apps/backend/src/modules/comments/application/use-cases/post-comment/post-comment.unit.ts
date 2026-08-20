@@ -7,8 +7,8 @@ import { withExistingPostByRandomMember } from '../../../../../../tests/fixtures
 import { Config } from '../../../../../shared/config';
 import { ProductionMembersRepository } from '../../../../members/repos/adapters/production-members-repository';
 import { ProductionPostsRepository } from '../../../../posts/repos/adapters/production-posts-repository';
-import { Comment } from '../../../domain/comment';
-import { CommentPosted } from '../../../domain/comment-posted';
+import { Comment } from '../../../domain/entities/comment';
+import { CommentPosted } from '../../../domain/events/comment-posted';
 import { ProductionCommentsRepository } from '../../../repos/adapters/production-comment-repository';
 
 import { PostComment } from './post-comment';

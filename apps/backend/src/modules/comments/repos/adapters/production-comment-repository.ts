@@ -1,6 +1,6 @@
 import { Database, Prisma } from '@forumate/database';
 
-import { Comment } from '../../domain/comment';
+import { Comment } from '../../domain/entities/comment';
 import { CommentRepository } from '../ports/comment-repository';
 
 export class ProductionCommentsRepository implements CommentRepository {

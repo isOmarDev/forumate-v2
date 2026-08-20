@@ -4,7 +4,7 @@ import { Result, UseCase } from '@forumate/core';
 import { NotFoundError } from '@forumate/errors/application';
 import { DatabaseError } from '@forumate/errors/server';
 
-import { Member } from '../../../../members/domain/member';
+import { Member } from '../../../../members/domain/entities/member';
 import { MembersRepository } from '../../../../members/repos/ports/members-repository';
 import { VoteRepository } from '../../../../votes/repos/ports/vote-repository';
 

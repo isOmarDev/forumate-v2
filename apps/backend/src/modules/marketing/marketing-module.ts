@@ -2,12 +2,12 @@ import { Config } from '../../shared/config';
 import { WebServer } from '../../shared/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
 
-import { ContactListApiSpy } from './adapters/contact-list-api/contact-list-spy';
-import { MailchimpContactList } from './adapters/contact-list-api/mail-chimp-contact-list';
 import { MarketingService } from './application/marketing-service';
+import { ContactListApiSpy } from './contact-list/adapters/contact-list-spy';
+import { MailchimpContactList } from './contact-list/adapters/mail-chimp-contact-list';
+import { ContactListApi } from './contact-list/ports/contact-list-api';
 import { MarketingController } from './marketing-controller';
 import { marketingErrorHandler } from './marketing-errors';
-import { ContactListApi } from './ports/contact-list-api';
 
 export class MarketingModule extends ApplicationModule {
   private marketingService: MarketingService;

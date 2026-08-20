@@ -1,5 +1,5 @@
 import { PostComment } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment';
-import { Post } from '../../../src/modules/posts/domain/post';
+import { Post } from '../../../src/modules/posts/domain/entities/post';
 
 export function withExistingPostByRandomMember(useCase: PostComment) {
   const existingPost = Post.create({

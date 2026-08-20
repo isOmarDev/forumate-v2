@@ -1,7 +1,7 @@
 import { Result, UseCase } from '@forumate/core';
 import { NotFoundError } from '@forumate/errors/application';
 
-import { Member } from '../../../domain/member';
+import { Member } from '../../../domain/entities/member';
 import { MembersRepository } from '../../../repos/ports/members-repository';
 
 export type GetMemberDetailsError = NotFoundError;

@@ -1,4 +1,4 @@
-import { Member } from '../../../src/modules/members/domain/member';
+import { Member } from '../../../src/modules/members/domain/entities/member';
 import { MembersModule } from '../../../src/modules/members/membersModule';
 import { CompositionRoot } from '../../../src/shared/compositionRoot';
 
