@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import { auth } from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
 
 /**
  * Creates a fake Firebase auth token for testing purposes.
@@ -14,7 +14,7 @@ export async function createFakeAuthTokenAndUser(): Promise<{
 
   // In test/development mode, we can use Firebase's createCustomToken
   // This will generate a token that can be verified by the JWT middleware
-  const token = await auth().createCustomToken(userId, {
+  const token = await getAuth().createCustomToken(userId, {
     // Add any additional claims needed for testing. We won't be using these now.
     permissions: ['create:members', 'create:posts'],
   });

@@ -1,6 +1,6 @@
 import { Member } from '../../../src/modules/members/domain/entities/member';
-import { MembersModule } from '../../../src/modules/members/membersModule';
-import { CompositionRoot } from '../../../src/shared/compositionRoot';
+import { MembersModule } from '../../../src/modules/members/members-module';
+import { CompositionRoot } from '../../../src/shared/composition-root';
 
 export class DatabaseFixture {
   constructor(private composition: CompositionRoot) {}
@@ -14,7 +14,7 @@ export class DatabaseFixture {
   }
 
   async resetDatabase() {
-    const connection = this.composition.getDatabase().getConnection();
+    const connection = this.composition.getDatabase().getClient();
 
     try {
       await connection.$transaction([
