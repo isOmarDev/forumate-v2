@@ -1,4 +1,4 @@
-import { PostDTO, PostType } from '@forumate/api';
+import { PostDto, PostType } from '@forumate/api/posts';
 import { Post as PostModel } from '@forumate/database';
 
 import { MemberReadModel } from '../../../members/application/read-models/member-read-model';
@@ -51,7 +51,7 @@ export class PostReadModel {
     });
   }
 
-  public toDTO(): PostDTO {
+  public toDTO(): PostDto {
     return {
       id: this.props.id,
       title: this.props.title,

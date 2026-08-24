@@ -49,8 +49,9 @@ export class PostsController {
       const posts = await this.postsService.getPosts(query);
 
       const response: GetPostsApiResponse = {
-        data: posts.map((p) => p.toDTO()),
         success: true,
+        data: posts.map((post) => post.toDTO()),
+        statusCode: 200,
         error: null,
       };
 
@@ -74,6 +75,7 @@ export class PostsController {
       const result = await this.postsService.createPost(
         commandOrError.getValue(),
       );
+
       if (!result.isSuccess()) {
         return next(result.getError());
       }
@@ -84,8 +86,9 @@ export class PostsController {
       );
 
       const response: CreatePostApiResponse = {
-        data: postDetails?.toDTO(),
         success: true,
+        data: postDetails!.toDTO(),
+        statusCode: 200,
         error: null,
       };
 
@@ -111,6 +114,7 @@ export class PostsController {
         return res.status(404).json({
           success: false,
           data: undefined,
+          statusCode: 404,
           error: {
             code: 'PostNotFound',
             message: 'Post not found.',
@@ -118,8 +122,9 @@ export class PostsController {
         });
       } else {
         const response: GetPostByIdApiResponse = {
-          data: postOrNothing.toDTO(),
           success: true,
+          data: postOrNothing.toDTO(),
+          statusCode: 200,
           error: null,
         };
         // Improvement: Handle these consistently and with strict types
