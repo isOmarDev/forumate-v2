@@ -1,9 +1,9 @@
 import { AnyApplicationError } from '@forumate/errors/application';
 import { AnyServerError } from '@forumate/errors/server';
 
-import { ApiResponse } from '..';
+import { ApiResponse } from '../types';
 
-import { MemberDTO } from './dtos';
+import { MemberDto } from './dtos';
 
 // Errors
 export type UsernameAlreadyTakenError = 'UsernameAlreadyTaken';
@@ -14,13 +14,13 @@ export type AnyMemberError =
   CreateMemberError | AnyApplicationError['code'] | AnyServerError['code'];
 
 export type CreateMemberApiResponse = ApiResponse<
-  MemberDTO,
+  MemberDto,
   CreateMemberError | 'NetworkError'
 >;
 
 // Api responses
 export type GetMemberDetailsApiResponse = ApiResponse<
-  MemberDTO,
+  MemberDto,
   AnyMemberError
 >;
 

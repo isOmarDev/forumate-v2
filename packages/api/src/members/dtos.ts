@@ -7,7 +7,7 @@ export const ReputationLevel = {
 export type ReputationLevel =
   (typeof ReputationLevel)[keyof typeof ReputationLevel];
 
-export type MemberDTO = {
+export type MemberDto = {
   userId: string;
   memberId: string;
   username: string;
