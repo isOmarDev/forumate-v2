@@ -15,7 +15,7 @@ import { PostComment } from './post-comment';
 
 describe('postComment', () => {
   const config = new Config('test:unit');
-  const database = new PrismaDatabase(config);
+  const database = new PrismaDatabase();
   const commentsRepo = new ProductionCommentsRepository(database);
   const postsRepo = new ProductionPostsRepository(database);
   const membersRepo = new ProductionMembersRepository(database);
