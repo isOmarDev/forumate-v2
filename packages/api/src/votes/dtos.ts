@@ -1,6 +1,6 @@
 import { VoteType } from './inputs';
 
-export type PostVoteDTO = {
+export type PostVoteDto = {
   postId: string;
   memberId: string;
   voteType: VoteType;
