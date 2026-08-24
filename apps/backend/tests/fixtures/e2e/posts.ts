@@ -1,8 +1,8 @@
-import { ApiClient, CreatePostInput, MemberDTO, PostDTO } from '@forumate/api';
+import { ApiClient, CreatePostInput, MemberDto, PostDto } from '@forumate/api';
 
 export async function setupPost(
   apiClient: ApiClient,
-  member: MemberDTO,
+  member: MemberDto,
   authToken: string,
 ) {
   const postData: CreatePostInput = {
@@ -16,5 +16,5 @@ export async function setupPost(
 
   expect(response).toBeDefined();
   expect(response.success).toBe(true);
-  return { post: response.data as PostDTO };
+  return { post: response.data as PostDto };
 }

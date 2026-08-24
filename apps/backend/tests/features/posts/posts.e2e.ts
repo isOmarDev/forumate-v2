@@ -14,7 +14,7 @@ jest.setTimeout(30000);
 
 describe('posts', () => {
   let databaseFixture: DatabaseFixture;
-  const apiClient = createApiClient('http://localhost:3000');
+  const apiClient = createApiClient({ baseURL: 'http://localhost:3000' });
   let appComposition: CompositionRoot;
 
   beforeAll(async () => {
