@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import { PostVoteDTO, VoteType } from '@forumate/api/votes';
+import { PostVoteDto, VoteType } from '@forumate/api/votes';
 import { AggregateRoot } from '@forumate/core';
 import { ValidationError } from '@forumate/errors/application';
 
@@ -101,7 +101,7 @@ export class PostVote extends AggregateRoot {
     });
   }
 
-  public toDTO(): PostVoteDTO {
+  public toDTO(): PostVoteDto {
     return {
       memberId: this.props.memberId,
       postId: this.props.postId,
