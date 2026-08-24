@@ -1,4 +1,4 @@
-import { fail, Result, success,TextUtil } from '@forumate/core';
+import { fail, Result, success, TextUtil } from '@forumate/core';
 import { ValidationError } from '@forumate/errors/application';
 import { InvalidRequestBodyError } from '@forumate/errors/server';
 

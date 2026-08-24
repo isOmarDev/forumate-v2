@@ -1,75 +1,20 @@
-import axios from 'axios';
+import { apiRequest } from '../api-request';
+import { HttpClient } from '../client';
 
 import { CreateUserInput } from './inputs';
 import { CreateUserResponse, GetUserByEmailResponse } from './responses';
 
 type AuthenticateResponse = any;
 
-export const createUsersApi = (apiURL: string) => {
+export const createUsersApi = (client: HttpClient) => {
   return {
-    authenticate: async (code: string) => {
-      try {
-        const successResponse = await axios.post(
-          `${apiURL}/users/authenticate`,
-          {
-            code,
-          },
-        );
-        return successResponse.data as AuthenticateResponse;
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error) && error.response) {
-          return error.response.data as AuthenticateResponse;
-        }
+    authenticate: (code: string) =>
+      apiRequest(() => client.post('/users/authenticate', { code })),
 
-        return {
-          data: null,
-          error: {
-            message: 'Network or server unreachable',
-            code: 'NetworkError',
-          },
-          success: false,
-        };
-      }
-    },
-    register: async (input: CreateUserInput) => {
-      try {
-        const successResponse = await axios.post(`${apiURL}/users`, input);
-        return successResponse.data as CreateUserResponse;
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error) && error.response) {
-          return error.response.data as CreateUserResponse;
-        }
+    register: (input: CreateUserInput) =>
+      apiRequest(() => client.post('/users', input)),
 
-        return {
-          data: null,
-          error: {
-            message: 'Network or server unreachable',
-            code: 'NetworkError',
-          },
-          success: false,
-        };
-      }
-    },
-    getUserByEmail: async (email: string) => {
-      try {
-        const successResponse = await axios.get(`${apiURL}/users`, {
-          params: { email },
-        });
-        return successResponse.data as GetUserByEmailResponse;
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error) && error.response) {
-          return error.response.data as GetUserByEmailResponse;
-        }
-
-        return {
-          data: null,
-          error: {
-            message: 'Network or server unreachable',
-            code: 'NetworkError',
-          },
-          success: false,
-        };
-      }
-    },
+    getUserByEmail: (email: string) =>
+      apiRequest(() => client.get('/users', { params: { email } })),
   };
 };
