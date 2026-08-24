@@ -1,9 +1,9 @@
 import { AnyApplicationError } from '@forumate/errors/application';
 import { AnyServerError } from '@forumate/errors/server';
 
-import { ApiResponse } from '..';
+import { ApiResponse } from '../types';
 
-import { PostDTO } from './dtos';
+import { PostDto } from './dtos';
 
 // Errors
 export type GetPostDetailsError = '';
@@ -13,10 +13,10 @@ export type GetPostByIdErrors = '';
 export type AnyPostError = AnyServerError | AnyApplicationError;
 
 // API Responses
-export type GetPostsApiResponse = ApiResponse<PostDTO[], GetPostsErrors>;
-export type CreatePostApiResponse = ApiResponse<PostDTO, CreatePostErrors>;
-export type GetPostByIdApiResponse = ApiResponse<PostDTO, GetPostByIdErrors>;
-export type GetPostDetailsResponse = ApiResponse<PostDTO, GetPostDetailsError>;
+export type GetPostsApiResponse = ApiResponse<PostDto[], GetPostsErrors>;
+export type CreatePostApiResponse = ApiResponse<PostDto, CreatePostErrors>;
+export type GetPostByIdApiResponse = ApiResponse<PostDto, GetPostByIdErrors>;
+export type GetPostDetailsResponse = ApiResponse<PostDto, GetPostDetailsError>;
 export type AnyPostsApiResponse =
   GetPostsApiResponse | CreatePostApiResponse | AnyPostError; // TODO: this pattern throughout
 // TODO: tidy functional errors; see users.ts
