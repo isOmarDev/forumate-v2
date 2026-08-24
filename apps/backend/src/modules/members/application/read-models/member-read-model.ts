@@ -1,4 +1,4 @@
-import { MemberDTO, ReputationLevel } from '@forumate/api';
+import { MemberDto, ReputationLevel } from '@forumate/api/members';
 import { Member as MemberModel } from '@forumate/database';
 
 interface MemberReadModelProps {
@@ -47,7 +47,7 @@ export class MemberReadModel {
   }
 
   // Continue to add the remaining properties when necessary
-  public toDTO(): MemberDTO {
+  public toDTO(): MemberDto {
     return {
       memberId: this.props.id,
       username: this.props.username,

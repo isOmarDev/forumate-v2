@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import { MemberDTO, ReputationLevel } from '@forumate/api';
+import { MemberDto, ReputationLevel } from '@forumate/api/members';
 import { AggregateRoot, fail, Result, success } from '@forumate/core';
 import { Member as MemberModel } from '@forumate/database';
 import { ValidationError } from '@forumate/errors/application';
@@ -120,7 +120,7 @@ export class Member extends AggregateRoot {
     });
   }
 
-  toDTO(): MemberDTO {
+  toDTO(): MemberDto {
     return {
       userId: this.props.userId,
       memberId: this.id,
