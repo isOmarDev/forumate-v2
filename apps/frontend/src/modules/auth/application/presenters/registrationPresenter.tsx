@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 
-import { CreateUserErrors, CreateUserInput, UserDTO } from '@forumate/api';
+import { CreateUserErrors, CreateUserInput, UserDto } from '@forumate/api';
 import { fail, Result, success } from '@forumate/core';
 
 import { RegistrationVm } from '../viewModels/registrationVm';
@@ -30,7 +30,7 @@ export class RegistrationPresenter {
   async submitRegistrationForm(
     input: CreateUserInput,
     allowMarketingEmails: boolean,
-  ): Promise<Result<UserDTO, CreateUserErrors>> {
+  ): Promise<Result<UserDto, CreateUserErrors>> {
     // Implement
     // @ts-ignore
     return fail();

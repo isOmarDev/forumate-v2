@@ -10,7 +10,6 @@ import { RegistrationForm } from '@/modules/auth/components/registrationForm';
 import { LayoutContainer } from '@/shared/layout/layoutContainer';
 import { OverlaySpinner } from '@/shared/spinner/overlaySpinner';
 
-
 export const RegisterPage = observer(() => {
   const { registration } = usePresenters();
   const [vm, setVm] = useState<RegistrationVm>(new RegistrationVm());

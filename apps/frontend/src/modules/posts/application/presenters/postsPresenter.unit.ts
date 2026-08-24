@@ -1,6 +1,5 @@
 import { createApiClient } from '@forumate/api';
 
-
 import { fakePostsData } from '../../__tests__/fakePostsData';
 import { FakePostsStore } from '../../stores/fakePostsStore';
 import { PostViewModel } from '../viewModels/postViewModel';

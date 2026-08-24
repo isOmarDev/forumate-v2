@@ -3,7 +3,6 @@ import { makeAutoObservable } from 'mobx';
 import { CreatePostInput, GetPostsQuery } from '@forumate/api';
 import { ApiClient } from '@forumate/api';
 
-
 import { PostDm } from '../domain/postDm';
 
 import { IPostsStore } from './postsStore';
@@ -33,11 +32,11 @@ export class PostsStore implements IPostsStore {
     const getPostsResponse = await this.api.posts.getPosts({
       sort: query?.sort ?? 'popular',
     });
-    const postDTOs = getPostsResponse.data;
-    if (!postDTOs) {
+    const postDtos = getPostsResponse.data;
+    if (!postDtos) {
       return [];
     }
-    this.postsDm = postDTOs.map((postDTO) => PostDm.fromDTO(postDTO));
+    this.postsDm = postDtos.map((postDto) => PostDm.fromDTO(postDto));
     return this.postsDm;
   }
 

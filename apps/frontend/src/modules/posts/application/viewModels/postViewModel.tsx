@@ -2,7 +2,6 @@ import { PostDm } from '../../domain/postDm';
 
 import { MemberDm } from '@/modules/auth/domain/memberDm';
 
-
 export interface PostViewModelProps {
   id: string;
   title: string;

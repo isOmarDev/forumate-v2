@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 
-import { CreatePostInput, GetPostsQuery, PostDTO } from '@forumate/api';
+import { CreatePostInput, GetPostsQuery, PostDto } from '@forumate/api/posts';
 
 import { PostDm } from '../domain/postDm';
 
@@ -9,9 +9,9 @@ import { IPostsStore } from './postsStore';
 export class FakePostsStore implements IPostsStore {
   postsDm: PostDm[] = [];
 
-  constructor(fakePostsData: PostDTO[]) {
+  constructor(fakePostsData: PostDto[]) {
     makeAutoObservable(this);
-    this.postsDm = fakePostsData.map((postDTO) => PostDm.fromDTO(postDTO));
+    this.postsDm = fakePostsData.map((postDto) => PostDm.fromDTO(postDto));
   }
 
   async getPosts(query?: GetPostsQuery): Promise<PostDm[]> {

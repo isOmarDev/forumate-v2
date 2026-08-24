@@ -1,6 +1,6 @@
-import { PostDTO } from '@forumate/api';
+import { PostDto } from '@forumate/api/posts';
 
-export const fakePostsData: PostDTO[] = [
+export const fakePostsData: PostDto[] = [
   {
     id: '1',
     title: 'This is my first post',

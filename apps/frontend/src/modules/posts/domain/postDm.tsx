@@ -1,4 +1,4 @@
-import { PostDTO } from '@forumate/api';
+import { PostDto } from '@forumate/api/posts';
 
 interface PostDmProps {
   id: string;
@@ -16,7 +16,7 @@ interface PostDmProps {
 export class PostDm {
   constructor(public props: PostDmProps) {}
 
-  static fromDTO(dto: PostDTO): PostDm {
+  static fromDTO(dto: PostDto): PostDm {
     return new PostDm({
       id: dto.id,
       title: dto.title,

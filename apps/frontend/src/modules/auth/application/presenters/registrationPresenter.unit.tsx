@@ -7,9 +7,8 @@ import { RegistrationPresenter } from './registrationPresenter';
 import { NavigationStore } from '@/shared/navigation/navigationStore';
 import { ToastAPI } from '@/shared/toast/toastAPI';
 
-
 function setupSuccessfulRegistration(presenter: RegistrationPresenter) {
-  const mockUserDTO = {
+  const mockUserDto = {
     id: '123',
     email: 'khalil@essentialist.dev',
     username: 'khalilstemmler',
@@ -20,12 +19,12 @@ function setupSuccessfulRegistration(presenter: RegistrationPresenter) {
   presenter.toastAPI.showError = jest.fn();
   presenter.navigationStore.navigate = jest.fn();
   presenter.authStore.apiClient.users.register = jest.fn(async () => {
-    return { success: true, data: mockUserDTO };
+    return { success: true, data: mockUserDto };
   });
 }
 
 describe('registrationPresenter', () => {
-  const apiClient = createApiClient('http://localhost:3000');
+  const apiClient = createApiClient({ baseURL: 'http://localhost:3000' });
   const toastAPI = new ToastAPI();
   const authStore = new AuthStore(apiClient);
   const navigationStore = new NavigationStore();
