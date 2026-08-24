@@ -1,4 +1,4 @@
-import { fail,Request, Result, success } from '@forumate/core';
+import { fail, Request, Result, success } from '@forumate/core';
 import { ValidationError } from '@forumate/errors/application';
 import { MissingRequestParamsError } from '@forumate/errors/server';
 
