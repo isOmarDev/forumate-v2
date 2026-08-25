@@ -10,10 +10,7 @@ import {
 
 export const createCommentsApi = (client: HttpClient) => {
   return {
-    postComment: (
-      input: PostCommentInput,
-      authToken: string,
-    ): Promise<PostCommentApiResponse> =>
+    postComment: (input: PostCommentInput, authToken: string) =>
       apiRequest(() =>
         client.post<PostCommentApiResponse>(
           `/posts/${input.postId}/comments`,
@@ -22,9 +19,7 @@ export const createCommentsApi = (client: HttpClient) => {
         ),
       ),
 
-    getCommentsByPostId: (
-      postId: string,
-    ): Promise<GetCommentsByPostIdApiResponse> =>
+    getCommentsByPostId: (postId: string) =>
       apiRequest(() =>
         client.get<GetCommentsByPostIdApiResponse>(`/posts/${postId}/comments`),
       ),
