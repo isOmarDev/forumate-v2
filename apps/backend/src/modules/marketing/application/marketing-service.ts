@@ -1,6 +1,6 @@
 import { GenericServerError } from '@forumate/errors/server';
 
-import { ContactListApi } from '../ports/contact-list-api';
+import { ContactListApi } from '../contact-list/ports/contact-list-api';
 
 export class MarketingService {
   constructor(private contactListApi: ContactListApi) {}

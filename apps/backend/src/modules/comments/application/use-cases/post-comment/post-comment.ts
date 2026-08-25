@@ -1,6 +1,6 @@
 import { PostCommentCommand } from '@forumate/api';
 import { EventBus } from '@forumate/bus';
-import { fail,Result, success, UseCase } from '@forumate/core';
+import { fail, Result, success, UseCase } from '@forumate/core';
 import {
   NotFoundError,
   PermissionError,
@@ -9,10 +9,9 @@ import {
 
 import { MembersRepository } from '../../../../members/repos/ports/members-repository';
 import { PostsRepository } from '../../../../posts/repos/ports/posts-repository';
-import { Comment } from '../../../domain/comment';
+import { Comment } from '../../../domain/entities/comment';
+import { CanPostCommentPolicy } from '../../../domain/policies/can-post-comment';
 import { CommentRepository } from '../../../repos/ports/comment-repository';
-
-import { CanPostCommentPolicy } from './can-post-comment';
 
 export type PostCommentError =
   ValidationError | PermissionError | NotFoundError;

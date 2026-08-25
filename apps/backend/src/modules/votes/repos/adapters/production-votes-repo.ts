@@ -1,9 +1,9 @@
 import { Database, Prisma } from '@forumate/database';
 
-import { CommentVote } from '../../domain/comment-vote';
-import { MemberCommentVotesRoundup } from '../../domain/member-comment-votes-roundup';
-import { MemberPostVotesRoundup } from '../../domain/member-post-votes-roundup';
-import { PostVote } from '../../domain/post-vote';
+import { MemberCommentVotesRoundup } from '../../application/read-models/member-comment-votes-roundup';
+import { MemberPostVotesRoundup } from '../../application/read-models/member-post-votes-roundup';
+import { CommentVote } from '../../domain/entities/comment-vote';
+import { PostVote } from '../../domain/entities/post-vote';
 import { VoteRepository } from '../ports/vote-repository';
 
 export class ProductionVotesRepository implements VoteRepository {

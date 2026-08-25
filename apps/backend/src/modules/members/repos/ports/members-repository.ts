@@ -1,4 +1,4 @@
-import { Member } from '../../domain/member';
+import { Member } from '../../domain/entities/member';
 
 export interface MembersRepository {
   findUserByUsername(username: string): Promise<Member | null>;

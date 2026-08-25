@@ -7,9 +7,9 @@ import {
 } from '@forumate/database';
 import { DatabaseError } from '@forumate/errors/server';
 
-import { MemberReadModel } from '../../../members/domain/member-read-model';
-import { Post } from '../../domain/post';
-import { PostReadModel } from '../../domain/post-read-model';
+import { MemberReadModel } from '../../../members/application/read-models/member-read-model';
+import { PostReadModel } from '../../application/read-models/post-read-model';
+import { Post } from '../../domain/entities/post';
 import { PostsRepository } from '../ports/posts-repository';
 
 type PostModelWithMember = PostModel & {

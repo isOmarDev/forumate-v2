@@ -2,9 +2,9 @@ import { AnyApplicationError } from '@forumate/errors/application';
 import { ConflictError, ValidationError } from '@forumate/errors/application';
 import { AnyServerError } from '@forumate/errors/server';
 
-import { ApiResponse } from '..';
+import { ApiResponse } from '../types';
 
-import { UserDTO } from './dtos';
+import { UserDto } from './dtos';
 
 // Errors
 export type CreateUserErrors =
@@ -13,15 +13,21 @@ export type CreateUserErrors =
   | AnyServerError;
 
 // Api Responses
-export type CreateUserResponse = ApiResponse<UserDTO, CreateUserErrors['code']>;
+export type CreateUserApiResponse = ApiResponse<
+  UserDto,
+  CreateUserErrors['code']
+>;
 
 export type UserNotFoundError = 'UserNotFound';
 export type GetUserByEmailErrors = UserNotFoundError;
 
-export type GetUserByEmailResponse = ApiResponse<UserDTO, GetUserByEmailErrors>;
+export type GetUserByEmailApiResponse = ApiResponse<
+  UserDto,
+  GetUserByEmailErrors
+>;
 export type GetUserErrors = GetUserByEmailErrors;
 
 export type UserResponse = ApiResponse<
-  CreateUserResponse | GetUserByEmailResponse | null,
+  CreateUserApiResponse | GetUserByEmailApiResponse | null,
   GetUserErrors | AnyServerError['code'] | AnyApplicationError['code']
 >;

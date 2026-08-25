@@ -4,7 +4,7 @@ import {
   ApiClient,
   CreateUserInput,
   CreateUserResponse,
-  UserDTO,
+  UserDto,
 } from '@forumate/api';
 
 import { AuthState } from '../domain/authState';
@@ -42,8 +42,8 @@ export class AuthStore {
     throw new Error('Not yet implemented');
   }
 
-  private setupInitialUserAndMember(userDTO: UserDTO) {
-    this.authState.user = UserDm.fromDTO(userDTO);
+  private setupInitialUserAndMember(userDto: UserDto) {
+    this.authState.user = UserDm.fromDTO(userDto);
     this.authState.member = MemberDm.fromInitialUser(this.authState.user);
   }
 

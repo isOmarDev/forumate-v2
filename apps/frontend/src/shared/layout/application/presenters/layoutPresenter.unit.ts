@@ -8,7 +8,6 @@ import { AuthStore } from '@/modules/auth/stores/authStore';
 import { NavigationStore } from '@/shared/navigation/navigationStore';
 import { setupAuthStoreWithMember } from '@/shared/testUtils';
 
-
 describe('LayoutPresenter', () => {
   let presenter: LayoutPresenter;
   let authStore: AuthStore;

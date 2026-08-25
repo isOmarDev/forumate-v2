@@ -1,13 +1,13 @@
-import { MemberDTO } from '../members';
+import { MemberDto } from '../members';
 
-export type CommentDTO = {
+export type CommentDto = {
   id: string;
   postId: string;
   commentId: string;
   parentCommentId?: string;
   text: string;
-  member: MemberDTO;
+  member: MemberDto;
   createdAt: string | Date;
-  childComments: CommentDTO[];
+  childComments: CommentDto[];
   points: number;
 };

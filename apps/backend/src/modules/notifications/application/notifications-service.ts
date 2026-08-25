@@ -1,4 +1,4 @@
-import { TransactionalEmailApi } from '../external-services/ports/transactional-email-api';
+import { TransactionalEmailApi } from '../email/ports/transactional-email-api';
 import { SendNotificationCommand } from '../notification-commands';
 
 import { SendNotification } from './use-cases/send-notification/send-notification';

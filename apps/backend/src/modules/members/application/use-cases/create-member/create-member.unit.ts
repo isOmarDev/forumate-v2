@@ -5,7 +5,7 @@ import { InMemoryEventBus } from '@forumate/bus';
 import { PrismaDatabase } from '@forumate/database';
 
 import { Config } from '../../../../../shared/config';
-import { Member } from '../../../domain/member';
+import { Member } from '../../../domain/entities/member';
 import { ProductionMembersRepository } from '../../../repos/adapters/production-members-repository';
 
 import { CreateMember } from './create-member';

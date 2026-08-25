@@ -1,13 +1,13 @@
-import { MemberDTO } from '../members';
+import { MemberDto } from '../members/dtos';
 
-export type PostDTO = {
+export type PostDto = {
   id: string;
   postType: string;
   title: string;
   content?: string;
   link?: string;
   dateCreated: string;
-  member: MemberDTO;
+  member: MemberDto;
   numComments: number;
   voteScore: number;
   lastUpdated: string;

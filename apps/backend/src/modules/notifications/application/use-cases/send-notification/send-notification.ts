@@ -2,7 +2,7 @@ import { Result, UseCase } from '@forumate/core';
 import { NotFoundError } from '@forumate/errors/application';
 import { AnyServerError } from '@forumate/errors/server';
 
-import { TransactionalEmailApi } from '../../../external-services/ports/transactional-email-api';
+import { TransactionalEmailApi } from '../../../email/ports/transactional-email-api';
 import { SendNotificationCommand } from '../../../notification-commands';
 
 type SendNotificationError = NotFoundError | AnyServerError;

@@ -55,10 +55,12 @@ export class CreatePostCommand {
         const missingKeys = error.errors
           .map((err) => err.path.join('.'))
           .join(', ');
+
         return Result.failure(
           new ValidationError(`Missing or invalid fields: ${missingKeys}`),
         );
       }
+
       return Result.failure(new ValidationError('Validation error'));
     }
   }

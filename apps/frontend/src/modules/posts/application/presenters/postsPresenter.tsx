@@ -1,6 +1,5 @@
 import { makeAutoObservable } from 'mobx';
 
-
 import { IPostsStore } from '../../stores/postsStore';
 import { PostViewModel } from '../viewModels/postViewModel';
 import {

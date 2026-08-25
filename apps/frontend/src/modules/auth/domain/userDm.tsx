@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 
-import { UserDTO } from '@forumate/api';
+import { UserDto } from '@forumate/api/users';
 
 // Unify all props in one interface
 interface UserDmProps {
@@ -31,7 +31,7 @@ export class UserDm {
     return this.props.username;
   }
 
-  public static fromDTO(dto: UserDTO): UserDm {
+  public static fromDTO(dto: UserDto): UserDm {
     return new UserDm({
       id: dto.id,
       email: dto.email,

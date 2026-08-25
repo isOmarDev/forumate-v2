@@ -3,8 +3,8 @@ import { WebServer } from '../../shared/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
 
 import { UserIdentityService } from './application/user-identity-service';
-import { FirebaseAuth } from './external-services/adapters/firebase-auth';
-import { IdentityServiceApi } from './external-services/ports/identity-service-api';
+import { FirebaseAuth } from './identity/adapters/firebase-auth';
+import { IdentityServiceApi } from './identity/ports/identity-service-api';
 import { UsersController } from './users-controller';
 import { userErrorHandler } from './users-errors'; // You'll need to create this
 

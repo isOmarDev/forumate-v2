@@ -9,7 +9,7 @@ import { MembersRepository } from '../members/repos/ports/members-repository';
 import { PostsRepository } from '../posts/repos/ports/posts-repository';
 
 import { VotesService } from './application/votes-service';
-import { VotesSubscriptions } from './application/votes-subscriptions';
+import { VotesSubscriptions } from './application/subscriptions/votes-subscriptions';
 import { ProductionVotesRepository } from './repos/adapters/production-votes-repo';
 import { VoteRepository } from './repos/ports/vote-repository';
 import { VotesController } from './votes-controller';

@@ -1,13 +1,13 @@
 import { AnyApplicationError } from '@forumate/errors/application';
 import { AnyServerError } from '@forumate/errors/server';
 
-import { ApiResponse } from '..';
+import { ApiResponse } from '../types';
 
-import { PostVoteDTO } from './dtos';
+import { PostVoteDto } from './dtos';
 
 // Api Responses
 export type VoteOnPostApiResponse = ApiResponse<
-  PostVoteDTO,
+  PostVoteDto,
   VoteErrors['code']
 >;
 

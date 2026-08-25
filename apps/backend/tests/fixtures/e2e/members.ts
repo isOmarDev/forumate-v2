@@ -1,4 +1,4 @@
-import { ApiClient, MemberDTO } from '@forumate/api';
+import { ApiClient, MemberDto } from '@forumate/api';
 import { NumberUtil } from '@forumate/core';
 
 import { DatabaseFixture } from './database';
@@ -32,7 +32,7 @@ export async function setupLevel1Member(
   console.log(`Created a Level 1 member`);
   console.log(response);
 
-  return { member: response.data as MemberDTO };
+  return { member: response.data as MemberDto };
 }
 
 export async function setupLevel2Member(

@@ -1,13 +1,13 @@
-import { ApiResponse } from '..';
+import { ApiResponse } from '../types';
 
-import { CommentDTO } from './dtos';
+import { CommentDto } from './dtos';
 
 export type GetCommentsByPostIdApiResponse = ApiResponse<
-  CommentDTO[],
+  CommentDto[],
   'COMMENTS_NOT_FOUND'
 >;
 
 export type PostCommentApiResponse = ApiResponse<
-  CommentDTO,
+  CommentDto,
   'POST_NOT_FOUND' | 'INVALID_COMMENT'
 >;

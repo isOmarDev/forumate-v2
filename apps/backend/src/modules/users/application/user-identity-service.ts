@@ -1,7 +1,7 @@
 import { NotFoundError } from '@forumate/errors/application';
 
 import { UserDetails } from '../domain/user-details';
-import { IdentityServiceApi } from '../external-services/ports/identity-service-api';
+import { IdentityServiceApi } from '../identity/ports/identity-service-api';
 import { UserNotFoundException } from '../users-exceptions';
 
 export class UserIdentityService {

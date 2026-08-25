@@ -1,1 +1,1 @@
-export type EmailSubscriber = { email: string };
+export type EmailSubscriberDto = { email: string };

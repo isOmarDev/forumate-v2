@@ -1,9 +1,13 @@
 import { randomUUID } from 'node:crypto';
 
 import { Router } from 'express';
-import { ErrorRequestHandler, NextFunction,Request, Response } from 'express';
+import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 
-import { CreateUserCommand, CreateUserResponse, UserDTO } from '@forumate/api';
+import {
+  CreateUserCommand,
+  CreateUserResponse,
+  UserDto,
+} from '@forumate/api/users';
 
 import { Config } from '../../shared/config';
 
@@ -43,7 +47,7 @@ export class UsersController {
       }
 
       const commandValue = command.getValue();
-      const temporaryUserResponseDTO: UserDTO = {
+      const temporaryUserResponseDto: UserDto = {
         id: randomUUID(),
         email: commandValue.email,
         firstName: commandValue.firstName,
@@ -52,10 +56,12 @@ export class UsersController {
       };
 
       const response: CreateUserResponse = {
-        data: temporaryUserResponseDTO,
         success: true,
+        data: temporaryUserResponseDto,
+        statusCode: 201,
         error: null,
       };
+
       return res.status(201).json(response);
     } catch (error) {
       next(error);

@@ -56,6 +56,7 @@ export class MembersController {
         return res.status(400).json({
           data: null,
           success: false,
+          statusCode: 400,
           error: result.getError(),
         } as CreateMemberApiResponse);
       }

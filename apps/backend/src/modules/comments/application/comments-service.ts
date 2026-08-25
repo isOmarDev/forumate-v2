@@ -4,7 +4,7 @@ import { Result } from '@forumate/core';
 
 import { MembersRepository } from '../../members/repos/ports/members-repository';
 import { PostsRepository } from '../../posts/repos/ports/posts-repository';
-import { Comment } from '../domain/comment';
+import { Comment } from '../domain/entities/comment';
 import { CommentRepository } from '../repos/ports/comment-repository';
 
 import {

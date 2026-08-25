@@ -1,4 +1,3 @@
-
 import { PostsPresenter } from '../../modules/posts/application/presenters/postsPresenter';
 import { LayoutPresenter } from '../layout/application/presenters/layoutPresenter';
 

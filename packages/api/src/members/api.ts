@@ -1,6 +1,6 @@
-import axios from 'axios';
-
-import { getAuthHeaders } from '..';
+import { apiRequest } from '../api-request';
+import { getAuthHeaders } from '../client';
+import { HttpClient } from '../client';
 
 import { CreateMemberInput } from './inputs';
 import {
@@ -8,55 +8,23 @@ import {
   GetMemberDetailsApiResponse,
 } from './responses';
 
-export const createMembersApi = (apiURL: string) => {
+export const createMembersApi = (client: HttpClient) => {
   return {
-    register: async (input: CreateMemberInput, authToken: string) => {
-      try {
-        const response = await axios.post(
-          `${apiURL}/members`,
+    register: (input: CreateMemberInput, authToken: string) =>
+      apiRequest(() =>
+        client.post<CreateMemberApiResponse>(
+          '/members',
           input,
           getAuthHeaders(authToken),
-        );
+        ),
+      ),
 
-        return response.data as CreateMemberApiResponse;
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error) && error.response) {
-          return error.response.data as CreateMemberApiResponse;
-        }
-
-        return {
-          data: null,
-          error: {
-            message: 'Network or server unreachable',
-            code: 'NetworkError',
-          },
-          success: false,
-        };
-      }
-    },
-
-    getMemberDetails: async (authToken: string) => {
-      try {
-        const response = await axios.get(
-          `${apiURL}/members/me`,
+    getMemberDetails: (authToken: string) =>
+      apiRequest(() =>
+        client.get<GetMemberDetailsApiResponse>(
+          '/members/me',
           getAuthHeaders(authToken),
-        );
-
-        return response.data as GetMemberDetailsApiResponse;
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error) && error.response) {
-          return error.response.data as GetMemberDetailsApiResponse;
-        }
-
-        return {
-          data: null,
-          error: {
-            message: 'Network or server unreachable',
-            code: 'NetworkError',
-          },
-          success: false,
-        };
-      }
-    },
+        ),
+      ),
   };
 };

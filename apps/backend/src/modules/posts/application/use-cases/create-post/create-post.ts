@@ -9,10 +9,9 @@ import {
 import { AnyServerError } from '@forumate/errors/server';
 
 import { MembersRepository } from '../../../../members/repos/ports/members-repository';
-import { Post } from '../../../domain/post';
+import { Post } from '../../../domain/entities/post';
+import { CanCreatePostPolicy } from '../../../domain/policies/can-create-post';
 import { PostsRepository } from '../../../repos/ports/posts-repository';
-
-import { CanCreatePostPolicy } from './can-create-post';
 
 type CreatePostError =
   ValidationError | PermissionError | NotFoundError | AnyServerError;

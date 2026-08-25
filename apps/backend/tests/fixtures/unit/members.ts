@@ -3,8 +3,8 @@
 import { ReputationLevel } from '@forumate/api';
 
 import { PostComment } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment';
-import { Member } from '../../../src/modules/members/domain/member';
-import { MemberUsername } from '../../../src/modules/members/domain/member-username';
+import { Member } from '../../../src/modules/members/domain/entities/member';
+import { MemberUsername } from '../../../src/modules/members/domain/value-objects/member-username';
 import { CreatePost } from '../../../src/modules/posts/application/use-cases/create-post/create-post';
 
 export function setupTestWithLevel2Member(useCase: CreatePost | PostComment) {
