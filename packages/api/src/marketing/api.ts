@@ -1,11 +1,13 @@
 import { apiRequest } from '../api-request';
 import { HttpClient } from '../client';
 
-import { AddEmailToListResponse } from './responses';
+import { AddEmailToListApiResponse } from './responses';
 
 export const createMarketingApi = (client: HttpClient) => {
   return {
     addEmailToList: (email: string) =>
-      apiRequest(() => client.post('/marketing', { email })),
+      apiRequest(() =>
+        client.post<AddEmailToListApiResponse>('/marketing', { email }),
+      ),
   };
 };
