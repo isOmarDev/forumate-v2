@@ -12,19 +12,26 @@ import {
 
 export const createPostsApi = (client: HttpClient) => {
   return {
-    create: (
-      input: CreatePostInput,
-      authToken: string,
-    ): Promise<CreatePostApiResponse> =>
-      apiRequest(() => client.post('/posts', input, getAuthHeaders(authToken))),
+    create: (input: CreatePostInput, authToken: string) =>
+      apiRequest(() =>
+        client.post<CreatePostApiResponse>(
+          '/posts',
+          input,
+          getAuthHeaders(authToken),
+        ),
+      ),
 
-    getPosts: (sort: GetPostsQueryInput): Promise<GetPostsApiResponse> =>
-      apiRequest(() => client.get('/posts', { params: sort })),
+    getPosts: (sort: GetPostsQueryInput) =>
+      apiRequest(() =>
+        client.get<GetPostsApiResponse>('/posts', { params: sort }),
+      ),
 
-    getPostById: (postId: string): Promise<GetPostByIdApiResponse> =>
-      apiRequest(() => client.get(`/posts/${postId}`)),
+    getPostById: (postId: string) =>
+      apiRequest(() => client.get<GetPostByIdApiResponse>(`/posts/${postId}`)),
 
-    getPostBySlug: (slug: string): Promise<GetPostByIdApiResponse> =>
-      apiRequest(() => client.get(`/posts/slug/${slug}`)),
+    getPostBySlug: (slug: string) =>
+      apiRequest(() =>
+        client.get<GetPostByIdApiResponse>(`/posts/slug/${slug}`),
+      ),
   };
 };

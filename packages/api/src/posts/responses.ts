@@ -13,10 +13,13 @@ export type GetPostByIdErrors = '';
 export type AnyPostError = AnyServerError | AnyApplicationError;
 
 // API Responses
-export type GetPostsApiResponse = ApiResponse<PostDto[], GetPostsErrors>;
 export type CreatePostApiResponse = ApiResponse<PostDto, CreatePostErrors>;
+export type GetPostsApiResponse = ApiResponse<PostDto[], GetPostsErrors>;
 export type GetPostByIdApiResponse = ApiResponse<PostDto, GetPostByIdErrors>;
-export type GetPostDetailsResponse = ApiResponse<PostDto, GetPostDetailsError>;
+export type GetPostDetailsApiResponse = ApiResponse<
+  PostDto,
+  GetPostDetailsError
+>;
 export type AnyPostsApiResponse =
   GetPostsApiResponse | CreatePostApiResponse | AnyPostError; // TODO: this pattern throughout
 // TODO: tidy functional errors; see users.ts
