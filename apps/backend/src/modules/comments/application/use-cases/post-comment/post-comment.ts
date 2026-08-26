@@ -1,6 +1,6 @@
 import { PostCommentCommand } from '@forumate/api';
 import { EventBus } from '@forumate/bus';
-import { fail, Result, success, UseCase } from '@forumate/core';
+import { UseCase, Result, success, fail } from '@forumate/core';
 import {
   NotFoundError,
   PermissionError,
@@ -21,7 +21,7 @@ export class PostComment implements UseCase<
   Result<Comment, PostCommentError>
 > {
   constructor(
-    private commentRepo: CommentRepository,
+    private commentRepository: CommentRepository,
     private postRepository: PostsRepository,
     private memberRepository: MembersRepository,
     private eventBus: EventBus,
