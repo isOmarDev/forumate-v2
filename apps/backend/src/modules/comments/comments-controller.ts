@@ -45,19 +45,19 @@ export class CommentsController {
         postId as string,
       );
 
-      if (result.isFailure()) {
-        return res.status(404).json({
-          success: false,
-          error: {
-            message: 'Comments not found',
-            code: 'COMMENTS_NOT_FOUND',
-          },
-        });
-      }
-
-      return res.json({
-        success: true,
-        data: result.getValue(),
+      return result.match({
+        success: (value) =>
+          res.json({
+            success: true,
+            data: value,
+            error: null,
+          }),
+        failure: (error) =>
+          res.status(404).json({
+            success: false,
+            data: null,
+            error,
+          }),
       });
     } catch (error) {
       next(error);
@@ -72,7 +72,7 @@ export class CommentsController {
     try {
       const commandOrError = PostCommentCommand.fromRequest(req.body, req.user);
 
-      if (commandOrError.isFailure()) {
+      if (commandOrError.isFailure) {
         return res.status(400).json({
           success: false,
           error: {
@@ -86,29 +86,30 @@ export class CommentsController {
         commandOrError.getValue(),
       );
 
-      if (result.isFailure()) {
-        const error = result.getError();
-        if (error instanceof Error && error.name === 'PostNotFound') {
-          return res.status(404).json({
+      return result.match({
+        success: (comment) =>
+          res.json({
+            success: true,
+            data: comment,
+          }),
+        failure: (error) => {
+          if (error instanceof Error && error.name === 'PostNotFound') {
+            return res.status(404).json({
+              success: false,
+              error: {
+                message: 'Post not found',
+                code: 'POST_NOT_FOUND',
+              },
+            });
+          }
+          return res.status(400).json({
             success: false,
             error: {
-              message: 'Post not found',
-              code: 'POST_NOT_FOUND',
+              message: 'Invalid comment',
+              code: 'INVALID_COMMENT',
             },
           });
-        }
-        return res.status(400).json({
-          success: false,
-          error: {
-            message: 'Invalid comment',
-            code: 'INVALID_COMMENT',
-          },
-        });
-      }
-
-      return res.json({
-        success: true,
-        data: result.getValue(),
+        },
       });
     } catch (error) {
       next(error);
