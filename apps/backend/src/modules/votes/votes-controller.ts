@@ -44,14 +44,15 @@ export class VotesController {
 
       const result = await this.votesService.castVoteOnPost(command);
 
-      if (!result.isSuccess()) {
+      if (!result.isSuccess) {
         return next(result.getError());
       }
 
       const postVote = result.getValue();
       const response: VoteOnPostApiResponse = {
-        data: postVote.toDTO(),
         success: true,
+        data: postVote.toDTO(),
+        statusCode: 200,
         error: null,
       };
       return res.status(200).json(response);

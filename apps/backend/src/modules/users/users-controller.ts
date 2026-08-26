@@ -5,7 +5,7 @@ import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 
 import {
   CreateUserCommand,
-  CreateUserResponse,
+  CreateUserApiResponse,
   UserDto,
 } from '@forumate/api/users';
 
@@ -42,7 +42,7 @@ export class UsersController {
   private async createUser(req: Request, res: Response, next: NextFunction) {
     try {
       const command = CreateUserCommand.fromRequest(req.body);
-      if (!command.isSuccess()) {
+      if (!command.isSuccess) {
         return next(command.getError());
       }
 
@@ -55,7 +55,7 @@ export class UsersController {
         username: commandValue.username,
       };
 
-      const response: CreateUserResponse = {
+      const response: CreateUserApiResponse = {
         success: true,
         data: temporaryUserResponseDto,
         statusCode: 201,

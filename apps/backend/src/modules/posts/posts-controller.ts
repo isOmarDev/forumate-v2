@@ -68,7 +68,7 @@ export class PostsController {
   ) {
     try {
       const commandOrError = CreatePostCommand.fromRequest(req.body);
-      if (!commandOrError.isSuccess()) {
+      if (!commandOrError.isSuccess) {
         return next(commandOrError.getError());
       }
 
@@ -76,7 +76,7 @@ export class PostsController {
         commandOrError.getValue(),
       );
 
-      if (!result.isSuccess()) {
+      if (!result.isSuccess) {
         return next(result.getError());
       }
 
