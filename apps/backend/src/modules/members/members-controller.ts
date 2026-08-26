@@ -1,6 +1,6 @@
 import express, { ErrorRequestHandler } from 'express';
 
-import { CreateMemberApiResponse, CreateMemberCommand } from '@forumate/api';
+import { CreateMemberCommand } from '@forumate/api';
 
 import { Config } from '../../shared/config';
 
@@ -37,7 +37,7 @@ export class MembersController {
         req.user,
         req.body,
       );
-      if (!commandOrError.isSuccess()) {
+      if (!commandOrError.isSuccess) {
         return res.status(401).json({
           success: false,
           error: commandOrError.getError(),
@@ -47,19 +47,23 @@ export class MembersController {
       const result = await this.memberService.createMember(
         commandOrError.getValue(),
       );
-      if (result.isSuccess()) {
-        return res.status(200).json({
-          success: true,
-          data: result.getValue().toDTO(),
-        } as CreateMemberApiResponse);
-      } else {
-        return res.status(400).json({
-          data: null,
-          success: false,
-          statusCode: 400,
-          error: result.getError(),
-        } as CreateMemberApiResponse);
-      }
+
+      return result.match({
+        success: (value) =>
+          res.status(200).json({
+            success: true,
+            data: value,
+            statusCode: 200,
+            error: null,
+          }),
+        failure: (error) =>
+          res.status(400).json({
+            success: false,
+            data: null,
+            statusCode: 400,
+            error,
+          }),
+      });
     } catch (err) {
       next(err);
     }
