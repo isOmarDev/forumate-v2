@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 
-import { DomainEvent } from './domainEvent';
-import { DomainEventStatus } from './domainEvent';
-import { EventModel } from './eventModel';
+import { DomainEvent } from './domain-event';
+import { DomainEventStatus } from './domain-event';
+import { EventModel } from './event-model';
 
 interface TestEventProps {
   aggregateId: string;
