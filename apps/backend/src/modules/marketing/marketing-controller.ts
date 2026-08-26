@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { AddEmailToListResponse } from '@forumate/api';
+import { AddEmailToListApiResponse } from '@forumate/api';
 
 import { ErrorHandler } from '../../shared/errors';
 
@@ -38,9 +38,10 @@ export class MarketingController {
     try {
       const email = req.body.email;
       const result = await this.marketingService.addEmailToList(email);
-      const response: AddEmailToListResponse = {
-        data: result,
+      const response: AddEmailToListApiResponse = {
         success: true,
+        data: result,
+        statusCode: 201,
         error: null,
       };
       return res.status(201).json(response);
