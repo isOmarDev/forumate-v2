@@ -6,6 +6,18 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./application": {
+      "types": "./src/application/index.ts",
+      "default": "./src/application/index.ts"
+    },
+    "./domain": {
+      "types": "./src/domain/index.ts",
+      "default": "./src/domain/index.ts"
+    },
+    "./utils": {
+      "types": "./src/utils/index.ts",
+      "default": "./src/utils/index.ts"
     }
   },
   "scripts": {
