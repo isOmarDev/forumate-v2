@@ -1,6 +1,6 @@
 import { PostCommentCommand } from '@forumate/api';
 import { EventBus } from '@forumate/bus';
-import { UseCase, Result, success, fail } from '@forumate/core';
+import { IUseCase, Result, success, fail } from '@forumate/core';
 import {
   NotFoundError,
   PermissionError,
@@ -16,7 +16,7 @@ import { CommentRepository } from '../../../repos/ports/comment-repository';
 export type PostCommentError =
   ValidationError | PermissionError | NotFoundError;
 
-export class PostComment implements UseCase<
+export class PostComment implements IUseCase<
   PostCommentCommand,
   Result<Comment, PostCommentError>
 > {

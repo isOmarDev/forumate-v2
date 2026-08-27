@@ -47,15 +47,17 @@ export class CommentsController {
 
       return result.match({
         success: (value) =>
-          res.json({
+          res.status(200).json({
             success: true,
             data: value,
+            statusCode: 200,
             error: null,
           }),
         failure: (error) =>
           res.status(404).json({
             success: false,
             data: null,
+            statusCode: 404,
             error,
           }),
       });
@@ -75,6 +77,8 @@ export class CommentsController {
       if (commandOrError.isFailure) {
         return res.status(400).json({
           success: false,
+          data: null,
+          statusCode: 400,
           error: {
             message: 'Missing required parameters',
             code: 'MISSING_PARAMS',
@@ -88,14 +92,18 @@ export class CommentsController {
 
       return result.match({
         success: (comment) =>
-          res.json({
+          res.status(201).json({
             success: true,
             data: comment,
+            statusCode: 201,
+            error: null,
           }),
         failure: (error) => {
           if (error instanceof Error && error.name === 'PostNotFound') {
             return res.status(404).json({
               success: false,
+              data: null,
+              statusCode: 404,
               error: {
                 message: 'Post not found',
                 code: 'POST_NOT_FOUND',
@@ -104,6 +112,8 @@ export class CommentsController {
           }
           return res.status(400).json({
             success: false,
+            data: null,
+            statusCode: 400,
             error: {
               message: 'Invalid comment',
               code: 'INVALID_COMMENT',
