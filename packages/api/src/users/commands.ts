@@ -1,50 +1,59 @@
-import { fail, Result, success, TextUtil } from '@forumate/core';
-import { ValidationError } from '@forumate/errors/application';
-import { InvalidRequestBodyError } from '@forumate/errors/server';
+import { Result, success, fail } from '@forumate/core/application';
+import { TextUtil } from '@forumate/core/utils';
+import {
+  InvalidInputError,
+  InvalidRequestBodyError,
+  MissingRequestBodyError,
+} from '@forumate/errors/request';
 
-import { CreateUserInput } from './inputs';
+import type { CreateUserInput } from './inputs';
 
 export class CreateUserCommand {
   private constructor(public props: CreateUserInput) {}
 
-  static fromRequest(body: unknown) {
-    const requiredKeys = ['email', 'firstName', 'lastName', 'username'];
-    const isRequestInvalid =
-      !body ||
-      typeof body !== 'object' ||
-      TextUtil.isMissingKeys(body, requiredKeys);
-
-    if (isRequestInvalid) {
-      throw new InvalidRequestBodyError(requiredKeys);
+  static fromRequest(
+    body: unknown,
+  ): Result<CreateUserCommand, InvalidInputError | InvalidRequestBodyError> {
+    if (!TextUtil.isObject<CreateUserInput>(body)) {
+      throw new MissingRequestBodyError();
     }
 
-    const input = body as CreateUserInput;
+    const requiredKeys = [
+      'email',
+      'firstName',
+      'lastName',
+      'username',
+      'password',
+    ];
 
-    return CreateUserCommand.create(input);
+    const missingKeys = TextUtil.getMissingKeys(body, requiredKeys);
+
+    if (missingKeys.length > 0) {
+      return fail(new InvalidRequestBodyError(missingKeys));
+    }
+
+    return CreateUserCommand.create(body);
   }
 
   static create(
     props: CreateUserInput,
-  ): Result<CreateUserCommand, ValidationError> {
-    const isEmailValid = props.email.indexOf('@') !== -1;
-    const isFirstNameValid = TextUtil.isBetweenLength(props.firstName, 2, 16);
-    const isLastNameValid = TextUtil.isBetweenLength(props.lastName, 2, 25);
-    const isUsernameValid = TextUtil.isBetweenLength(props.username, 2, 25);
+  ): Result<CreateUserCommand, InvalidInputError> {
+    const validations = {
+      email: props.email.includes('@'),
+      firstName: TextUtil.isBetweenLength(props.firstName, 2, 16),
+      lastName: TextUtil.isBetweenLength(props.lastName, 2, 25),
+      username: TextUtil.isBetweenLength(props.username, 2, 25),
+    };
 
-    if (
-      !isEmailValid ||
-      !isFirstNameValid ||
-      !isLastNameValid ||
-      !isUsernameValid
-    ) {
-      return fail(new ValidationError());
+    const invalidFields = Object.entries(validations)
+      .filter(([, isValid]) => !isValid)
+      .map(([field]) => field);
+
+    if (invalidFields.length > 0) {
+      return fail(new InvalidInputError(invalidFields));
     }
 
-    const { username, email, firstName, lastName } = props;
-
-    return success(
-      new CreateUserCommand({ email, firstName, lastName, username }),
-    );
+    return success(new CreateUserCommand(props));
   }
 
   get email() {
@@ -61,5 +70,9 @@ export class CreateUserCommand {
 
   get username() {
     return this.props.username;
+  }
+
+  get password() {
+    return this.props.password;
   }
 }
