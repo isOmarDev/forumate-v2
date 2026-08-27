@@ -1,9 +1,8 @@
 import { apiRequest } from '../api-request';
-import { getAuthHeaders } from '../client';
-import { HttpClient } from '../client';
+import { getAuthHeaders, type HttpClient } from '../client';
 
-import { CreateMemberInput } from './inputs';
-import {
+import type { CreateMemberInput } from './inputs';
+import type {
   CreateMemberApiResponse,
   GetMemberDetailsApiResponse,
 } from './responses';
