@@ -1,0 +1,10 @@
+export const requestErrorCodes = {
+  MISSING_REQUEST_BODY: 'MISSING_REQUEST_BODY',
+  INVALID_REQUEST_BODY: 'INVALID_REQUEST_BODY',
+  MISSING_REQUEST_QUERY_PARAMS: 'MISSING_REQUEST_QUERY_PARAMS',
+  INVALID_REQUEST_QUERY_PARAMS: 'INVALID_REQUEST_QUERY_PARAMS',
+  INVALID_INPUT: 'INVALID_INPUT',
+} as const;
+
+export type RequestErrorCode =
+  (typeof requestErrorCodes)[keyof typeof requestErrorCodes];
