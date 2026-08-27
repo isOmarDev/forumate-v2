@@ -1,51 +1,67 @@
-import { Request } from '@forumate/core';
+import { type Request } from '@forumate/core/application';
 import {
-  InvalidRequestParamsError,
-  MissingRequestParamsError,
-} from '@forumate/errors/server';
+  InvalidRequestQueryParamsError,
+  MissingRequestQueryParamsError,
+} from '@forumate/errors/request';
 
+import type { GetPostsQueryInput, GetPostsQueryOption } from './inputs';
+
+// Get Post By ID
 export class GetPostByIdQuery {
-  constructor(private props: { postId: string }) {}
+  constructor(
+    private readonly props: {
+      postId: string;
+    },
+  ) {}
 
-  static fromRequest(req: Request) {
-    const postId = req['query'].postId || req['params'].postId;
+  static fromRequest(
+    req: Request<unknown, { postId?: string }, { postId?: string }>,
+  ): GetPostByIdQuery {
+    const postId = req.query.postId ?? req.params.postId;
 
     if (!postId) {
-      throw new MissingRequestParamsError(['postId']);
+      throw new MissingRequestQueryParamsError(['postId']);
     }
 
-    return new GetPostByIdQuery({ postId: postId as string });
+    return new GetPostByIdQuery({
+      postId: postId,
+    });
   }
 
-  get postId() {
+  get postId(): string {
     return this.props.postId;
   }
 }
 
-export type GetPostsQueryOption = 'popular' | 'recent';
-export type GetPostsQueryInput = { sort: GetPostsQueryOption };
+// Get Posts
 export class GetPostsQuery {
-  constructor(private props: GetPostsQueryInput) {}
+  constructor(private readonly props: GetPostsQueryInput) {}
 
-  public static create(option: GetPostsQueryOption) {
-    return new GetPostsQuery({ sort: option });
+  static create(option: GetPostsQueryOption): GetPostsQuery {
+    return new GetPostsQuery({
+      sort: option,
+    });
   }
 
-  static fromRequest(query: Request['query']) {
+  static fromRequest(
+    query: Request<unknown, GetPostsQueryInput>['query'],
+  ): GetPostsQuery {
     const { sort } = query;
 
     if (!sort) {
-      throw new MissingRequestParamsError(['sort']);
+      throw new MissingRequestQueryParamsError(['sort']);
     }
 
     if (sort !== 'recent' && sort !== 'popular') {
-      throw new InvalidRequestParamsError(['sort']);
+      throw new InvalidRequestQueryParamsError(['sort']);
     }
 
-    return new GetPostsQuery({ sort });
+    return new GetPostsQuery({
+      sort,
+    });
   }
 
-  get sort() {
+  get sort(): GetPostsQueryOption {
     return this.props.sort;
   }
 }

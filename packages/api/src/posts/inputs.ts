@@ -1,3 +1,4 @@
+// Create Post
 export type PostType = 'link' | 'text';
 
 export type CreatePostInput = {
@@ -6,4 +7,11 @@ export type CreatePostInput = {
   content?: string;
   link?: string;
   postType: PostType;
+};
+
+// Get Posts
+export type GetPostsQueryOption = 'popular' | 'recent';
+
+export type GetPostsQueryInput = {
+  sort: GetPostsQueryOption;
 };
