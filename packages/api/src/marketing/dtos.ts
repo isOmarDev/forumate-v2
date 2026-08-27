@@ -1,1 +1,4 @@
-export type EmailSubscriberDto = { email: string };
+export type EmailSubscriptionDto = {
+  email: string;
+  subscribed: boolean;
+};
