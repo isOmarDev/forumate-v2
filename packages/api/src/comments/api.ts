@@ -1,9 +1,8 @@
 import { apiRequest } from '../api-request';
-import { getAuthHeaders } from '../client';
-import { HttpClient } from '../client';
+import { getAuthHeaders, type HttpClient } from '../client';
 
-import { PostCommentInput } from './inputs';
-import {
+import type { PostCommentInput } from './inputs';
+import type {
   GetCommentsByPostIdApiResponse,
   PostCommentApiResponse,
 } from './responses';
