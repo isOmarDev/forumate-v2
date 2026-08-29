@@ -4,8 +4,8 @@ import { FailureApiResponse } from '@forumate/api';
 import { CustomError, ErrorCode } from '@forumate/errors';
 import { InternalServerError } from '@forumate/errors/server';
 
-import { CATEGORY_TO_STATUS, httpStatus } from '../http/http-status';
-import { toApiError } from '../http/to-api-error';
+import { httpStatus, CATEGORY_TO_STATUS } from '../infra/http/http-status';
+import { toApiError } from '../infra/http/to-api-error';
 
 export const errorHandler: ErrorRequestHandler = (
   err: unknown,
