@@ -1,7 +1,5 @@
-export type AddEmailResult = {
-  email: string;
-};
+import { type EmailSubscriptionDto } from '@forumate/api/marketing';
 
-export interface ContactListApi {
-  addEmailToList(email: string): Promise<AddEmailResult>;
+export interface IContactListApi {
+  addEmailToList(email: string): Promise<EmailSubscriptionDto>;
 }
