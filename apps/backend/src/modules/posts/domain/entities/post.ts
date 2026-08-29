@@ -2,34 +2,70 @@ import { randomUUID } from 'node:crypto';
 
 import { z } from 'zod';
 
-import { CreatePostInput, PostType } from '@forumate/api/posts';
+import { type CreatePostInput } from '@forumate/api/posts';
 import { AggregateRoot } from '@forumate/core';
-import { Post as PostModel } from '@forumate/database';
-import { ValidationError } from '@forumate/errors/application';
+import { type Post as PostModel } from '@forumate/database';
 
+import { mapPostValidationError, PostCreationError } from '../../posts-errors';
 import { PostCreated } from '../events/post-created';
 import { PostSlug } from '../value-objects/post-slug';
 
-interface PostProps {
+interface BasePostProps {
   id: string;
   memberId: string;
   title: string;
-  link?: string;
-  content?: string;
-  postType: PostType;
   voteScore: number;
   slug: PostSlug;
 }
 
+interface TextPostProps extends BasePostProps {
+  postType: 'text';
+  content: string;
+  link?: undefined;
+}
+
+interface LinkPostProps extends BasePostProps {
+  postType: 'link';
+  link: string;
+  content?: undefined;
+}
+
+type PostProps = TextPostProps | LinkPostProps;
+
+// These could be value objects too
 const createTextPostSchema = z.object({
-  title: z.string().min(5).max(100),
-  content: z.string().min(5).max(3000).optional(),
+  postType: z.literal('text'),
+
+  title: z
+    .string()
+    .min(5, 'Post title must be at least 5 characters')
+    .max(100, 'Post title must not exceed 100 characters'),
+
+  content: z
+    .string()
+    .min(5, 'Post content must be at least 5 characters')
+    .max(3000, 'Post content must not exceed 3000 characters'),
+
+  link: z.never().optional(),
 });
 
 const createLinkPostSchema = z.object({
-  title: z.string().min(5).max(100),
-  link: z.string().url(),
+  postType: z.literal('link'),
+
+  title: z
+    .string()
+    .min(5, 'Post title must be at least 5 characters')
+    .max(100, 'Post title must not exceed 100 characters'),
+
+  link: z.url('Post link must be a valid URL'),
+
+  content: z.never().optional(),
 });
+
+const createPostSchema = z.discriminatedUnion('postType', [
+  createTextPostSchema,
+  createLinkPostSchema,
+]);
 
 export class Post extends AggregateRoot {
   constructor(private props: PostProps) {
@@ -68,36 +104,23 @@ export class Post extends AggregateRoot {
     return this.props.slug.value;
   }
 
-  public static create(input: CreatePostInput): Post | ValidationError {
-    const isTextPost = input.postType === 'text';
+  public static create(input: CreatePostInput): Post | PostCreationError {
+    const { memberId, ...postInput } = input;
 
-    if (isTextPost) {
-      const validationResult = createTextPostSchema.safeParse(input);
+    const result = createPostSchema.safeParse(postInput);
 
-      if (!validationResult.success) {
-        return new ValidationError(
-          validationResult.error.errors.map((e) => e.message).join(', '),
-        );
-      }
-    } else {
-      const linkPostValidationResult = createLinkPostSchema.safeParse(input);
-
-      if (!linkPostValidationResult.success) {
-        return new ValidationError(
-          linkPostValidationResult.error.errors
-            .map((e) => e.message)
-            .join(', '),
-        );
-      }
+    if (!result.success) {
+      return mapPostValidationError(result.error, input);
     }
 
     const postId = randomUUID();
 
     const post = new Post({
-      ...input,
-      voteScore: 0,
+      ...result.data,
+      memberId,
       id: postId,
-      slug: PostSlug.create(input.title),
+      voteScore: 0,
+      slug: PostSlug.create(result.data.title),
     });
 
     post.domainEvents.push(new PostCreated(postId, input.memberId));
@@ -106,15 +129,24 @@ export class Post extends AggregateRoot {
   }
 
   public static toDomain(prismaModel: PostModel): Post {
+    const postVariant =
+      prismaModel.postType === 'text'
+        ? {
+            postType: 'text' as const,
+            content: prismaModel.content!,
+          }
+        : {
+            postType: 'link' as const,
+            link: prismaModel.link!,
+          };
+
     return new Post({
       id: prismaModel.id,
       memberId: prismaModel.memberId,
       title: prismaModel.title,
-      content: prismaModel.content ? prismaModel.content : undefined,
-      link: prismaModel.link ? prismaModel.link : undefined,
-      postType: prismaModel.postType as PostType,
       voteScore: prismaModel.voteScore,
       slug: PostSlug.toDomain(prismaModel.slug),
+      ...postVariant,
     });
   }
 }

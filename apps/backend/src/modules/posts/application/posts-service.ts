@@ -1,16 +1,17 @@
 import { CreatePostCommand, GetPostsQuery } from '@forumate/api/posts';
-import { EventBus } from '@forumate/bus';
+import { IEventBus } from '@forumate/bus';
 
-import { MembersRepository } from '../../members/repos/ports/members-repository';
-import { PostsRepository } from '../repos/ports/posts-repository';
+import { IMembersRepository } from '../../members/repos/ports/members-repository';
+import { IPostsRepository } from '../repos/ports/posts-repository';
 
 import { CreatePost } from './use-cases/create-post/create-post';
+import { GetPostDetails } from './use-cases/create-post/get-post-details';
 
 export class PostsService {
   constructor(
-    private postsRepo: PostsRepository,
-    private membersRepo: MembersRepository,
-    private eventBus: EventBus,
+    private postsRepo: IPostsRepository,
+    private membersRepo: IMembersRepository,
+    private eventBus: IEventBus,
   ) {}
 
   async getPosts(query: GetPostsQuery) {
@@ -30,6 +31,6 @@ export class PostsService {
   }
 
   async getPostDetailsById(id: string) {
-    return this.postsRepo.getPostDetailsById(id);
+    return new GetPostDetails(this.postsRepo).execute(id);
   }
 }

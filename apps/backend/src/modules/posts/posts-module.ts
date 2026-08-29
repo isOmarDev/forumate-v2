@@ -1,54 +1,58 @@
-import { EventBus } from '@forumate/bus';
-import { Database, PrismaDatabase } from '@forumate/database';
+import { IEventBus } from '@forumate/bus';
+import { IDatabase } from '@forumate/database';
 
 import { Config } from '../../shared/config';
-import { WebServer } from '../../shared/http';
+import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
-import { MembersRepository } from '../members/repos/ports/members-repository';
+import { IMembersRepository } from '../members/repos/ports/members-repository';
 
 import { PostsService } from './application/posts-service';
 import { PostsController } from './posts-controller';
-import { postsErrorHandler } from './posts-errors';
+import { PostsRouter } from './posts-router';
+import { InMemoryPostsRepository } from './repos/adapters/in-memory-posts-repository';
 import { ProductionPostsRepository } from './repos/adapters/production-posts-repository';
-import { PostsRepository } from './repos/ports/posts-repository';
+import { IPostsRepository } from './repos/ports/posts-repository';
 
 export class PostsModule extends ApplicationModule {
-  private postsRepository: PostsRepository;
+  private postsRepository: IPostsRepository;
   private postsService: PostsService;
   private postsController: PostsController;
+  private postsRouter: PostsRouter;
 
   private constructor(
-    private db: Database,
     config: Config,
-    private eventBus: EventBus,
-    private membersRepository: MembersRepository,
+    private database: IDatabase,
+    private eventBus: IEventBus,
+    private membersRepository: IMembersRepository,
   ) {
     super(config);
+
     this.postsRepository = this.createPostsRepository();
     this.postsService = this.createPostsService(membersRepository);
     this.postsController = this.createPostsController();
+    this.postsRouter = this.createPostsRouter();
+
+    this.setupRoutes();
   }
 
   static build(
-    db: PrismaDatabase,
+    db: IDatabase,
     config: Config,
-    eventBus: EventBus,
-    membersRepository: MembersRepository,
+    eventBus: IEventBus,
+    membersRepository: IMembersRepository,
   ) {
-    return new PostsModule(db, config, eventBus, membersRepository);
+    return new PostsModule(config, db, eventBus, membersRepository);
   }
 
   private createPostsRepository() {
-    if (this.postsRepository) return this.postsRepository;
+    if (this.shouldBuildFakeRepository) {
+      return new InMemoryPostsRepository();
+    }
 
-    // if (this.shouldBuildFakeRepository) {
-    //   return InMemoryPostsRepository.createWithSeedData();
-    // }
-
-    return new ProductionPostsRepository(this.db);
+    return new ProductionPostsRepository(this.database);
   }
 
-  private createPostsService(membersRepository: MembersRepository) {
+  private createPostsService(membersRepository: IMembersRepository) {
     return new PostsService(
       this.postsRepository,
       membersRepository,
@@ -57,22 +61,32 @@ export class PostsModule extends ApplicationModule {
   }
 
   private createPostsController() {
-    return new PostsController(this.postsService, postsErrorHandler);
+    return new PostsController(this.postsService);
   }
 
-  public getPostsController() {
-    return this.postsController;
+  private createPostsRouter() {
+    return new PostsRouter(this.postsController);
+  }
+
+  private setupRoutes() {
+    this.postsRouter.register();
   }
 
   public mountRouter(webServer: WebServer) {
-    webServer.mountRouter('/posts', this.postsController.getRouter());
+    const path = this.postsRouter.basePath;
+    const router = this.postsRouter.getRouter();
+    webServer.mountRouter(path, router);
+  }
+
+  public getPostsRepository() {
+    return this.postsRepository;
   }
 
   public getPostsService() {
     return this.postsService;
   }
 
-  public getPostsRepository() {
-    return this.postsRepository;
+  public getPostsController() {
+    return this.postsController;
   }
 }

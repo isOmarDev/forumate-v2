@@ -1,8 +1,8 @@
 import { GetPostsQuery } from '@forumate/api/posts';
 import {
-  Database,
-  Member as MemberModel,
-  Post as PostModel,
+  type IDatabase,
+  type Member as MemberModel,
+  type Post as PostModel,
   Prisma,
 } from '@forumate/database';
 import { DatabaseError } from '@forumate/errors/server';
@@ -10,14 +10,14 @@ import { DatabaseError } from '@forumate/errors/server';
 import { MemberReadModel } from '../../../members/application/read-models/member-read-model';
 import { PostReadModel } from '../../application/read-models/post-read-model';
 import { Post } from '../../domain/entities/post';
-import { PostsRepository } from '../ports/posts-repository';
+import { type IPostsRepository } from '../ports/posts-repository';
 
 type PostModelWithMember = PostModel & {
   memberPostedBy: MemberModel;
 };
 
-export class ProductionPostsRepository implements PostsRepository {
-  constructor(private database: Database) {}
+export class ProductionPostsRepository implements IPostsRepository {
+  constructor(private database: IDatabase) {}
 
   async getPostById(id: string): Promise<Post | null> {
     const connection = this.database.getClient();
