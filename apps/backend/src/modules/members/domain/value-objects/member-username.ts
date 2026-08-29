@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { ValueObject } from '@forumate/core';
 import { ValidationError } from '@forumate/errors/application';
 
+import { InvalidMemberUsernameError } from '../../member-errors';
+
 // Note: It's debatable whether you should validate the commands or validate the
 // value objects in the use cases.
 // Actually, the most intelligent approach would be to validate within the commands
@@ -45,6 +47,6 @@ export class MemberUsername extends ValueObject<MemberUsernameProps> {
       return new MemberUsername({ value: input as string });
     }
 
-    return new ValidationError(`Member username invalid`);
+    return new InvalidMemberUsernameError();
   }
 }

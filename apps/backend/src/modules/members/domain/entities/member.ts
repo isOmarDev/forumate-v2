@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 
-import { MemberDto, ReputationLevel } from '@forumate/api/members';
-import { AggregateRoot, fail, Result, success } from '@forumate/core';
-import { Member as MemberModel } from '@forumate/database';
+import { type MemberDto, ReputationLevel } from '@forumate/api/members';
+import { AggregateRoot, Result, fail, success } from '@forumate/core';
+import { type Member as MemberModel } from '@forumate/database';
 import { ValidationError } from '@forumate/errors/application';
 
 import { MemberReputationLevelUpgraded } from '../events/member-reputation-level-upgraded';

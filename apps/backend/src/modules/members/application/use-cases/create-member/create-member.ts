@@ -1,6 +1,6 @@
 import { CreateMemberCommand } from '@forumate/api/members';
-import { EventBus } from '@forumate/bus';
-import { fail, Result, success, UseCase } from '@forumate/core';
+import { type IEventBus } from '@forumate/bus';
+import { type IUseCase, Result, fail, success } from '@forumate/core';
 import {
   ConflictError,
   NotFoundError,
@@ -8,17 +8,17 @@ import {
 } from '@forumate/errors/application';
 
 import { Member } from '../../../domain/entities/member';
-import { MembersRepository } from '../../../repos/ports/members-repository';
+import { type IMembersRepository } from '../../../repos/ports/members-repository';
 
 export type CreateMemberError = ValidationError | NotFoundError | ConflictError;
 
-export class CreateMember implements UseCase<
+export class CreateMember implements IUseCase<
   CreateMemberCommand,
   Result<Member, CreateMemberError>
 > {
   constructor(
-    private memberRepository: MembersRepository,
-    private eventBus: EventBus,
+    private memberRepository: IMembersRepository,
+    private eventBus: IEventBus,
   ) {}
 
   async execute(
