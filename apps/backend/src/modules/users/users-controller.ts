@@ -1,70 +1,37 @@
 import { randomUUID } from 'node:crypto';
 
-import { Router } from 'express';
-import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import express from 'express';
 
-import {
-  CreateUserCommand,
-  CreateUserApiResponse,
-  UserDto,
-} from '@forumate/api/users';
+import { CreateUserCommand, UserDto } from '@forumate/api/users';
 
-import { Config } from '../../shared/config';
+import { BaseController } from '../../shared/infra/http';
 
-export class UsersController {
-  private router: Router;
-
-  constructor(
-    config: Config,
-    private errorHandler: ErrorRequestHandler,
-  ) {
-    this.router = Router();
-    this.setupRoutes();
-    this.setupErrorHandler();
-  }
-
-  getRouter() {
-    return this.router;
-  }
-
-  private setupRoutes() {
-    this.router.post('/new', this.createUser.bind(this));
-  }
-
-  private setupErrorHandler() {
-    this.router.use(this.errorHandler);
+export class UsersController extends BaseController {
+  constructor() {
+    super();
   }
 
   /**
    * Note: For temporary purposes to simplify Pattern-First frontend teachings.
    */
 
-  private async createUser(req: Request, res: Response, next: NextFunction) {
-    try {
-      const command = CreateUserCommand.fromRequest(req.body);
-      if (!command.isSuccess) {
-        return next(command.getError());
-      }
+  public createUser = async (req: express.Request, res: express.Response) => {
+    const command = CreateUserCommand.fromRequest(req.body);
 
-      const commandValue = command.getValue();
-      const temporaryUserResponseDto: UserDto = {
-        id: randomUUID(),
-        email: commandValue.email,
-        firstName: commandValue.firstName,
-        lastName: commandValue.lastName,
-        username: commandValue.username,
-      };
-
-      const response: CreateUserApiResponse = {
-        success: true,
-        data: temporaryUserResponseDto,
-        statusCode: 201,
-        error: null,
-      };
-
-      return res.status(201).json(response);
-    } catch (error) {
-      next(error);
+    if (command.isFailure) {
+      return this.fail(res, command.getError());
     }
-  }
+
+    const user = command.getValue();
+
+    const temporaryUserResponseDTO: UserDto = {
+      id: randomUUID(),
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+    };
+
+    return this.created(res, temporaryUserResponseDTO);
+  };
 }

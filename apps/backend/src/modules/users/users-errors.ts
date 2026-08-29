@@ -1,83 +1,46 @@
-import { NextFunction, Request, Response } from 'express';
-
-import { UserResponse } from '@forumate/api/users';
 import {
-  ApplicationEntity,
-  ConflictError,
   NotFoundError,
+  ConflictError,
   ValidationError,
 } from '@forumate/errors/application';
-import { CustomError } from '@forumate/errors/custom';
-import { GenericServerError } from '@forumate/errors/server';
+import { userErrorCodes } from '@forumate/errors/domain';
 
-import {
-  EmailAlreadyInUseException,
-  UsernameAlreadyTakenException,
-  UserNotFoundException,
-} from './users-exceptions';
+export class UserNotFoundError extends NotFoundError {
+  readonly code = userErrorCodes.USER_NOT_FOUND;
 
-interface ErrorWithEntity extends CustomError {
-  missingEntityType?: ApplicationEntity;
+  constructor(email?: string) {
+    super(email ? `User with email: ${email} not found` : 'User not found');
+  }
 }
 
-export function userErrorHandler(
-  error: ErrorWithEntity,
-  _: Request,
-  res: Response,
-  _next: NextFunction,
-): Response<UserResponse> {
-  let responseBody: UserResponse;
+export class EmailAlreadyTakenError extends ConflictError {
+  readonly code = userErrorCodes.EMAIL_ALREADY_TAKEN;
 
-  // Handle validation errors
-  if (
-    error.code === 'InvalidRequestBodyError' ||
-    error.code === 'InvalidParamsError'
-  ) {
-    return res.status(400).json({
-      success: false,
-      data: null,
-      error: {
-        message: error.message,
-        code: new ValidationError(error.message),
-      },
-    });
+  constructor(email: string) {
+    super(`Email: ${email} is already taken`);
   }
+}
 
-  // Handle not found errors
-  if (error instanceof NotFoundError) {
-    responseBody = {
-      success: false,
-      data: null,
-      error: new NotFoundError(error.missingEntityType || 'user'),
-    };
-    return res.status(404).json(responseBody);
+export class UsernameAlreadyTakenError extends ConflictError {
+  readonly code = userErrorCodes.USERNAME_ALREADY_TAKEN;
+
+  constructor(username: string) {
+    super(`Username: ${username} is already taken`);
   }
+}
 
-  // Handle conflict errors
-  if (error instanceof EmailAlreadyInUseException) {
-    responseBody = {
-      success: false,
-      data: null,
-      error: new ConflictError('user', error.message),
-    };
-    return res.status(409).json(responseBody);
+export class InvalidUserIdError extends ValidationError {
+  readonly code = userErrorCodes.INVALID_USER_ID;
+
+  constructor() {
+    super('User ID is invalid');
   }
+}
 
-  if (error instanceof UserNotFoundException) {
-    responseBody = {
-      success: false,
-      data: null,
-      error: new NotFoundError('user', error.message),
-    };
-    return res.status(404).json(responseBody);
+export class MissingUserIdError extends ValidationError {
+  readonly code = userErrorCodes.MISSING_USER_ID;
+
+  constructor() {
+    super('User ID is missing');
   }
-
-  // Handle all other errors as server errors
-  responseBody = {
-    success: false,
-    data: null,
-    error: new GenericServerError(error.message),
-  };
-
-  return res.status(500).json(responseBody);
 }

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { auth } from 'firebase-admin';
+import { Auth } from 'firebase-admin/auth';
 
 import { UnauthorizedError } from '@forumate/errors/application';
 
@@ -21,7 +21,7 @@ export const authenticateRequest = async (
     const token = authHeader.split('Bearer ')[1];
 
     try {
-      const decodedToken = await auth().verifyIdToken(token);
+      const decodedToken = await new Auth().verifyIdToken(token);
 
       if (!decodedToken.email) {
         return new UnauthorizedError();
