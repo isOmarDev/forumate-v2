@@ -1,13 +1,13 @@
-import { Database, Prisma } from '@forumate/database';
+import { type IDatabase, Prisma } from '@forumate/database';
 
 import { MemberCommentVotesRoundup } from '../../application/read-models/member-comment-votes-roundup';
 import { MemberPostVotesRoundup } from '../../application/read-models/member-post-votes-roundup';
 import { CommentVote } from '../../domain/entities/comment-vote';
 import { PostVote } from '../../domain/entities/post-vote';
-import { VoteRepository } from '../ports/vote-repository';
+import { type IVoteRepository } from '../ports/vote-repository';
 
-export class ProductionVotesRepository implements VoteRepository {
-  constructor(private database: Database) {}
+export class ProductionVotesRepository implements IVoteRepository {
+  constructor(private database: IDatabase) {}
 
   async getMemberCommentVotesRoundup(
     memberId: string,

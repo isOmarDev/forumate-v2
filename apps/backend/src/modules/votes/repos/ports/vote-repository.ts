@@ -3,7 +3,7 @@ import { MemberPostVotesRoundup } from '../../application/read-models/member-pos
 import { CommentVote } from '../../domain/entities/comment-vote';
 import { PostVote } from '../../domain/entities/post-vote';
 
-export interface VoteRepository {
+export interface IVoteRepository {
   findVoteByMemberAndPostId(
     memberId: string,
     postId: string,

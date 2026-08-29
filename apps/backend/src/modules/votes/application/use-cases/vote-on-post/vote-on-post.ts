@@ -1,31 +1,26 @@
 import { VoteOnPostCommand } from '@forumate/api/votes';
-import { EventBus } from '@forumate/bus';
-import { Result, success, UseCase } from '@forumate/core';
-import {
-  NotFoundError,
-  PermissionError,
-  ValidationError,
-} from '@forumate/errors/application';
+import { type IEventBus } from '@forumate/bus';
+import { Result, success, type IUseCase } from '@forumate/core';
+import { NotFoundError, ValidationError } from '@forumate/errors/application';
 import { DatabaseError } from '@forumate/errors/server';
 
-import { MembersRepository } from '../../../../members/repos/ports/members-repository';
-import { PostsRepository } from '../../../../posts/repos/ports/posts-repository';
+import { type IMembersRepository } from '../../../../members/repos/ports/members-repository';
+import { type IPostsRepository } from '../../../../posts/repos/ports/posts-repository';
 import { PostVote } from '../../../domain/entities/post-vote';
 import { CanVoteOnPostPolicy } from '../../../domain/policies/can-vote-on-post';
-import { VoteRepository } from '../../../repos/ports/vote-repository';
+import { type IVoteRepository } from '../../../repos/ports/vote-repository';
 
-type VoteOnPostError =
-  ValidationError | PermissionError | NotFoundError | DatabaseError;
+type VoteOnPostError = ValidationError | NotFoundError | DatabaseError;
 
-export class VoteOnPost implements UseCase<
+export class VoteOnPost implements IUseCase<
   VoteOnPostCommand,
   Result<PostVote, VoteOnPostError>
 > {
   constructor(
-    private memberRepository: MembersRepository,
-    private postRepository: PostsRepository,
-    private voteRepository: VoteRepository,
-    private eventBus: EventBus,
+    private memberRepository: IMembersRepository,
+    private postRepository: IPostsRepository,
+    private voteRepository: IVoteRepository,
+    private eventBus: IEventBus,
   ) {}
 
   async execute(

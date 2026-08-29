@@ -1,5 +1,3 @@
-import {} from '@forumate/api/members';
-
 import { Member } from '../../../members/domain/entities/member';
 
 export class CanVoteOnPostPolicy {
