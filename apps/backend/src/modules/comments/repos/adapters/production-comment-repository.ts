@@ -1,10 +1,10 @@
-import { Database, Prisma } from '@forumate/database';
+import { type IDatabase, Prisma } from '@forumate/database';
 
 import { Comment } from '../../domain/entities/comment';
-import { CommentRepository } from '../ports/comment-repository';
+import { type ICommentRepository } from '../ports/comment-repository';
 
-export class ProductionCommentsRepository implements CommentRepository {
-  constructor(private database: Database) {}
+export class ProductionCommentsRepository implements ICommentRepository {
+  constructor(private database: IDatabase) {}
 
   async save(comment: Comment, transaction?: Prisma.TransactionClient) {
     const prismaInstance = transaction || this.database.getClient();

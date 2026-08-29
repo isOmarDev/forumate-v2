@@ -1,11 +1,11 @@
 import { PostCommentCommand } from '@forumate/api';
-import { EventBus } from '@forumate/bus';
+import { IEventBus } from '@forumate/bus';
 import { Result } from '@forumate/core';
 
-import { MembersRepository } from '../../members/repos/ports/members-repository';
-import { PostsRepository } from '../../posts/repos/ports/posts-repository';
+import { IMembersRepository } from '../../members/repos/ports/members-repository';
+import { IPostsRepository } from '../../posts/repos/ports/posts-repository';
 import { Comment } from '../domain/entities/comment';
-import { CommentRepository } from '../repos/ports/comment-repository';
+import { ICommentRepository } from '../repos/ports/comment-repository';
 
 import {
   PostComment,
@@ -14,10 +14,10 @@ import {
 
 export class CommentsService {
   constructor(
-    private commentRepo: CommentRepository,
-    private postRepo: PostsRepository,
-    private membersRepo: MembersRepository,
-    private eventBus: EventBus,
+    private commentRepo: ICommentRepository,
+    private postRepo: IPostsRepository,
+    private membersRepo: IMembersRepository,
+    private eventBus: IEventBus,
   ) {}
 
   async postComment(

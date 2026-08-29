@@ -1,30 +1,25 @@
 import { PostCommentCommand } from '@forumate/api';
-import { EventBus } from '@forumate/bus';
-import { IUseCase, Result, success, fail } from '@forumate/core';
-import {
-  NotFoundError,
-  PermissionError,
-  ValidationError,
-} from '@forumate/errors/application';
+import { type IEventBus } from '@forumate/bus';
+import { type IUseCase, Result, success, fail } from '@forumate/core';
+import { NotFoundError } from '@forumate/errors/application';
 
-import { MembersRepository } from '../../../../members/repos/ports/members-repository';
-import { PostsRepository } from '../../../../posts/repos/ports/posts-repository';
+import { type IMembersRepository } from '../../../../members/repos/ports/members-repository';
+import { type IPostsRepository } from '../../../../posts/repos/ports/posts-repository';
 import { Comment } from '../../../domain/entities/comment';
 import { CanPostCommentPolicy } from '../../../domain/policies/can-post-comment';
-import { CommentRepository } from '../../../repos/ports/comment-repository';
+import { type ICommentRepository } from '../../../repos/ports/comment-repository';
 
-export type PostCommentError =
-  ValidationError | PermissionError | NotFoundError;
+export type PostCommentError = NotFoundError;
 
 export class PostComment implements IUseCase<
   PostCommentCommand,
   Result<Comment, PostCommentError>
 > {
   constructor(
-    private commentRepository: CommentRepository,
-    private postRepository: PostsRepository,
-    private memberRepository: MembersRepository,
-    private eventBus: EventBus,
+    private commentRepository: ICommentRepository,
+    private postRepository: IPostsRepository,
+    private memberRepository: IMembersRepository,
+    private eventBus: IEventBus,
   ) {}
 
   async execute(
