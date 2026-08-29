@@ -1,4 +1,4 @@
-import { EventBus,InMemoryEventBus } from '@forumate/bus';
+import { IEventBus, InMemoryEventBus } from '@forumate/bus';
 import { PrismaDatabase } from '@forumate/database';
 
 import {
@@ -12,12 +12,12 @@ import { MembersModule } from '../../modules/members/members-module';
 import { VotesModule } from '../../modules/votes/votes-module';
 import { Application } from '../application/application-interface';
 import { Config } from '../config';
-import { WebServer } from '../http';
+import { WebServer } from '../infra/http';
 
 export class CompositionRoot {
   private static instance: CompositionRoot | null = null;
 
-  private eventBus: EventBus;
+  private eventBus: IEventBus;
   private dbConnection: PrismaDatabase;
   private config: Config;
   private webServer!: WebServer;
@@ -75,9 +75,10 @@ export class CompositionRoot {
   createCommentsModule() {
     return CommentsModule.build(
       this.dbConnection,
-      this.config,
       this.membersModule.getMembersRepository(),
+      this.postsModule.getPostsRepository(),
       this.eventBus,
+      this.config,
     );
   }
 
