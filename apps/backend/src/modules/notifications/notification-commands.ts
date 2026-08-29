@@ -1,9 +1,8 @@
-export class SendNotificationCommand {
+interface SendNotificationCommandProps {
   memberId: string;
   correspondingEventName: string;
+}
 
-  constructor(props: { memberId: string; correspondingEventName: string }) {
-    this.memberId = props.memberId;
-    this.correspondingEventName = props.correspondingEventName;
-  }
+export class SendNotificationCommand {
+  constructor(public readonly props: SendNotificationCommandProps) {}
 }

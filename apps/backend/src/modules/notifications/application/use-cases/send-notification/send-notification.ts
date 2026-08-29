@@ -1,17 +1,16 @@
-import { Result, UseCase } from '@forumate/core';
+import { Result, type IUseCase } from '@forumate/core';
 import { NotFoundError } from '@forumate/errors/application';
-import { AnyServerError } from '@forumate/errors/server';
 
-import { TransactionalEmailApi } from '../../../email/ports/transactional-email-api';
+import { ITransactionalEmailApi } from '../../../email/ports/transactional-email-api';
 import { SendNotificationCommand } from '../../../notification-commands';
 
-type SendNotificationError = NotFoundError | AnyServerError;
+type SendNotificationError = NotFoundError;
 
-export class SendNotification implements UseCase<
+export class SendNotification implements IUseCase<
   SendNotificationCommand,
   Result<void, SendNotificationError>
 > {
-  constructor(transactionalEmailApi: TransactionalEmailApi) {}
+  constructor(private transactionalEmailApi: ITransactionalEmailApi) {}
 
   async execute(
     request: SendNotificationCommand,
