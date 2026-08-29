@@ -19,11 +19,6 @@ export abstract class BaseController {
       error: null,
     });
   }
-
-  public created<T>(res: express.Response<SuccessApiResponse<T>>, dto: T) {
-    return this.ok(res, dto, 201);
-  }
-
   public fail(
     res: express.Response<FailureApiResponse<ErrorCode>>,
     error: CustomError,
@@ -36,6 +31,10 @@ export abstract class BaseController {
       status,
       error: toApiError(error),
     });
+  }
+
+  public created<T>(res: express.Response<SuccessApiResponse<T>>, dto: T) {
+    return this.ok(res, dto, 201);
   }
 
   public noContent(res: express.Response) {

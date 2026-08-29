@@ -3,8 +3,8 @@ import { Server } from 'http';
 import cors from 'cors';
 import express from 'express';
 
-import { Config } from '../config';
-import { ProcessService } from '../processes/process-service';
+import { Config } from '../../config';
+import { ProcessService } from '../../processes/process-service';
 
 export class WebServer {
   private express: express.Express;
