@@ -1,7 +1,6 @@
 import { UserDetails } from '../domain/user-details';
 import { type IIdentityServiceApi } from '../identity/ports/identity-service-api';
 import { UserNotFoundError } from '../users-errors';
-import { UserNotFoundException } from '../users-exceptions';
 
 export class UserIdentityService {
   constructor(private identityServiceApi: IIdentityServiceApi) {}
@@ -24,7 +23,7 @@ export class UserIdentityService {
   async getUserByEmail(email: string) {
     const prismaUser = await this.identityServiceApi.findUserByEmail(email);
     if (!prismaUser) {
-      throw new UserNotFoundException(email);
+      throw new UserNotFoundError(email);
     }
     return prismaUser;
   }
@@ -32,7 +31,7 @@ export class UserIdentityService {
   async getUserDetailsByEmail(email: string) {
     const userModel = await this.identityServiceApi.findUserByEmail(email);
     if (!userModel) {
-      throw new UserNotFoundException(email);
+      throw new UserNotFoundError(email);
     }
     return UserDetails.toDTO(userModel);
   }
