@@ -8,16 +8,20 @@ export type ApplicationError =
   | UnauthorizedError
   | ForbiddenError;
 
+export type FieldError = {
+  field: string;
+  message: string;
+};
+
+export type FieldErrors = FieldError[];
+
 export abstract class ValidationError extends CustomError {
   readonly category = errorCategories.VALIDATION;
   abstract readonly code: ErrorCode;
 
   constructor(
     message: string,
-    readonly fieldErrors?: Array<{
-      field: string;
-      message: string;
-    }>,
+    readonly fieldErrors?: FieldErrors,
   ) {
     super(message);
   }
