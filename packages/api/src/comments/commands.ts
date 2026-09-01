@@ -1,43 +1,23 @@
-import { Result, success, fail, type Request } from '@forumate/core';
-import { InvalidInputError, InvalidRequestBodyError } from '@forumate/errors';
+import { Result, success, fail } from '@forumate/core';
+import { InvalidRequestInputError } from '@forumate/errors';
 
-import { type DecodedIdToken } from '../users';
+import { validateCommandInput } from '../validate-command-input';
 
-import { PostCommentInput } from './inputs';
+import { CreateCommentInput, createCommentInputSchema } from './inputs';
+
 export class PostCommentCommand {
-  private constructor(public readonly props: PostCommentInput) {}
-
-  static fromRequest(
-    body: Request<PostCommentInput>['body'],
-    decodedToken: DecodedIdToken | undefined,
-  ): Result<PostCommentCommand, InvalidRequestBodyError | InvalidInputError> {
-    const input: PostCommentInput = {
-      postId: body.postId,
-      text: body.text,
-      parentCommentId: body.parentCommentId,
-      memberId: body.memberId,
-    };
-
-    return this.create(input);
-  }
+  private constructor(public readonly props: CreateCommentInput) {}
 
   static create(
-    input: PostCommentInput,
-  ): Result<PostCommentCommand, InvalidInputError> {
-    const { postId, text, memberId } = input;
+    input: unknown,
+    // decodedToken: DecodedIdToken | undefined,
+  ): Result<PostCommentCommand, InvalidRequestInputError> {
+    const inputOrError = validateCommandInput(createCommentInputSchema, input);
 
-    if (!postId) {
-      return fail(new InvalidInputError(['postId']));
+    if (inputOrError.isFailure) {
+      return fail(inputOrError.getError());
     }
 
-    if (!text || text.length > 1000) {
-      return fail(new InvalidInputError(['text']));
-    }
-
-    if (!memberId) {
-      return fail(new InvalidInputError(['memberId']));
-    }
-
-    return success(new PostCommentCommand(input));
+    return success(new PostCommentCommand(inputOrError.getValue()));
   }
 }

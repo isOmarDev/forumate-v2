@@ -1,7 +1,7 @@
 import { apiRequest } from '../api-request';
 import { getAuthHeaders, type HttpClient } from '../client';
 
-import type { PostCommentInput } from './inputs';
+import type { CreateCommentInput } from './inputs';
 import type {
   GetCommentsByPostIdApiResponse,
   PostCommentApiResponse,
@@ -9,7 +9,7 @@ import type {
 
 export const createCommentsApi = (client: HttpClient) => {
   return {
-    postComment: (input: PostCommentInput, authToken: string) =>
+    postComment: (input: CreateCommentInput, authToken: string) =>
       apiRequest(() =>
         client.post<PostCommentApiResponse>(
           `/posts/${input.postId}/comments`,
