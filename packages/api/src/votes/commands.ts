@@ -1,7 +1,14 @@
-import { type Request } from '@forumate/core/application';
-import { InvalidRequestBodyError } from '@forumate/errors/request';
+import { fail, Result, success } from '@forumate/core/application';
+import { InvalidRequestInputError } from '@forumate/errors/request';
 
-import type { VoteOnCommentInput, VoteOnPostInput } from './inputs';
+import { validateCommandInput } from '../validate-command-input';
+
+import {
+  voteOnCommentInputSchema,
+  voteOnPostInputSchema,
+  type VoteOnCommentInput,
+  type VoteOnPostInput,
+} from './inputs';
 
 // Update Member Reputation
 export class UpdateMemberReputationScoreCommand {
@@ -14,58 +21,34 @@ export class UpdateMemberReputationScoreCommand {
 
 // Vote On Comment
 export class VoteOnCommentCommand {
-  constructor(public readonly props: VoteOnCommentInput) {}
+  private constructor(public readonly props: VoteOnCommentInput) {}
 
-  static fromRequest(
-    body: Request<VoteOnCommentInput>['body'],
-  ): VoteOnCommentCommand {
-    const { voteType, commentId, memberId } = body;
+  static create(
+    input: unknown,
+  ): Result<VoteOnCommentCommand, InvalidRequestInputError> {
+    const inputOrError = validateCommandInput(voteOnCommentInputSchema, input);
 
-    if (!commentId) {
-      throw new InvalidRequestBodyError(['commentId']);
+    if (inputOrError.isFailure) {
+      return fail(inputOrError.getError());
     }
 
-    if (!voteType) {
-      throw new InvalidRequestBodyError(['voteType']);
-    }
-
-    if (!memberId) {
-      throw new InvalidRequestBodyError(['memberId']);
-    }
-
-    return new VoteOnCommentCommand({
-      commentId,
-      voteType,
-      memberId,
-    });
+    return success(new VoteOnCommentCommand(inputOrError.getValue()));
   }
 }
 
 // Vote On Post
 export class VoteOnPostCommand {
-  constructor(public readonly props: VoteOnPostInput) {}
+  private constructor(public readonly props: VoteOnPostInput) {}
 
-  static fromRequest(
-    body: Request<VoteOnPostInput>['body'],
-  ): VoteOnPostCommand {
-    const { voteType, postId, memberId } = body;
+  static create(
+    input: unknown,
+  ): Result<VoteOnPostCommand, InvalidRequestInputError> {
+    const inputOrError = validateCommandInput(voteOnPostInputSchema, input);
 
-    if (!postId) {
-      throw new InvalidRequestBodyError(['postId']);
+    if (inputOrError.isFailure) {
+      return fail(inputOrError.getError());
     }
 
-    if (!voteType) {
-      throw new InvalidRequestBodyError(['voteType']);
-    }
-
-    if (!memberId) {
-      throw new InvalidRequestBodyError(['memberId']);
-    }
-
-    return new VoteOnPostCommand({
-      postId,
-      voteType,
-      memberId,
-    });
+    return success(new VoteOnPostCommand(inputOrError.getValue()));
   }
 }
