@@ -2,3 +2,4 @@ export * from './api';
 export * from './dtos';
 export * from './responses';
 export * from './commands';
+export * from './inputs';
