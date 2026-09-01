@@ -7,7 +7,7 @@ import { DatabaseError } from '@forumate/errors/server';
 import { Member } from '../../../../members/domain/entities/member';
 import { MemberNotFoundError } from '../../../../members/member-errors';
 import { type IMembersRepository } from '../../../../members/repos/ports/members-repository';
-import { VoteRepository } from '../../../../votes/repos/ports/vote-repository';
+import { IVoteRepository } from '../../../../votes/repos/ports/vote-repository';
 
 type UpdateMemberReputationError = NotFoundError | DatabaseError;
 
@@ -21,7 +21,7 @@ export class UpdateMemberReputationScore implements IUseCase<
 > {
   constructor(
     private memberRepository: IMembersRepository,
-    private votesRepository: VoteRepository,
+    private votesRepository: IVoteRepository,
     private eventBus: IEventBus,
   ) {}
 
