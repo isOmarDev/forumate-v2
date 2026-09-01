@@ -1,13 +1,9 @@
-import { z } from 'zod';
+import { fail, Result, success } from '@forumate/core/application';
+import { InvalidRequestInputError } from '@forumate/errors/request';
 
-import { type Request, Result } from '@forumate/core/application';
-import {
-  InvalidRequestBodyError,
-  MissingRequestBodyError,
-} from '@forumate/errors/request';
+import { validateCommandInput } from '../validate-command-input';
 
-import type { CreatePostInput } from './inputs';
-import { createPostSchema } from './schemas';
+import { createPostInputSchema, type CreatePostInput } from './inputs';
 
 export class CreatePostCommand {
   private constructor(private readonly props: CreatePostInput) {}
@@ -17,46 +13,14 @@ export class CreatePostCommand {
   }
 
   static create(
-    input: CreatePostInput,
-  ): Result<
-    CreatePostCommand,
-    InvalidRequestBodyError | MissingRequestBodyError
-  > {
-    try {
-      const result = createPostSchema.parse(input);
+    input: unknown,
+  ): Result<CreatePostCommand, InvalidRequestInputError> {
+    const inputOrError = validateCommandInput(createPostInputSchema, input);
 
-      return Result.success(new CreatePostCommand(result as CreatePostInput));
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const invalidKeys = Object.keys(z.flattenError(error).fieldErrors);
-
-        return Result.failure(new InvalidRequestBodyError(invalidKeys));
-      }
-
-      return Result.failure(new MissingRequestBodyError());
-    }
-  }
-
-  static fromRequest(
-    body: Request<CreatePostInput>['body'],
-  ): Result<
-    CreatePostCommand,
-    InvalidRequestBodyError | MissingRequestBodyError
-  > {
-    const { title, postType, memberId } = body;
-
-    if (!memberId) {
-      return Result.failure(new InvalidRequestBodyError(['memberId']));
+    if (inputOrError.isFailure) {
+      return fail(inputOrError.getError());
     }
 
-    if (!title) {
-      return Result.failure(new InvalidRequestBodyError(['title']));
-    }
-
-    if (!postType) {
-      return Result.failure(new InvalidRequestBodyError(['postType']));
-    }
-
-    return this.create(body);
+    return success(new CreatePostCommand(inputOrError.getValue()));
   }
 }

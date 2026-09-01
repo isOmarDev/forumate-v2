@@ -1,35 +1,35 @@
-import { type Request } from '@forumate/core/application';
-import {
-  InvalidRequestQueryParamsError,
-  MissingRequestQueryParamsError,
-} from '@forumate/errors/request';
+import { fail, success, type Result } from '@forumate/core/application';
+import { InvalidRequestQueryParamsError } from '@forumate/errors/request';
 
-import type { GetPostsQueryInput, GetPostsQueryOption } from './inputs';
+import { validateQueryInput } from '../validate-query-input';
+
+import {
+  GetPostByIdQueryInput,
+  getPostByIdQueryInputSchema,
+  getPostsQueryInputSchema,
+  type GetPostsQueryInput,
+  type GetPostsQueryOption,
+} from './inputs';
 
 // Get Post By ID
+
 export class GetPostByIdQuery {
-  constructor(
-    private readonly props: {
-      postId: string;
-    },
-  ) {}
+  private constructor(private readonly props: GetPostByIdQueryInput) {}
 
-  static fromRequest(
-    req: Request<unknown, { postId?: string }, { postId?: string }>,
-  ): GetPostByIdQuery {
-    const postId = req.query.postId ?? req.params.postId;
-
-    if (!postId) {
-      throw new MissingRequestQueryParamsError(['postId']);
-    }
-
-    return new GetPostByIdQuery({
-      postId: postId,
-    });
+  get postId() {
+    return this.props.postId;
   }
 
-  get postId(): string {
-    return this.props.postId;
+  static create(
+    input: unknown,
+  ): Result<GetPostByIdQuery, InvalidRequestQueryParamsError> {
+    const inputResult = validateQueryInput(getPostByIdQueryInputSchema, input);
+
+    if (inputResult.isFailure) {
+      return fail(inputResult.getError());
+    }
+
+    return success(new GetPostByIdQuery(inputResult.getValue()));
   }
 }
 
@@ -37,28 +37,16 @@ export class GetPostByIdQuery {
 export class GetPostsQuery {
   constructor(private readonly props: GetPostsQueryInput) {}
 
-  static create(option: GetPostsQueryOption): GetPostsQuery {
-    return new GetPostsQuery({
-      sort: option,
-    });
-  }
+  static create(
+    input: unknown,
+  ): Result<GetPostsQuery, InvalidRequestQueryParamsError> {
+    const queryOrError = validateQueryInput(getPostsQueryInputSchema, input);
 
-  static fromRequest(
-    query: Request<unknown, GetPostsQueryInput>['query'],
-  ): GetPostsQuery {
-    const { sort } = query;
-
-    if (!sort) {
-      throw new MissingRequestQueryParamsError(['sort']);
+    if (queryOrError.isFailure) {
+      return fail(queryOrError.getError());
     }
 
-    if (sort !== 'recent' && sort !== 'popular') {
-      throw new InvalidRequestQueryParamsError(['sort']);
-    }
-
-    return new GetPostsQuery({
-      sort,
-    });
+    return success(new GetPostsQuery(queryOrError.getValue()));
   }
 
   get sort(): GetPostsQueryOption {
