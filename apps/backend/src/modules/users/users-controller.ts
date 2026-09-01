@@ -16,13 +16,13 @@ export class UsersController extends BaseController {
    */
 
   public createUser = async (req: express.Request, res: express.Response) => {
-    const command = CreateUserCommand.fromRequest(req.body);
+    const commandOrError = CreateUserCommand.create(req.body);
 
-    if (command.isFailure) {
-      return this.fail(res, command.getError());
+    if (commandOrError.isFailure) {
+      return this.fail(res, commandOrError.getError());
     }
 
-    const user = command.getValue();
+    const user = commandOrError.getValue().props;
 
     const temporaryUserResponseDTO: UserDto = {
       id: randomUUID(),
