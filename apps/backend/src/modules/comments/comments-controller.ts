@@ -29,7 +29,7 @@ export class CommentsController extends BaseController {
   };
 
   public postComment = async (req: express.Request, res: express.Response) => {
-    const commandOrError = PostCommentCommand.fromRequest(req.body, req.user);
+    const commandOrError = PostCommentCommand.create(req.body);
 
     if (commandOrError.isFailure) {
       return this.fail(res, commandOrError.getError());

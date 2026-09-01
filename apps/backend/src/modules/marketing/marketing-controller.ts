@@ -15,10 +15,17 @@ export class MarketingController extends BaseController {
     req: express.Request,
     res: express.Response,
   ) => {
-    const commandOrError = AddEmailToListCommand.fromRequest(req.body);
+    const commandOrError = AddEmailToListCommand.create(req.body);
+
+    if (commandOrError.isFailure) {
+      return this.fail(res, commandOrError.getError());
+    }
+
     // Temporary until real service is used
-    const resultOrError =
-      await this.marketingService.addEmailToList(commandOrError);
+    const resultOrError = await this.marketingService.addEmailToList(
+      commandOrError.getValue(),
+    );
+
     this.created(res, { subscription: resultOrError });
   };
 }

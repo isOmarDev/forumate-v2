@@ -16,32 +16,15 @@ export class PostsController extends BaseController {
     super();
   }
 
-  public getPosts = async (
-    req: express.Request<
-      Record<string, never>,
-      unknown,
-      unknown,
-      GetPostsQueryInput
-    >,
-    res: express.Response,
-  ) => {
-    const query = GetPostsQuery.fromRequest(req.query);
-
-    const result = await this.postsService.getPosts(query);
-    const posts = result.map((p) => p.toDTO());
-
-    return this.ok(res, posts);
-  };
-
   public createPost = async (req: express.Request, res: express.Response) => {
-    const command = CreatePostCommand.fromRequest(req.body);
+    const commandOrError = CreatePostCommand.create(req.body);
 
-    if (command.isFailure) {
-      return this.fail(res, command.getError());
+    if (commandOrError.isFailure) {
+      return this.fail(res, commandOrError.getError());
     }
 
     const createPostresult = await this.postsService.createPost(
-      command.getValue(),
+      commandOrError.getValue(),
     );
 
     if (createPostresult.isFailure) {
@@ -61,12 +44,36 @@ export class PostsController extends BaseController {
     return this.ok(res, postDetailsResult.getValue().toDTO());
   };
 
-  public getPostById = async (req: express.Request, res: express.Response) => {
-    const query = GetPostByIdQuery.fromRequest(req);
+  public getPosts = async (
+    req: express.Request<
+      Record<string, never>,
+      unknown,
+      unknown,
+      GetPostsQueryInput
+    >,
+    res: express.Response,
+  ) => {
+    const queryOrError = GetPostsQuery.create(req.query);
 
-    const resultOrError = await this.postsService.getPostDetailsById(
-      query.postId,
-    );
+    if (queryOrError.isFailure) {
+      return this.fail(res, queryOrError.getError());
+    }
+
+    const result = await this.postsService.getPosts(queryOrError.getValue());
+    const posts = result.map((p) => p.toDTO());
+
+    return this.ok(res, posts);
+  };
+
+  public getPostById = async (req: express.Request, res: express.Response) => {
+    const queryOrError = GetPostByIdQuery.create(req);
+
+    if (queryOrError.isFailure) {
+      return this.fail(res, queryOrError.getError());
+    }
+
+    const postId = queryOrError.getValue().postId;
+    const resultOrError = await this.postsService.getPostDetailsById(postId);
 
     if (resultOrError.isFailure) {
       return this.fail(res, resultOrError.getError());
