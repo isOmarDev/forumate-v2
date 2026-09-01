@@ -1,13 +1,19 @@
-import { ValidationError } from '../application';
+import { FieldErrors, ValidationError } from '../application';
 
 import { requestErrorCodes } from './codes';
 
+type RequestBodyError =
+  MissingRequestBodyError | InvalidRequestBodyError | InvalidRequestInputError;
+
+type RequestQueryError =
+  MissingRequestQueryParamsError | InvalidRequestQueryParamsError;
+
+type RequestPathParamsError = InvalidRequestPathParamsError;
+
 export type RequestError =
-  | MissingRequestBodyError
-  | InvalidRequestBodyError
-  | MissingRequestQueryParamsError
-  | InvalidRequestQueryParamsError
-  | InvalidInputError;
+  RequestBodyError | RequestQueryError | RequestPathParamsError;
+
+// Request body
 
 export class MissingRequestBodyError extends ValidationError {
   readonly code = requestErrorCodes.MISSING_REQUEST_BODY;
@@ -25,6 +31,16 @@ export class InvalidRequestBodyError extends ValidationError {
   }
 }
 
+export class InvalidRequestInputError extends ValidationError {
+  readonly code = requestErrorCodes.INVALID_REQUEST_INPUT;
+
+  constructor(fieldErrors: FieldErrors) {
+    super('One or more fields are invalid', fieldErrors);
+  }
+}
+
+// Request query
+
 export class MissingRequestQueryParamsError extends ValidationError {
   readonly code = requestErrorCodes.MISSING_REQUEST_QUERY_PARAMS;
 
@@ -41,10 +57,12 @@ export class InvalidRequestQueryParamsError extends ValidationError {
   }
 }
 
-export class InvalidInputError extends ValidationError {
-  readonly code = requestErrorCodes.INVALID_INPUT;
+// Request Path params
 
-  constructor(fields: string[]) {
-    super('Invalid input: ' + fields.join(', '));
+export class InvalidRequestPathParamsError extends ValidationError {
+  readonly code = requestErrorCodes.INVALID_REQUEST_PATH_PARAMS;
+
+  constructor(invalidParams: string[]) {
+    super(`Path has invalid params: ${invalidParams.join(', ')}`);
   }
 }
