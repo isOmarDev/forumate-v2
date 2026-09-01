@@ -40,8 +40,8 @@ export class TextUtil {
     return keysToCheckFor.filter((key) => data[key] === undefined);
   }
 
-  public static isObject = <T extends Record<string, any>>(
-    val: any,
+  public static isObject = <T extends Record<string, unknown>>(
+    val: unknown,
   ): val is T => {
     return val !== null && typeof val === 'object' && !Array.isArray(val);
   };
