@@ -12,6 +12,7 @@ import { MembersModule } from '../../modules/members/members-module';
 import { VotesModule } from '../../modules/votes/votes-module';
 import { Application } from '../application/application-interface';
 import { Config } from '../config';
+import { errorHandler } from '../errors';
 import { WebServer } from '../infra/http';
 
 export class CompositionRoot {
@@ -60,11 +61,12 @@ export class CompositionRoot {
 
     // Build the core modules
     this.membersModule = this.createMembersModule();
-    this.commentsModule = this.createCommentsModule();
     this.postsModule = this.createPostsModule();
+    this.commentsModule = this.createCommentsModule();
     this.votesModule = this.createVotesModule();
 
     this.mountRoutes();
+    this.useErrorHandler();
   }
 
   async stop() {
@@ -139,6 +141,10 @@ export class CompositionRoot {
     return this.webServer;
   }
 
+  private useErrorHandler() {
+    this.webServer.useErrorHandler(errorHandler);
+  }
+
   private mountRoutes() {
     this.usersModule.mountRouter(this.webServer);
     this.marketingModule.mountRouter(this.webServer);
@@ -156,6 +162,14 @@ export class CompositionRoot {
     return dbConnection;
   }
 
+  getTransactionalEmailApi() {
+    return this.notificationsModule.getTransactionalEmailApi();
+  }
+
+  getContactListApi() {
+    return this.marketingModule.getContactListApi();
+  }
+
   getApplication(): Application {
     return {
       users: this.usersModule.getUsersService(),
@@ -164,14 +178,6 @@ export class CompositionRoot {
       notifications: this.notificationsModule.getNotificationsService(),
       votes: this.votesModule.getVotesService(),
     };
-  }
-
-  getTransactionalEmailApi() {
-    return this.notificationsModule.getTransactionalEmailApi();
-  }
-
-  getContactListApi() {
-    return this.marketingModule.getContactListApi();
   }
 
   getModule(
@@ -199,6 +205,9 @@ export class CompositionRoot {
   getRepositories() {
     return {
       posts: this.postsModule.getPostsRepository(),
+      comments: this.commentsModule.getCommentsRepository(),
+      members: this.membersModule.getMembersRepository(),
+      votes: this.votesModule.getVotesRepository(),
     };
   }
 }
