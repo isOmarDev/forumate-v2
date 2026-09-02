@@ -5,7 +5,7 @@ import { IMembersRepository } from '../../members/repos/ports/members-repository
 import { IPostsRepository } from '../repos/ports/posts-repository';
 
 import { CreatePost } from './use-cases/create-post/create-post';
-import { GetPostDetails } from './use-cases/create-post/get-post-details';
+import { GetPostDetails } from './use-cases/get-post-details/get-post-details';
 
 export class PostsService {
   constructor(
