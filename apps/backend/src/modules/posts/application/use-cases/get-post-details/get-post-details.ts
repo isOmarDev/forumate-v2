@@ -1,4 +1,4 @@
-import { Result, success, type IUseCase } from '@forumate/core';
+import { Result, type IUseCase } from '@forumate/core';
 
 import { PostNotFoundError } from '../../../posts-errors';
 import { IPostsRepository } from '../../../repos/ports/posts-repository';
