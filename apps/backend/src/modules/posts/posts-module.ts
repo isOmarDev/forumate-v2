@@ -39,7 +39,7 @@ export class PostsModule extends ApplicationModule {
     db: IDatabase,
     config: Config,
     eventBus: IEventBus,
-    membersRepository: IMembersRepository,
+    membersRepository: IMembersRepository,  
   ) {
     return new PostsModule(config, db, eventBus, membersRepository);
   }
