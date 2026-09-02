@@ -1,7 +1,6 @@
 import { type ErrorCode } from './error-codes';
 
 export const errorCategories = {
-  // 4xx
   VALIDATION: 'VALIDATION',
   UNAUTHORIZED: 'UNAUTHORIZED',
   PAYMENT_REQUIRED: 'PAYMENT_REQUIRED',
@@ -9,8 +8,6 @@ export const errorCategories = {
   NOT_FOUND: 'NOT_FOUND',
   CONFLICT: 'CONFLICT',
   TOO_MANY_REQUESTS: 'TOO_MANY_REQUESTS',
-
-  // 5xx
   INTERNAL: 'INTERNAL',
 } as const;
 
