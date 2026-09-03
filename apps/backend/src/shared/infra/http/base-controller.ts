@@ -1,18 +1,13 @@
 import express from 'express';
 
 import {
-  ApiError,
   type FailureApiResponse,
   type SuccessApiResponse,
 } from '@forumate/api';
-import {
-  CustomError,
-  FieldErrors,
-  ValidationError,
-  type ErrorCode,
-} from '@forumate/errors';
+import { CustomError, type ErrorCode } from '@forumate/errors';
 
 import { CATEGORY_TO_STATUS } from './http-status';
+import { toApiError } from './to-api-error';
 
 export abstract class BaseController {
   public ok<T>(
@@ -32,33 +27,17 @@ export abstract class BaseController {
     return this.ok(res, dto, 201);
   }
 
-  public fail<E extends ErrorCode>(
+  public fail(
     res: express.Response<FailureApiResponse<ErrorCode>>,
     error: CustomError,
   ) {
     const status = CATEGORY_TO_STATUS[error.category];
 
-    if (error instanceof ValidationError && error.fieldErrors?.length) {
-      return res.status(status).json({
-        success: false,
-        data: null,
-        status,
-        error: {
-          code: error.code,
-          message: error.message,
-          fields: error.fieldErrors,
-        },
-      } as FailureApiResponse<E>);
-    }
-
     return res.status(status).json({
       success: false,
       data: null,
       status,
-      error: {
-        code: error.code,
-        message: error.message,
-      } as Exclude<ApiError<ErrorCode>, { fields: FieldErrors }>,
+      error: toApiError(error),
     });
   }
 
