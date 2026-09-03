@@ -65,7 +65,7 @@ function setupTest({
 
 describe('updateMemberReputationScore', () => {
   const config = new Config('test:unit');
-  const database = new PrismaDatabase(config);
+  const database = new PrismaDatabase();
 
   const membersRepo = new ProductionMembersRepository(database);
   const votesRepo = new ProductionVotesRepository(database);

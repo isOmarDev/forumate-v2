@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer';
 
 import {
-  SendMailInput,
-  TransactionalEmailApi,
+  type SendMailInput,
+  type ITransactionalEmailApi,
 } from '../ports/transactional-email-api';
 
 const mailSettings = {
@@ -21,7 +21,7 @@ const transporter = nodemailer.createTransport({
   authMethod: 'PLAIN',
 });
 
-export class MailjetTransactionalEmail implements TransactionalEmailApi {
+export class MailjetTransactionalEmail implements ITransactionalEmailApi {
   async sendMail(input: SendMailInput) {
     // Email content
     const mailOptions = {

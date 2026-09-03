@@ -1,33 +1,36 @@
-import { AnyApplicationError } from '@forumate/errors/application';
-import { ConflictError, ValidationError } from '@forumate/errors/application';
-import { AnyServerError } from '@forumate/errors/server';
+import {
+  RequestErrorCode,
+  userErrorCodes,
+  ServerErrorCode,
+} from '@forumate/errors';
 
 import { ApiResponse } from '../types';
 
 import { UserDto } from './dtos';
 
-// Errors
-export type CreateUserErrors =
-  | ConflictError // username, email
-  | ValidationError
-  | AnyServerError;
+// User Error Types
+type EmailAlreadyTakenError = typeof userErrorCodes.EMAIL_ALREADY_TAKEN;
+type UsernameAlreadyTakenError = typeof userErrorCodes.USERNAME_ALREADY_TAKEN;
+type UserNotFoundError = typeof userErrorCodes.USER_NOT_FOUND;
 
-// Api Responses
-export type CreateUserApiResponse = ApiResponse<
-  UserDto,
-  CreateUserErrors['code']
->;
+type RequestError = RequestErrorCode;
+type ServerError = ServerErrorCode;
+type NetworkError = 'NETWORK_ERROR';
 
-export type UserNotFoundError = 'UserNotFound';
-export type GetUserByEmailErrors = UserNotFoundError;
+// Create User Response
+export type CreateUserError =
+  | EmailAlreadyTakenError
+  | UsernameAlreadyTakenError
+  | ServerError
+  | NetworkError;
+
+export type CreateUserApiResponse = ApiResponse<UserDto, CreateUserError>;
+
+// Get User By Email Response
+export type GetUserByEmailError =
+  UserNotFoundError | RequestError | ServerError | NetworkError;
 
 export type GetUserByEmailApiResponse = ApiResponse<
   UserDto,
-  GetUserByEmailErrors
->;
-export type GetUserErrors = GetUserByEmailErrors;
-
-export type UserResponse = ApiResponse<
-  CreateUserApiResponse | GetUserByEmailApiResponse | null,
-  GetUserErrors | AnyServerError['code'] | AnyApplicationError['code']
+  GetUserByEmailError
 >;

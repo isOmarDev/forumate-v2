@@ -1,5 +1,5 @@
-import { MemberDto, ReputationLevel } from '@forumate/api/members';
-import { Member as MemberModel } from '@forumate/database';
+import { type MemberDto, ReputationLevel } from '@forumate/api/members';
+import { type Member as MemberModel } from '@forumate/database';
 
 interface MemberReadModelProps {
   id: string;

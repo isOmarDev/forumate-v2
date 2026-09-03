@@ -1,5 +1,5 @@
 import { UpdateMemberReputationScoreCommand } from '@forumate/api/votes';
-import { EventBus } from '@forumate/bus';
+import { type IEventBus } from '@forumate/bus';
 
 import { CommentDownvoted } from '../../domain/events/comment-downvoted';
 import { CommentUpvoted } from '../../domain/events/comment-upvoted';
@@ -9,7 +9,7 @@ import { VotesService } from '../votes-service';
 
 export class VotesSubscriptions {
   constructor(
-    private eventBus: EventBus,
+    private eventBus: IEventBus,
     private voteService: VotesService,
   ) {
     this.setupSubscriptions();

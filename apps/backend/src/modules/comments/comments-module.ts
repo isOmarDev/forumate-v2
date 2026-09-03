@@ -1,45 +1,55 @@
-import { EventBus } from '@forumate/bus';
-import { Database } from '@forumate/database';
+import { type IEventBus } from '@forumate/bus';
+import { type IDatabase } from '@forumate/database';
 
 import { Config } from '../../shared/config';
-import { WebServer } from '../../shared/http';
+import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
-import { MembersRepository } from '../members/repos/ports/members-repository';
-import { ProductionPostsRepository } from '../posts/repos/adapters/production-posts-repository';
-import { PostsRepository } from '../posts/repos/ports/posts-repository';
+import { IMembersRepository } from '../members/repos/ports/members-repository';
+import { IPostsRepository } from '../posts/repos/ports/posts-repository';
 
 import { CommentsService } from './application/comments-service';
 import { CommentsController } from './comments-controller';
-import { commentsErrorHandler } from './comments-errors';
+import { CommentsRouter } from './comments-router';
 import { ProductionCommentsRepository } from './repos/adapters/production-comment-repository';
-import { CommentRepository } from './repos/ports/comment-repository';
+import { ICommentRepository } from './repos/ports/comment-repository';
 
 export class CommentsModule extends ApplicationModule {
-  private commentsRepository: CommentRepository;
-  private postsRepository: PostsRepository;
+  private commentsRepository: ICommentRepository;
   private commentsService: CommentsService;
   private commentsController: CommentsController;
+  private commentsRouter: CommentsRouter;
 
   private constructor(
-    private db: Database,
-    membersRepo: MembersRepository,
-    eventBus: EventBus,
+    private db: IDatabase,
+    private membersRepository: IMembersRepository,
+    private postsRepository: IPostsRepository,
+    private eventBus: IEventBus,
     config: Config,
   ) {
     super(config);
+
     this.commentsRepository = this.createCommentRepository();
-    this.postsRepository = this.createPostsRepository();
-    this.commentsService = this.createCommentsService(membersRepo, eventBus);
+    this.commentsService = this.createCommentsService();
     this.commentsController = this.createCommentsController();
+    this.commentsRouter = this.createCommentsRouter();
+
+    this.setupRoutes();
   }
 
   static build(
-    db: Database,
+    db: IDatabase,
+    membersRepository: IMembersRepository,
+    postsRepository: IPostsRepository,
+    eventBus: IEventBus,
     config: Config,
-    membersRepo: MembersRepository,
-    eventBus: EventBus,
   ) {
-    return new CommentsModule(db, membersRepo, eventBus, config);
+    return new CommentsModule(
+      db,
+      membersRepository,
+      postsRepository,
+      eventBus,
+      config,
+    );
   }
 
   private createCommentRepository() {
@@ -47,25 +57,31 @@ export class CommentsModule extends ApplicationModule {
     return new ProductionCommentsRepository(this.db);
   }
 
-  private createPostsRepository() {
-    if (this.postsRepository) return this.postsRepository;
-    return new ProductionPostsRepository(this.db);
-  }
-
-  private createCommentsService(
-    membersRepo: MembersRepository,
-    eventBus: EventBus,
-  ) {
+  private createCommentsService() {
     return new CommentsService(
       this.commentsRepository,
       this.postsRepository,
-      membersRepo,
-      eventBus,
+      this.membersRepository,
+      this.eventBus,
     );
   }
 
   private createCommentsController() {
-    return new CommentsController(this.commentsService, commentsErrorHandler);
+    return new CommentsController(this.commentsService);
+  }
+
+  private createCommentsRouter() {
+    return new CommentsRouter(this.commentsController);
+  }
+
+  public mountRouter(webServer: WebServer) {
+    const path = this.commentsRouter.basePath;
+    const router = this.commentsRouter.getRouter();
+    webServer.mountRouter(path, router);
+  }
+
+  private setupRoutes() {
+    this.commentsRouter.register();
   }
 
   public getCommentsRepository() {
@@ -74,9 +90,5 @@ export class CommentsModule extends ApplicationModule {
 
   public getCommentsService() {
     return this.commentsService;
-  }
-
-  public mountRouter(webServer: WebServer) {
-    webServer.mountRouter('/', this.commentsController.getRouter());
   }
 }

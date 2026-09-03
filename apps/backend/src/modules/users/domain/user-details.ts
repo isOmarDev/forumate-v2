@@ -1,4 +1,4 @@
-import { UserDto } from '@forumate/api/users';
+import { type UserDto } from '@forumate/api/users';
 
 export class UserDetails {
   // Temporary

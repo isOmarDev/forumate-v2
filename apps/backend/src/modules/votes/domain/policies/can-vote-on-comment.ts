@@ -1,5 +1,3 @@
-import {} from '@forumate/api/members';
-
 import { Comment } from '../../../comments/domain/entities/comment';
 import { Member } from '../../../members/domain/entities/member';
 

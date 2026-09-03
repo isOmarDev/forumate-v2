@@ -1,13 +1,25 @@
-import { ApiResponse, GenericErrors } from '../types';
+import { RequestErrorCode, ServerErrorCode } from '@forumate/errors';
 
-import { EmailSubscriberDto } from './dtos';
+import { ApiResponse } from '../types';
 
+import { EmailSubscriptionDto } from './dtos';
+
+// Errors
 type EmailNotAddedToMailListError = 'EMAIL_NOT_ADDED_TO_MAILIST';
 
-export type AddEmailToListErrors = EmailNotAddedToMailListError | GenericErrors;
-export type AddEmailToListApiResponse = ApiResponse<
-  { subscriber: EmailSubscriberDto },
-  AddEmailToListErrors
->;
+type RequestError = RequestErrorCode;
+type ServerError = ServerErrorCode;
+type NetworkError = 'NETWORK_ERROR';
 
-export type MarketingResponse = AddEmailToListApiResponse;
+// Add Email To List Api Response
+export type AddEmailToListError =
+  EmailNotAddedToMailListError | RequestError | ServerError | NetworkError;
+
+export type AddEmailToListResponseData = {
+  subscription: EmailSubscriptionDto;
+};
+
+export type AddEmailToListApiResponse = ApiResponse<
+  AddEmailToListResponseData,
+  AddEmailToListError
+>;

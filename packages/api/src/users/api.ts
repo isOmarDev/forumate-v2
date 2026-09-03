@@ -1,8 +1,11 @@
 import { apiRequest } from '../api-request';
-import { HttpClient } from '../client';
+import { type HttpClient } from '../client';
 
-import { CreateUserInput } from './inputs';
-import { CreateUserApiResponse, GetUserByEmailApiResponse } from './responses';
+import type { CreateUserInput } from './inputs';
+import type {
+  CreateUserApiResponse,
+  GetUserByEmailApiResponse,
+} from './responses';
 
 export const createUsersApi = (client: HttpClient) => {
   return {

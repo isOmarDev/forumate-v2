@@ -1,62 +1,76 @@
-import { EventBus } from '@forumate/bus';
-import { Database } from '@forumate/database';
+import { type IEventBus } from '@forumate/bus';
+import { type IDatabase } from '@forumate/database';
 
 import { Config } from '../../shared/config';
-import { WebServer } from '../../shared/http';
+import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
 
-import { MemberService } from './application/members-service';
-import { membersErrorHandler } from './member-errors';
+import { MembersService } from './application/members-service';
 import { MembersController } from './members-controller';
+import { MembersRouter } from './members-routers';
 import { ProductionMembersRepository } from './repos/adapters/production-members-repository';
-import { MembersRepository } from './repos/ports/members-repository';
+import { type IMembersRepository } from './repos/ports/members-repository';
 
 export class MembersModule extends ApplicationModule {
-  private membersRepository: MembersRepository;
-  private memberService: MemberService;
+  private membersRepository: IMembersRepository;
+  private membersService: MembersService;
   private membersController: MembersController;
+  private membersRouter: MembersRouter;
 
   private constructor(
-    db: Database,
-    private eventBus: EventBus,
+    db: IDatabase,
+    private eventBus: IEventBus,
     config: Config,
   ) {
     super(config);
     // Create the tree in reverse (repos, services, controllers)
     this.membersRepository = this.createMembersRepository(db);
-    this.memberService = this.createMembersService();
+    this.membersService = this.createMembersService();
     this.membersController = this.createMembersController(config);
+    this.membersRouter = this.createMembersRouter();
+
+    this.setupRoutes();
   }
 
-  createMembersController(config: Config) {
-    return new MembersController(
-      this.memberService,
-      membersErrorHandler,
-      config,
-    );
+  public static build(db: IDatabase, eventBus: IEventBus, config: Config) {
+    return new MembersModule(db, eventBus, config);
   }
 
-  createMembersService() {
-    return new MemberService(this.membersRepository, this.eventBus);
-  }
-
-  getMemberRepository() {
-    return this.membersRepository;
-  }
-
-  createMembersRepository(db: Database) {
+  private createMembersRepository(db: IDatabase) {
     return new ProductionMembersRepository(db);
   }
 
-  getMembersRepository() {
-    return this.membersRepository;
+  private createMembersService() {
+    return new MembersService(this.membersRepository, this.eventBus);
+  }
+
+  private createMembersController(config: Config) {
+    return new MembersController(this.membersService, config);
+  }
+
+  private createMembersRouter() {
+    return new MembersRouter(this.membersController);
+  }
+
+  private setupRoutes() {
+    this.membersRouter.register();
   }
 
   public mountRouter(webServer: WebServer) {
-    webServer.mountRouter('/members', this.membersController.getRouter());
+    const path = this.membersRouter.basePath;
+    const router = this.membersRouter.getRouter();
+    webServer.mountRouter(path, router);
   }
 
-  public static build(db: Database, eventBus: EventBus, config: Config) {
-    return new MembersModule(db, eventBus, config);
+  public getMembersRepository() {
+    return this.membersRepository;
+  }
+
+  public getMembersService() {
+    return this.membersService;
+  }
+
+  public getMembersController() {
+    return this.membersController;
   }
 }

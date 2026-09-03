@@ -1,47 +1,52 @@
-import { EventBus } from '@forumate/bus';
-import { Database } from '@forumate/database';
+import { type IEventBus } from '@forumate/bus';
+import { type IDatabase } from '@forumate/database';
 
 import { Config } from '../../shared/config';
-import { WebServer } from '../../shared/http';
+import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
-import { CommentRepository } from '../comments/repos/ports/comment-repository';
-import { MembersRepository } from '../members/repos/ports/members-repository';
-import { PostsRepository } from '../posts/repos/ports/posts-repository';
+import { ICommentRepository } from '../comments/repos/ports/comment-repository';
+import { IMembersRepository } from '../members/repos/ports/members-repository';
+import { IPostsRepository } from '../posts/repos/ports/posts-repository';
 
-import { VotesService } from './application/votes-service';
 import { VotesSubscriptions } from './application/subscriptions/votes-subscriptions';
+import { VotesService } from './application/votes-service';
 import { ProductionVotesRepository } from './repos/adapters/production-votes-repo';
-import { VoteRepository } from './repos/ports/vote-repository';
+import { IVoteRepository } from './repos/ports/vote-repository';
 import { VotesController } from './votes-controller';
-import { votesErrorHandler } from './votes-errors';
+import { VotesRouter } from './votes-router';
 
 export class VotesModule extends ApplicationModule {
-  private votesRepository: VoteRepository;
+  private votesRepository: IVoteRepository;
   private votesService: VotesService;
   private votesSubscriptions: VotesSubscriptions;
   private votesController: VotesController;
+  private votesRouter: VotesRouter;
 
   private constructor(
-    private db: Database,
-    private membersRepository: MembersRepository,
-    private commentRepository: CommentRepository,
-    private postsRepository: PostsRepository,
-    private eventBus: EventBus,
+    private db: IDatabase,
+    private membersRepository: IMembersRepository,
+    private commentRepository: ICommentRepository,
+    private postsRepository: IPostsRepository,
+    private eventBus: IEventBus,
     config: Config,
   ) {
     super(config);
+
     this.votesRepository = this.createVotesRepository();
     this.votesService = this.createVotesService();
     this.votesSubscriptions = this.createVotesSubscriptions();
     this.votesController = this.createVotesController();
+    this.votesRouter = this.createPostsRouter();
+
+    this.setupRoutes();
   }
 
   static build(
-    db: Database,
-    membersRepo: MembersRepository,
-    commentsRepo: CommentRepository,
-    postsRepo: PostsRepository,
-    eventBus: EventBus,
+    db: IDatabase,
+    membersRepo: IMembersRepository,
+    commentsRepo: ICommentRepository,
+    postsRepo: IPostsRepository,
+    eventBus: IEventBus,
     config: Config,
   ) {
     return new VotesModule(
@@ -54,6 +59,12 @@ export class VotesModule extends ApplicationModule {
     );
   }
 
+  private createVotesRepository() {
+    if (this.votesRepository) return this.votesRepository;
+
+    return new ProductionVotesRepository(this.db);
+  }
+
   private createVotesService() {
     return new VotesService(
       this.membersRepository,
@@ -64,14 +75,26 @@ export class VotesModule extends ApplicationModule {
     );
   }
 
+  private createVotesController() {
+    return new VotesController(this.votesService);
+  }
+
+  private createPostsRouter() {
+    return new VotesRouter(this.votesController);
+  }
+
   private createVotesSubscriptions() {
     return new VotesSubscriptions(this.eventBus, this.votesService);
   }
 
-  private createVotesRepository() {
-    if (this.votesRepository) return this.votesRepository;
+  private setupRoutes() {
+    this.votesRouter.register();
+  }
 
-    return new ProductionVotesRepository(this.db);
+  public mountRouter(webServer: WebServer) {
+    const path = this.votesRouter.basePath;
+    const router = this.votesRouter.getRouter();
+    webServer.mountRouter(path, router);
   }
 
   public getVotesRepository() {
@@ -82,11 +105,7 @@ export class VotesModule extends ApplicationModule {
     return this.votesService;
   }
 
-  private createVotesController() {
-    return new VotesController(this.votesService, votesErrorHandler);
-  }
-
-  public mountRouter(webServer: WebServer) {
-    webServer.mountRouter('/votes', this.votesController.getRouter());
+  public getVotesController() {
+    return this.votesController;
   }
 }

@@ -7,9 +7,10 @@ import { Auth, getAuth } from 'firebase-admin/auth';
 import { NotFoundError } from '@forumate/errors/application';
 
 import { User } from '../../domain/user';
-import { IdentityServiceApi } from '../ports/identity-service-api';
+import { UserNotFoundError } from '../../users-errors';
+import { IIdentityServiceApi } from '../ports/identity-service-api';
 
-export class FirebaseAuth implements IdentityServiceApi {
+export class FirebaseAuth implements IIdentityServiceApi {
   private firebaseAuth: Auth | null = null;
 
   constructor() {
@@ -39,7 +40,7 @@ export class FirebaseAuth implements IdentityServiceApi {
 
   async getUserById(userId: string): Promise<User | NotFoundError> {
     if (!this.firebaseAuth) {
-      return new NotFoundError('user');
+      return new UserNotFoundError('user');
     }
     try {
       const userRecord = await this.firebaseAuth.getUser(userId);
@@ -51,7 +52,7 @@ export class FirebaseAuth implements IdentityServiceApi {
       };
     } catch (error) {
       if ((error as { code?: string }).code === 'auth/user-not-found') {
-        return new NotFoundError('user');
+        return new UserNotFoundError('user');
       }
       throw error;
     }
@@ -59,7 +60,7 @@ export class FirebaseAuth implements IdentityServiceApi {
 
   async findUserByEmail(email: string): Promise<User | NotFoundError> {
     if (!this.firebaseAuth) {
-      return new NotFoundError('user');
+      return new UserNotFoundError('user');
     }
     try {
       const userRecord = await this.firebaseAuth.getUserByEmail(email);
@@ -71,7 +72,7 @@ export class FirebaseAuth implements IdentityServiceApi {
       };
     } catch (error) {
       if ((error as { code?: string }).code === 'auth/user-not-found') {
-        return new NotFoundError('user');
+        return new UserNotFoundError('user');
       }
       throw error;
     }

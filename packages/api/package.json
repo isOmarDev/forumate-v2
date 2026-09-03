@@ -7,6 +7,14 @@
       "types": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./types": {
+      "types": "./src/types.ts",
+      "default": "./src/types.ts"
+    },
+    "./client": {
+      "types": "./src/client.ts",
+      "default": "./src/client.ts"
+    },
     "./users": {
       "types": "./src/users/index.ts",
       "default": "./src/users/index.ts"
@@ -43,6 +51,6 @@
     "@forumate/errors": "workspace:*",
     "@faker-js/faker": "^9.9.0",
     "axios": "^1.6.2",
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   }
 }

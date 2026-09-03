@@ -1,47 +1,18 @@
-import { NextFunction, Request, Response } from 'express';
+import { ValidationError, NotFoundError } from '@forumate/errors/application';
+import { memberErrorCodes } from '@forumate/errors/domain';
 
-import { AnyMemberApiResponse } from '@forumate/api';
-import { AnyApplicationError } from '@forumate/errors/application';
-import { CustomError } from '@forumate/errors/custom';
+export class InvalidMemberUsernameError extends ValidationError {
+  readonly code = memberErrorCodes.INVALID_MEMBER_USERNAME;
 
-export function membersErrorHandler(
-  error: CustomError,
-  _: Request,
-  res: Response,
-  _next: NextFunction,
-): Response<AnyMemberApiResponse> {
-  // Updated return type
+  constructor() {
+    super('Member username is invalid');
+  }
+}
 
-  const errorType = (error as AnyApplicationError).code;
+export class MemberNotFoundError extends NotFoundError {
+  readonly code = memberErrorCodes.MEMBER_NOT_FOUND;
 
-  switch (errorType) {
-    case 'PermissionError':
-      return res.status(403).json({
-        success: false,
-        data: undefined,
-        error: {
-          code: 403,
-          message: error.message,
-        },
-      });
-    case 'ValidationError':
-      return res.status(400).json({
-        success: false,
-        data: undefined,
-        error: {
-          code: 400,
-          message: error.message,
-        },
-      });
-    case 'GenericServerError':
-    default:
-      return res.status(500).json({
-        success: false,
-        data: undefined,
-        error: {
-          code: 500,
-          message: error.message,
-        },
-      });
+  constructor() {
+    super('Member not found');
   }
 }

@@ -1,10 +1,8 @@
 import { apiRequest } from '../api-request';
-import { getAuthHeaders } from '../client';
-import { HttpClient } from '../client';
+import { getAuthHeaders, type HttpClient } from '../client';
 
-import { CreatePostInput } from './inputs';
-import { GetPostsQueryInput } from './queries';
-import {
+import type { CreatePostInput, GetPostsQueryInput } from './inputs';
+import type {
   CreatePostApiResponse,
   GetPostByIdApiResponse,
   GetPostsApiResponse,
@@ -21,9 +19,13 @@ export const createPostsApi = (client: HttpClient) => {
         ),
       ),
 
-    getPosts: (sort: GetPostsQueryInput) =>
+    getPosts: (query: GetPostsQueryInput) =>
       apiRequest(() =>
-        client.get<GetPostsApiResponse>('/posts', { params: sort }),
+        client.get<GetPostsApiResponse>('/posts', {
+          params: {
+            sort: query.sort,
+          },
+        }),
       ),
 
     getPostById: (postId: string) =>

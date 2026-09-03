@@ -1,4 +1,4 @@
-import { VoteType } from './inputs';
+import { VoteType } from './types';
 
 export type PostVoteDto = {
   postId: string;

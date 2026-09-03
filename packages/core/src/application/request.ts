@@ -1,5 +1,9 @@
-export type Request = {
-  body: any;
-  query: Record<string, any>;
-  params: Record<string, any>;
+export type Request<
+  TBody = unknown,
+  TQuery = Record<string, unknown>,
+  TParams = Record<string, unknown>,
+> = {
+  body: TBody;
+  query: TQuery;
+  params: TParams;
 };

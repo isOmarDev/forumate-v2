@@ -1,11 +1,9 @@
-import { NotFoundError } from '@forumate/errors/application';
-
 import { UserDetails } from '../domain/user-details';
-import { IdentityServiceApi } from '../identity/ports/identity-service-api';
-import { UserNotFoundException } from '../users-exceptions';
+import { type IIdentityServiceApi } from '../identity/ports/identity-service-api';
+import { UserNotFoundError } from '../users-errors';
 
 export class UserIdentityService {
-  constructor(private identityServiceApi: IdentityServiceApi) {}
+  constructor(private identityServiceApi: IIdentityServiceApi) {}
 
   async getUserById(userId: string) {
     try {
@@ -13,7 +11,7 @@ export class UserIdentityService {
       if (user) {
         return user;
       }
-      return new NotFoundError('user');
+      return new UserNotFoundError();
     } catch (err) {
       console.log(err);
       throw new Error('error occurreted getting user from service', {
@@ -25,7 +23,7 @@ export class UserIdentityService {
   async getUserByEmail(email: string) {
     const prismaUser = await this.identityServiceApi.findUserByEmail(email);
     if (!prismaUser) {
-      throw new UserNotFoundException(email);
+      throw new UserNotFoundError(email);
     }
     return prismaUser;
   }
@@ -33,7 +31,7 @@ export class UserIdentityService {
   async getUserDetailsByEmail(email: string) {
     const userModel = await this.identityServiceApi.findUserByEmail(email);
     if (!userModel) {
-      throw new UserNotFoundException(email);
+      throw new UserNotFoundError(email);
     }
     return UserDetails.toDTO(userModel);
   }

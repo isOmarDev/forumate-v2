@@ -1,8 +1,8 @@
 import { apiRequest } from '../api-request';
-import { HttpClient } from '../client';
+import { type HttpClient } from '../client';
 
-import { VoteOnPostInput } from './inputs';
-import { VoteOnPostApiResponse } from './responses';
+import type { VoteOnPostInput } from './inputs';
+import type { VoteOnPostApiResponse } from './responses';
 
 export const createVotesApi = (client: HttpClient) => {
   return {

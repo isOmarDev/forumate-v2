@@ -1,62 +1,38 @@
 import express from 'express';
 
-import { VoteOnPostApiResponse, VoteOnPostCommand } from '@forumate/api/votes';
+import { VoteOnPostCommand } from '@forumate/api/votes';
 
-import { ErrorHandler } from '../../shared/errors';
+import { BaseController } from '../../shared/infra/http';
 
 import { VotesService } from './application/votes-service';
 
-export class VotesController {
-  private router: express.Router;
-
-  constructor(
-    private votesService: VotesService,
-    private errorHandler: ErrorHandler,
-  ) {
-    this.router = express.Router();
-    this.setupRoutes();
-    this.setupErrorHandler();
+export class VotesController extends BaseController {
+  constructor(private votesService: VotesService) {
+    super();
   }
 
-  getRouter() {
-    return this.router;
-  }
-
-  private setupRoutes() {
-    this.router.post('/post/:postId/new', this.castVoteOnPost.bind(this));
-  }
-
-  private setupErrorHandler() {
-    this.router.use(this.errorHandler);
-  }
-
-  private async castVoteOnPost(
+  public castVoteOnPost = async (
     req: express.Request,
     res: express.Response,
-    next: express.NextFunction,
-  ) {
-    try {
-      const command = new VoteOnPostCommand({
-        postId: req.params.postId as string,
-        voteType: req.body.voteType,
-        memberId: req.body.memberId,
-      });
+  ) => {
+    const commandOrError = VoteOnPostCommand.create({
+      postId: req.params.postId as string,
+      voteType: req.body.voteType,
+      memberId: req.body.memberId,
+    });
 
-      const result = await this.votesService.castVoteOnPost(command);
-
-      if (!result.isSuccess()) {
-        return next(result.getError());
-      }
-
-      const postVote = result.getValue();
-      const response: VoteOnPostApiResponse = {
-        data: postVote.toDTO(),
-        success: true,
-        error: null,
-      };
-      return res.status(200).json(response);
-    } catch (error) {
-      next(error);
+    if (commandOrError.isFailure) {
+      return this.fail(res, commandOrError.getError());
     }
-  }
+
+    const result = await this.votesService.castVoteOnPost(
+      commandOrError.getValue(),
+    );
+
+    if (result.isFailure) {
+      return this.fail(res, result.getError());
+    }
+
+    return this.ok(res, result.getValue().toDTO());
+  };
 }

@@ -3,12 +3,12 @@ import {
   VoteOnCommentCommand,
   VoteOnPostCommand,
 } from '@forumate/api/votes';
-import { EventBus } from '@forumate/bus';
+import { type IEventBus } from '@forumate/bus';
 
-import { CommentRepository } from '../../comments/repos/ports/comment-repository';
-import { MembersRepository } from '../../members/repos/ports/members-repository';
-import { PostsRepository } from '../../posts/repos/ports/posts-repository';
-import { VoteRepository } from '../repos/ports/vote-repository';
+import { type ICommentRepository } from '../../comments/repos/ports/comment-repository';
+import { type IMembersRepository } from '../../members/repos/ports/members-repository';
+import { type IPostsRepository } from '../../posts/repos/ports/posts-repository';
+import { IVoteRepository } from '../repos/ports/vote-repository';
 
 import { UpdateMemberReputationScore } from './use-cases/update-member-reputation/update-member-reputation-score';
 import { VoteOnComment } from './use-cases/vote-on-comment/vote-on-comment';
@@ -16,11 +16,11 @@ import { VoteOnPost } from './use-cases/vote-on-post/vote-on-post';
 
 export class VotesService {
   constructor(
-    private memberRepository: MembersRepository,
-    private commentRepository: CommentRepository,
-    private postRepository: PostsRepository,
-    private voteRepository: VoteRepository,
-    private eventBus: EventBus,
+    private memberRepository: IMembersRepository,
+    private commentRepository: ICommentRepository,
+    private postRepository: IPostsRepository,
+    private voteRepository: IVoteRepository,
+    private eventBus: IEventBus,
   ) {}
 
   castVoteOnPost(command: VoteOnPostCommand) {

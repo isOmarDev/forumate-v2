@@ -4,6 +4,6 @@ export interface SendMailInput {
   text: string;
 }
 
-export interface TransactionalEmailApi {
+export interface ITransactionalEmailApi {
   sendMail(input: SendMailInput): Promise<boolean>;
 }

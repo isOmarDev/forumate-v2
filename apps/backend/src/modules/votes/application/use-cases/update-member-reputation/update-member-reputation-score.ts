@@ -1,12 +1,13 @@
 import { UpdateMemberReputationScoreCommand } from '@forumate/api/votes';
-import { EventBus } from '@forumate/bus';
-import { Result, UseCase } from '@forumate/core';
+import { type IEventBus } from '@forumate/bus';
+import { Result, type IUseCase } from '@forumate/core';
 import { NotFoundError } from '@forumate/errors/application';
 import { DatabaseError } from '@forumate/errors/server';
 
 import { Member } from '../../../../members/domain/entities/member';
-import { MembersRepository } from '../../../../members/repos/ports/members-repository';
-import { VoteRepository } from '../../../../votes/repos/ports/vote-repository';
+import { MemberNotFoundError } from '../../../../members/member-errors';
+import { type IMembersRepository } from '../../../../members/repos/ports/members-repository';
+import { type IVoteRepository } from '../../../../votes/repos/ports/vote-repository';
 
 type UpdateMemberReputationError = NotFoundError | DatabaseError;
 
@@ -14,14 +15,14 @@ type UpdateMemberReputationError = NotFoundError | DatabaseError;
 // We could have a cron job that runs every 24 hours and updates the reputation score of all members using
 // the read models. This would be a good way to ensure that the reputation score is always up to date.
 
-export class UpdateMemberReputationScore implements UseCase<
+export class UpdateMemberReputationScore implements IUseCase<
   UpdateMemberReputationScoreCommand,
   Result<Member, UpdateMemberReputationError>
 > {
   constructor(
-    private memberRepository: MembersRepository,
-    private votesRepository: VoteRepository,
-    private eventBus: EventBus,
+    private memberRepository: IMembersRepository,
+    private votesRepository: IVoteRepository,
+    private eventBus: IEventBus,
   ) {}
 
   async execute(
@@ -37,7 +38,7 @@ export class UpdateMemberReputationScore implements UseCase<
       ]);
 
     if (memberOrNull === null) {
-      return Result.failure(new NotFoundError('member'));
+      return Result.failure(new MemberNotFoundError());
     }
 
     // Get the current score from the read models for this member to calculate

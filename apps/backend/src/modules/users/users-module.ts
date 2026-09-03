@@ -1,24 +1,31 @@
 import { Config } from '../../shared/config';
-import { WebServer } from '../../shared/http';
+import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
 
 import { UserIdentityService } from './application/user-identity-service';
 import { FirebaseAuth } from './identity/adapters/firebase-auth';
-import { IdentityServiceApi } from './identity/ports/identity-service-api';
+import { type IIdentityServiceApi } from './identity/ports/identity-service-api';
 import { UsersController } from './users-controller';
-import { userErrorHandler } from './users-errors'; // You'll need to create this
+import { UsersRouter } from './users-router';
 
 export class UsersModule extends ApplicationModule {
   private usersService: UserIdentityService;
-  private identityServiceApi: IdentityServiceApi;
+  private identityServiceApi: IIdentityServiceApi;
   private usersController: UsersController;
+  private usersRouter: UsersRouter;
 
   private constructor(config: Config) {
     super(config);
-    // Build external services + repos, then services, then controllers
+
     this.identityServiceApi = this.createIdentityServiceApi(config);
     this.usersService = this.createUsersService();
-    this.usersController = this.createUsersController(config);
+    this.usersController = this.createUsersController();
+    this.usersRouter = this.createUserRouter();
+
+    this.setupRoutes();
+  }
+  static build(config: Config) {
+    return new UsersModule(config);
   }
 
   private createIdentityServiceApi(config: Config) {
@@ -29,19 +36,25 @@ export class UsersModule extends ApplicationModule {
     return new UserIdentityService(this.identityServiceApi);
   }
 
-  private createUsersController(config: Config) {
-    return new UsersController(config, userErrorHandler);
+  private createUsersController() {
+    return new UsersController();
   }
 
-  static build(config: Config) {
-    return new UsersModule(config);
+  private createUserRouter() {
+    return new UsersRouter(this.usersController);
+  }
+
+  private setupRoutes() {
+    this.usersRouter.register();
+  }
+
+  public mountRouter(webServer: WebServer) {
+    const path = this.usersRouter.basePath;
+    const router = this.usersRouter.getRouter();
+    webServer.mountRouter(path, router);
   }
 
   public getUsersService() {
     return this.usersService;
-  }
-
-  public mountRouter(webServer: WebServer) {
-    webServer.mountRouter('/users', this.usersController.getRouter());
   }
 }

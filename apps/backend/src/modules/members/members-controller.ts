@@ -1,71 +1,31 @@
-import express, { ErrorRequestHandler } from 'express';
+import express from 'express';
 
-import { CreateMemberApiResponse, CreateMemberCommand } from '@forumate/api';
+import { CreateMemberCommand } from '@forumate/api';
 
-import { Config } from '../../shared/config';
+import { BaseController } from '../../shared/infra/http';
 
-import { MemberService } from './application/members-service';
+import { MembersService } from './application/members-service';
 
-export class MembersController {
-  private router: express.Router;
-
-  constructor(
-    private memberService: MemberService,
-    private errorHandler: ErrorRequestHandler,
-    private config: Config,
-  ) {
-    this.router = express.Router();
-    this.setupRoutes();
-    this.setupErrorHandler();
+export class MembersController extends BaseController {
+  constructor(private memberService: MembersService) {
+    super();
   }
 
-  getRouter() {
-    return this.router;
-  }
+  public createMember = async (req: express.Request, res: express.Response) => {
+    const commandOrError = CreateMemberCommand.create(req.user);
 
-  private setupRoutes() {
-    this.router.post('/new', this.createMember.bind(this));
-  }
-
-  private async createMember(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction,
-  ) {
-    try {
-      const commandOrError = CreateMemberCommand.fromRequest(
-        req.user,
-        req.body,
-      );
-      if (!commandOrError.isSuccess()) {
-        return res.status(401).json({
-          success: false,
-          error: commandOrError.getError(),
-        });
-      }
-
-      const result = await this.memberService.createMember(
-        commandOrError.getValue(),
-      );
-      if (result.isSuccess()) {
-        return res.status(200).json({
-          success: true,
-          data: result.getValue().toDTO(),
-        } as CreateMemberApiResponse);
-      } else {
-        return res.status(400).json({
-          data: null,
-          success: false,
-          statusCode: 400,
-          error: result.getError(),
-        } as CreateMemberApiResponse);
-      }
-    } catch (err) {
-      next(err);
+    if (commandOrError.isFailure) {
+      return this.fail(res, commandOrError.getError());
     }
-  }
 
-  private setupErrorHandler() {
-    this.router.use(this.errorHandler);
-  }
+    const resultOrError = await this.memberService.createMember(
+      commandOrError.getValue(),
+    );
+
+    if (resultOrError.isFailure) {
+      return this.fail(res, resultOrError.getError());
+    }
+
+    return this.created(res, resultOrError.getValue());
+  };
 }

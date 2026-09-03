@@ -1,10 +1,14 @@
-import { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import { getAuth } from 'firebase-admin/auth';
 
 import { Config } from '../../../../shared/config';
 
 export function createJwtCheck(config: Config) {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
     const authHeader = req.headers.authorization;
     if (!authHeader?.startsWith('Bearer ')) {
       console.log('No Bearer token found in Authorization header');

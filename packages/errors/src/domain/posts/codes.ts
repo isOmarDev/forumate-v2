@@ -1,0 +1,11 @@
+export const postErrorCodes = {
+  POST_NOT_FOUND: 'POST_NOT_FOUND',
+  POST_CREATION_FORBIDDEN: 'POST_CREATION_FORBIDDEN',
+  INVALID_POST_TITLE: 'INVALID_POST_TITLE',
+  INVALID_POST_CONTENT: 'INVALID_POST_CONTENT',
+  INVALID_POST_LINK: 'INVALID_POST_LINK',
+  INVALID_POST_TYPE: 'INVALID_POST_TYPE',
+} as const;
+
+export type PostErrorCode =
+  (typeof postErrorCodes)[keyof typeof postErrorCodes];

@@ -1,9 +1,9 @@
 import { CreateMemberCommand } from '@forumate/api';
-import { EventBus } from '@forumate/bus';
+import { IEventBus } from '@forumate/bus';
 import { Result } from '@forumate/core';
 
 import { Member } from '../domain/entities/member';
-import { MembersRepository } from '../repos/ports/members-repository';
+import { IMembersRepository } from '../repos/ports/members-repository';
 
 import {
   CreateMember,
@@ -14,10 +14,10 @@ import {
   GetMemberDetailsError,
 } from './use-cases/get-member-details/get-member-details';
 
-export class MemberService {
+export class MembersService {
   constructor(
-    private membersRepository: MembersRepository,
-    private eventBus: EventBus,
+    private membersRepository: IMembersRepository,
+    private eventBus: IEventBus,
   ) {}
 
   public createMember(

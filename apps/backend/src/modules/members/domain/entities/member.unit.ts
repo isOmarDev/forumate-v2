@@ -9,7 +9,7 @@ describe('member', () => {
       username: 'billy',
     });
 
-    expect(result.isSuccess()).toBe(true);
+    expect(result.isSuccess).toBe(true);
     const member = result.getValue();
     expect(member.reputationLevel).toEqual(ReputationLevel.Level1);
   });

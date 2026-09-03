@@ -1,10 +1,10 @@
 import { DomainEvent } from '@forumate/core';
 
-import { EventBus } from '../ports/eventBus';
+import { IEventBus } from '../ports/eventBus';
 
 type EventHandler<T extends DomainEvent> = (event: T) => void;
 
-export class InMemoryEventBus implements EventBus {
+export class InMemoryEventBus implements IEventBus {
   private subscriptions: Map<string, Array<EventHandler<DomainEvent>>> =
     new Map();
 

@@ -1,8 +1,16 @@
-import { Request } from '@forumate/core';
-import { MissingRequestParamsError } from '@forumate/errors/server';
+import { fail, Result, success } from '@forumate/core/application';
+import { InvalidRequestInputError } from '@forumate/errors/request';
 
-import { VoteOnCommentInput, VoteOnPostInput } from './inputs';
+import { validateCommandInput } from '../validate-command-input';
 
+import {
+  voteOnCommentInputSchema,
+  voteOnPostInputSchema,
+  type VoteOnCommentInput,
+  type VoteOnPostInput,
+} from './inputs';
+
+// Update Member Reputation
 export class UpdateMemberReputationScoreCommand {
   constructor(
     public readonly props: {
@@ -11,46 +19,36 @@ export class UpdateMemberReputationScoreCommand {
   ) {}
 }
 
+// Vote On Comment
 export class VoteOnCommentCommand {
-  constructor(public props: VoteOnCommentInput) {}
+  private constructor(public readonly props: VoteOnCommentInput) {}
 
-  static fromRequest(body: Request['body']) {
-    const { voteType, commentId, memberId } = body;
+  static create(
+    input: unknown,
+  ): Result<VoteOnCommentCommand, InvalidRequestInputError> {
+    const inputOrError = validateCommandInput(voteOnCommentInputSchema, input);
 
-    if (!commentId) {
-      throw new MissingRequestParamsError(['commentId']);
+    if (inputOrError.isFailure) {
+      return fail(inputOrError.getError());
     }
 
-    if (!voteType) {
-      throw new MissingRequestParamsError(['voteType']);
-    }
-
-    if (!memberId) {
-      throw new MissingRequestParamsError(['memberId']);
-    }
-
-    return new VoteOnCommentCommand({ ...body });
+    return success(new VoteOnCommentCommand(inputOrError.getValue()));
   }
 }
 
+// Vote On Post
 export class VoteOnPostCommand {
-  constructor(public props: VoteOnPostInput) {}
+  private constructor(public readonly props: VoteOnPostInput) {}
 
-  static fromRequest(body: Request['body']) {
-    const { voteType, postId, memberId } = body;
+  static create(
+    input: unknown,
+  ): Result<VoteOnPostCommand, InvalidRequestInputError> {
+    const inputOrError = validateCommandInput(voteOnPostInputSchema, input);
 
-    if (!postId) {
-      throw new MissingRequestParamsError(['postId']);
+    if (inputOrError.isFailure) {
+      return fail(inputOrError.getError());
     }
 
-    if (!voteType) {
-      throw new MissingRequestParamsError(['voteType']);
-    }
-
-    if (!memberId) {
-      throw new MissingRequestParamsError(['memberId']);
-    }
-
-    return new VoteOnCommentCommand({ ...body });
+    return success(new VoteOnPostCommand(inputOrError.getValue()));
   }
 }

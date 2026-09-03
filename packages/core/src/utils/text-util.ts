@@ -35,4 +35,14 @@ export class TextUtil {
   public static isBetweenLength(str: string, min: number, max: number) {
     return str.length >= min && str.length <= max;
   }
+
+  public static getMissingKeys(data: any, keysToCheckFor: string[]): string[] {
+    return keysToCheckFor.filter((key) => data[key] === undefined);
+  }
+
+  public static isObject = <T extends Record<string, unknown>>(
+    val: unknown,
+  ): val is T => {
+    return val !== null && typeof val === 'object' && !Array.isArray(val);
+  };
 }

@@ -1,10 +1,10 @@
 import { Server } from 'http';
 
 import cors from 'cors';
-import express from 'express';
+import express, { ErrorRequestHandler } from 'express';
 
-import { Config } from '../config';
-import { ProcessService } from '../processes/process-service';
+import { Config } from '../../config';
+import { ProcessService } from '../../processes/process-service';
 
 export class WebServer {
   private express: express.Express;
@@ -14,16 +14,16 @@ export class WebServer {
   constructor(private config: Config) {
     this.state = 'stopped';
     this.express = express();
-    this.initializeServer();
+    this.addMiddlewares();
   }
 
-  private initializeServer() {
-    this.addMiddlewares();
-    this.express.use(cors());
+  public useErrorHandler(errorHandler: ErrorRequestHandler) {
+    this.express.use(errorHandler);
   }
 
   private addMiddlewares() {
     this.express.use(express.json());
+    this.express.use(cors());
   }
 
   public mountRouter(path: string, router: express.Router) {

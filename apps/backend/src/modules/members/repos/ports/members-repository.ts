@@ -1,6 +1,6 @@
 import { Member } from '../../domain/entities/member';
 
-export interface MembersRepository {
+export interface IMembersRepository {
   findUserByUsername(username: string): Promise<Member | null>;
   getMemberByUserId(userId: string): Promise<Member | null>;
   getMemberById(memberId: string): Promise<Member | null>;

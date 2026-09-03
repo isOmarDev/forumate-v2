@@ -1,5 +1,5 @@
 // Port exports
-export { type EventBus } from './ports/eventBus';
+export * from './ports/eventBus';
 
 // Adapter exports
-export { InMemoryEventBus } from './adapters/inMemoryEventBus';
+export * from './adapters/inMemoryEventBus';

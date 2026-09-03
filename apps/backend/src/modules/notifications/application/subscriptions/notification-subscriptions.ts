@@ -1,4 +1,4 @@
-import { EventBus } from '@forumate/bus';
+import { IEventBus } from '@forumate/bus';
 
 import { MemberReputationLevelUpgraded } from '../../../members/domain/events/member-reputation-level-upgraded';
 import { SendNotificationCommand } from '../../notification-commands';
@@ -6,7 +6,7 @@ import { NotificationsService } from '../notifications-service';
 
 export class NotificationsSubscriptions {
   constructor(
-    private eventBus: EventBus,
+    private eventBus: IEventBus,
     private notificationService: NotificationsService,
   ) {
     this.setupSubscriptions();

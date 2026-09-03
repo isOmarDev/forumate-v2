@@ -1,6 +1,6 @@
 import { DomainEvent } from '@forumate/core';
 
-export interface EventBus {
+export interface IEventBus {
   initialize(): Promise<unknown>;
   stop(): Promise<unknown>;
   publishEvents(events: DomainEvent[]): void;

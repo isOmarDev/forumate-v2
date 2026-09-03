@@ -2,12 +2,12 @@ import { PrismaPg } from '@prisma/adapter-pg';
 
 import { PrismaClient } from './prisma/generated/client';
 
-export interface Database {
+export interface IDatabase {
   getClient(): PrismaClient;
   connect(): Promise<void>;
 }
 
-export class PrismaDatabase implements Database {
+export class PrismaDatabase implements IDatabase {
   private client: PrismaClient;
 
   constructor() {
@@ -34,7 +34,7 @@ export class PrismaDatabase implements Database {
   }
 }
 
-export class FakeDatabase implements Database {
+export class FakeDatabase implements IDatabase {
   constructor() {}
 
   getClient() {

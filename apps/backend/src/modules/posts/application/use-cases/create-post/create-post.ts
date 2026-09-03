@@ -1,31 +1,25 @@
 import { CreatePostCommand } from '@forumate/api/posts';
-import { EventBus } from '@forumate/bus';
-import { Result, UseCase } from '@forumate/core';
-import {
-  NotFoundError,
-  PermissionError,
-  ValidationError,
-} from '@forumate/errors/application';
-import { AnyServerError } from '@forumate/errors/server';
+import { type IEventBus } from '@forumate/bus';
+import { Result, type IUseCase } from '@forumate/core';
+import { NotFoundError, ValidationError } from '@forumate/errors/application';
 
-import { MembersRepository } from '../../../../members/repos/ports/members-repository';
+import { type IMembersRepository } from '../../../../members/repos/ports/members-repository';
 import { Post } from '../../../domain/entities/post';
 import { CanCreatePostPolicy } from '../../../domain/policies/can-create-post';
-import { PostsRepository } from '../../../repos/ports/posts-repository';
+import { type IPostsRepository } from '../../../repos/ports/posts-repository';
 
-type CreatePostError =
-  ValidationError | PermissionError | NotFoundError | AnyServerError;
+type CreatePostError = ValidationError | NotFoundError;
 
 export type CreatePostResponse = Result<Post, CreatePostError>;
 
-export class CreatePost implements UseCase<
+export class CreatePost implements IUseCase<
   CreatePostCommand,
   CreatePostResponse
 > {
   constructor(
-    private postRepository: PostsRepository,
-    private memberRepository: MembersRepository,
-    private eventBus: EventBus,
+    private postRepository: IPostsRepository,
+    private memberRepository: IMembersRepository,
+    private eventBus: IEventBus,
   ) {}
 
   async execute(request: CreatePostCommand): Promise<CreatePostResponse> {

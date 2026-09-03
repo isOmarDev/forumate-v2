@@ -1,16 +1,16 @@
-import { Result, UseCase } from '@forumate/core';
+import { Result, type IUseCase } from '@forumate/core';
 import { NotFoundError } from '@forumate/errors/application';
 
 import { Member } from '../../../domain/entities/member';
-import { MembersRepository } from '../../../repos/ports/members-repository';
+import { type IMembersRepository } from '../../../repos/ports/members-repository';
 
 export type GetMemberDetailsError = NotFoundError;
 
-export class GetMemberDetails implements UseCase<
+export class GetMemberDetails implements IUseCase<
   string,
   Result<Member, GetMemberDetailsError>
 > {
-  constructor(private memberRepository: MembersRepository) {}
+  constructor(private memberRepository: IMembersRepository) {}
 
   async execute(
     userId: string,

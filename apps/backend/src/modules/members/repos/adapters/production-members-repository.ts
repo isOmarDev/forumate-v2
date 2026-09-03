@@ -1,10 +1,10 @@
-import { Database, Prisma } from '@forumate/database';
+import { type IDatabase, Prisma } from '@forumate/database';
 
 import { Member } from '../../domain/entities/member';
-import { MembersRepository } from '../ports/members-repository';
+import { type IMembersRepository } from '../ports/members-repository';
 
-export class ProductionMembersRepository implements MembersRepository {
-  constructor(private database: Database) {}
+export class ProductionMembersRepository implements IMembersRepository {
+  constructor(private database: IDatabase) {}
 
   async getMemberByUserId(userId: string): Promise<Member | null> {
     const connection = this.database.getClient();

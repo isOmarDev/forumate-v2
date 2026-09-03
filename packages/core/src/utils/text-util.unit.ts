@@ -1,4 +1,4 @@
-import { TextUtil } from './textUtil';
+import { TextUtil } from './text-util';
 
 describe('TextUtil', () => {
   describe('createRandomText', () => {
