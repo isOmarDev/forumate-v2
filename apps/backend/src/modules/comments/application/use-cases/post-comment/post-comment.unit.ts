@@ -9,14 +9,14 @@ import { ProductionMembersRepository } from '../../../../members/repos/adapters/
 import { ProductionPostsRepository } from '../../../../posts/repos/adapters/production-posts-repository';
 import { Comment } from '../../../domain/entities/comment';
 import { CommentPosted } from '../../../domain/events/comment-posted';
-import { ProductionCommentsRepository } from '../../../repos/adapters/production-comment-repository';
+import { PrismaCommentsRepository } from '../../../infrastructure/repositories/prisma-comment-repository';
 
 import { PostComment } from './post-comment';
 
 describe('postComment', () => {
   const config = new Config('test:unit');
   const database = new PrismaDatabase();
-  const commentsRepo = new ProductionCommentsRepository(database);
+  const commentsRepo = new PrismaCommentsRepository(database);
   const postsRepo = new ProductionPostsRepository(database);
   const membersRepo = new ProductionMembersRepository(database);
   const eventBus = new InMemoryEventBus();

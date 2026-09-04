@@ -5,7 +5,7 @@ import { Result } from '@forumate/core';
 import { IMembersRepository } from '../../members/repos/ports/members-repository';
 import { IPostsRepository } from '../../posts/repos/ports/posts-repository';
 import { Comment } from '../domain/entities/comment';
-import { ICommentRepository } from '../repos/ports/comment-repository';
+import type { ICommentsRepository } from '../domain/ports/comments-repository';
 
 import {
   PostComment,
@@ -14,7 +14,7 @@ import {
 
 export class CommentsService {
   constructor(
-    private commentRepo: ICommentRepository,
+    private commentRepo: ICommentsRepository,
     private postRepo: IPostsRepository,
     private membersRepo: IMembersRepository,
     private eventBus: IEventBus,

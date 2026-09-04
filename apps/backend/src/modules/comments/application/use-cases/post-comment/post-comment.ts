@@ -7,7 +7,7 @@ import { type IMembersRepository } from '../../../../members/repos/ports/members
 import { type IPostsRepository } from '../../../../posts/repos/ports/posts-repository';
 import { Comment } from '../../../domain/entities/comment';
 import { CanPostCommentPolicy } from '../../../domain/policies/can-post-comment';
-import { type ICommentRepository } from '../../../repos/ports/comment-repository';
+import { type ICommentsRepository } from '../../../domain/ports/comments-repository';
 
 export type PostCommentError = NotFoundError;
 
@@ -16,7 +16,7 @@ export class PostComment implements IUseCase<
   Result<Comment, PostCommentError>
 > {
   constructor(
-    private commentRepository: ICommentRepository,
+    private commentRepository: ICommentsRepository,
     private postRepository: IPostsRepository,
     private memberRepository: IMembersRepository,
     private eventBus: IEventBus,

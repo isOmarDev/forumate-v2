@@ -1,9 +1,9 @@
 import { type IDatabase, Prisma } from '@forumate/database';
 
 import { Comment } from '../../domain/entities/comment';
-import { type ICommentRepository } from '../ports/comment-repository';
+import type { ICommentsRepository } from '../../domain/ports/comments-repository';
 
-export class ProductionCommentsRepository implements ICommentRepository {
+export class PrismaCommentsRepository implements ICommentsRepository {
   constructor(private database: IDatabase) {}
 
   async save(comment: Comment, transaction?: Prisma.TransactionClient) {
