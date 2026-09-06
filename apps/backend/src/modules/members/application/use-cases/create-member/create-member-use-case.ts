@@ -8,22 +8,21 @@ import {
 } from '@forumate/errors/application';
 
 import { Member } from '../../../domain/entities/member';
-import { type IMembersRepository } from '../../../repos/ports/members-repository';
+import type { IMembersRepository } from '../../ports/members-repository';
 
 export type CreateMemberError = ValidationError | NotFoundError | ConflictError;
+export type CreateMemberResponse = Result<Member, CreateMemberError>;
 
-export class CreateMember implements IUseCase<
+export class CreateMemberUseCase implements IUseCase<
   CreateMemberCommand,
-  Result<Member, CreateMemberError>
+  CreateMemberResponse
 > {
   constructor(
     private memberRepository: IMembersRepository,
     private eventBus: IEventBus,
   ) {}
 
-  async execute(
-    request: CreateMemberCommand,
-  ): Promise<Result<Member, CreateMemberError>> {
+  async execute(request: CreateMemberCommand): Promise<CreateMemberResponse> {
     // Implement
     throw new Error('Not yet implemented');
   }

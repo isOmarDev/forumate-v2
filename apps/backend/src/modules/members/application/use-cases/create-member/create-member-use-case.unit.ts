@@ -6,17 +6,17 @@ import { PrismaDatabase } from '@forumate/database';
 
 import { Config } from '../../../../../shared/config';
 import { Member } from '../../../domain/entities/member';
-import { ProductionMembersRepository } from '../../../repos/adapters/production-members-repository';
+import { PrismaMembersRepository } from '../../../infrastructure/repositories/prisma-members-repository';
 
-import { CreateMember } from './create-member';
+import { CreateMemberUseCase } from './create-member-use-case';
 
 describe('createMember', () => {
   const config = new Config('test:unit');
   const database = new PrismaDatabase(config);
-  const membersRepo = new ProductionMembersRepository(database);
+  const membersRepo = new PrismaMembersRepository(database);
   const eventBus = new InMemoryEventBus();
 
-  const useCase = new CreateMember(membersRepo, eventBus);
+  const useCase = new CreateMemberUseCase(membersRepo, eventBus);
 
   const mockToken: DecodedIdToken = {
     email: 'test@example.com',

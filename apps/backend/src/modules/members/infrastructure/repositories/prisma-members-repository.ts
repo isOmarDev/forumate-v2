@@ -1,9 +1,9 @@
 import { type IDatabase, Prisma } from '@forumate/database';
 
+import { type IMembersRepository } from '../../application/ports/members-repository';
 import { Member } from '../../domain/entities/member';
-import { type IMembersRepository } from '../ports/members-repository';
 
-export class ProductionMembersRepository implements IMembersRepository {
+export class PrismaMembersRepository implements IMembersRepository {
   constructor(private database: IDatabase) {}
 
   async getMemberByUserId(userId: string): Promise<Member | null> {
