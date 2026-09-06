@@ -4,18 +4,15 @@ import express from 'express';
 
 import { CreateUserCommand, UserDto } from '@forumate/api/users';
 
-import { BaseController } from '../../shared/infra/http';
+import { BaseController } from '../../../../../shared/infra/http';
+import { UserIdentityService } from '../../../application/user-identity-service';
 
-export class UsersController extends BaseController {
-  constructor() {
+export class CreateUserController extends BaseController {
+  constructor(private userIdentityService: UserIdentityService) {
     super();
   }
 
-  /**
-   * Note: For temporary purposes to simplify Pattern-First frontend teachings.
-   */
-
-  public createUser = async (req: express.Request, res: express.Response) => {
+  async executeImpl(req: express.Request, res: express.Response) {
     const commandOrError = CreateUserCommand.create(req.body);
 
     if (commandOrError.isFailure) {
@@ -33,5 +30,5 @@ export class UsersController extends BaseController {
     };
 
     return this.created(res, temporaryUserResponseDTO);
-  };
+  }
 }

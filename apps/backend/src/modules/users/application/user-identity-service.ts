@@ -1,6 +1,7 @@
-import { UserDetails } from '../domain/user-details';
-import { type IIdentityServiceApi } from '../identity/ports/identity-service-api';
-import { UserNotFoundError } from '../users-errors';
+import { UserDetails } from '../domain/entities/user-details';
+import { UserNotFoundError } from '../domain/errors/users-errors';
+
+import { type IIdentityServiceApi } from './ports/identity-service-api';
 
 export class UserIdentityService {
   constructor(private identityServiceApi: IIdentityServiceApi) {}

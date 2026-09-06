@@ -6,9 +6,9 @@ import { Auth, getAuth } from 'firebase-admin/auth';
 
 import { NotFoundError } from '@forumate/errors/application';
 
-import { User } from '../../domain/user';
-import { UserNotFoundError } from '../../users-errors';
-import { IIdentityServiceApi } from '../ports/identity-service-api';
+import { IIdentityServiceApi } from '../../application/ports/identity-service-api';
+import { User } from '../../domain/entities/user';
+import { UserNotFoundError } from '../../domain/errors/users-errors';
 
 export class FirebaseAuth implements IIdentityServiceApi {
   private firebaseAuth: Auth | null = null;

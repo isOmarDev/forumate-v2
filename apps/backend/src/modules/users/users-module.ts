@@ -2,11 +2,11 @@ import { Config } from '../../shared/config';
 import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
 
+import { type IIdentityServiceApi } from './application/ports/identity-service-api';
 import { UserIdentityService } from './application/user-identity-service';
-import { FirebaseAuth } from './identity/adapters/firebase-auth';
-import { type IIdentityServiceApi } from './identity/ports/identity-service-api';
-import { UsersController } from './users-controller';
-import { UsersRouter } from './users-router';
+import { FirebaseAuth } from './infrastructure/identity/firebase-auth';
+import { UsersController } from './presentation/http/controllers';
+import { UsersRouter } from './presentation/http/routes/users-router';
 
 export class UsersModule extends ApplicationModule {
   private usersService: UserIdentityService;
@@ -37,7 +37,7 @@ export class UsersModule extends ApplicationModule {
   }
 
   private createUsersController() {
-    return new UsersController();
+    return new UsersController(this.usersService);
   }
 
   private createUserRouter() {
