@@ -2,7 +2,7 @@ import { Spy } from '../../../../shared/test-doubles/spy';
 import {
   type SendMailInput,
   type ITransactionalEmailApi,
-} from '../ports/transactional-email-api';
+} from '../../application/ports/transactional-email-api';
 
 export class TransactionalEmailApiSpy
   extends Spy<ITransactionalEmailApi>

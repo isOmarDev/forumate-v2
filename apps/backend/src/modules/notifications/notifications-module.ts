@@ -4,10 +4,10 @@ import { Config } from '../../shared/config';
 import { ApplicationModule } from '../../shared/modules/application-module';
 
 import { NotificationsService } from './application/notifications-service';
+import { type ITransactionalEmailApi } from './application/ports/transactional-email-api';
 import { NotificationsSubscriptions } from './application/subscriptions/notification-subscriptions';
-import { MailjetTransactionalEmail } from './email/adapters/mailjet-transactional-email-api';
-import { TransactionalEmailApiSpy } from './email/adapters/transactional-email-api-spy';
-import { type ITransactionalEmailApi } from './email/ports/transactional-email-api';
+import { MailjetTransactionalEmail } from './infrastructure/email/mailjet-transactional-email-api';
+import { TransactionalEmailApiSpy } from './infrastructure/email/transactional-email-api-spy';
 
 export class NotificationsModule extends ApplicationModule {
   private transactionalEmailApi: ITransactionalEmailApi;

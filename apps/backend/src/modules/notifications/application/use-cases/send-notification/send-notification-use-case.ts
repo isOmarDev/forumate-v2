@@ -1,20 +1,20 @@
 import { Result, type IUseCase } from '@forumate/core';
 import { NotFoundError } from '@forumate/errors/application';
 
-import { ITransactionalEmailApi } from '../../../email/ports/transactional-email-api';
-import { SendNotificationCommand } from '../../../notification-commands';
+import { SendNotificationCommand } from '../../../notifications-commands';
+import { ITransactionalEmailApi } from '../../ports/transactional-email-api';
 
-type SendNotificationError = NotFoundError;
+export type SendNotificationResponse = Result<void, NotFoundError>;
 
-export class SendNotification implements IUseCase<
+export class SendNotificationUseCase implements IUseCase<
   SendNotificationCommand,
-  Result<void, SendNotificationError>
+  SendNotificationResponse
 > {
   constructor(private transactionalEmailApi: ITransactionalEmailApi) {}
 
   async execute(
     request: SendNotificationCommand,
-  ): Promise<Result<void, SendNotificationError>> {
+  ): Promise<SendNotificationResponse> {
     // No need to implement. For demonstration purposes only. A mature approach would be to
     // queue a notification and process it later (see the RDD-First approach to event queuing).
     console.log('SendNotification -> Not yet implemented');
