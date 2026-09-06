@@ -4,19 +4,19 @@ import { type IDatabase } from '@forumate/database';
 import { Config } from '../../shared/config';
 import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
-import { ICommentRepository } from '../comments/repos/ports/comment-repository';
-import { IMembersRepository } from '../members/repos/ports/members-repository';
-import { IPostsRepository } from '../posts/repos/ports/posts-repository';
+import type { ICommentsRepository } from '../comments/application/ports/comments-repository';
+import type { IMembersRepository } from '../members/application/ports/members-repository';
+import type { IPostsRepository } from '../posts/application/ports/posts-repository';
 
+import type { IVotesRepository } from './application/ports/votes-repository';
 import { VotesSubscriptions } from './application/subscriptions/votes-subscriptions';
 import { VotesService } from './application/votes-service';
-import { ProductionVotesRepository } from './repos/adapters/production-votes-repo';
-import { IVoteRepository } from './repos/ports/vote-repository';
-import { VotesController } from './votes-controller';
-import { VotesRouter } from './votes-router';
+import { prismaVotesRepository } from './infrastructure/repositories/prisma-votes-repo';
+import { VotesController } from './presentation/http/controllers';
+import { VotesRouter } from './presentation/http/routes/votes-router';
 
 export class VotesModule extends ApplicationModule {
-  private votesRepository: IVoteRepository;
+  private votesRepository: IVotesRepository;
   private votesService: VotesService;
   private votesSubscriptions: VotesSubscriptions;
   private votesController: VotesController;
@@ -25,7 +25,7 @@ export class VotesModule extends ApplicationModule {
   private constructor(
     private db: IDatabase,
     private membersRepository: IMembersRepository,
-    private commentRepository: ICommentRepository,
+    private commentRepository: ICommentsRepository,
     private postsRepository: IPostsRepository,
     private eventBus: IEventBus,
     config: Config,
@@ -44,7 +44,7 @@ export class VotesModule extends ApplicationModule {
   static build(
     db: IDatabase,
     membersRepo: IMembersRepository,
-    commentsRepo: ICommentRepository,
+    commentsRepo: ICommentsRepository,
     postsRepo: IPostsRepository,
     eventBus: IEventBus,
     config: Config,
@@ -60,9 +60,11 @@ export class VotesModule extends ApplicationModule {
   }
 
   private createVotesRepository() {
-    if (this.votesRepository) return this.votesRepository;
+    if (this.shouldBuildFakeRepository) {
+      return new prismaVotesRepository(this.db); // change to in memory repo
+    }
 
-    return new ProductionVotesRepository(this.db);
+    return new prismaVotesRepository(this.db);
   }
 
   private createVotesService() {

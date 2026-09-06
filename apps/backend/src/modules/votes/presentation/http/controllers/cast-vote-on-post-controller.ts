@@ -2,19 +2,15 @@ import express from 'express';
 
 import { VoteOnPostCommand } from '@forumate/api/votes';
 
-import { BaseController } from '../../shared/infra/http';
+import { BaseController } from '../../../../../shared/infra/http';
+import { VotesService } from '../../../application/votes-service';
 
-import { VotesService } from './application/votes-service';
-
-export class VotesController extends BaseController {
+export class CastVoteOnPostController extends BaseController {
   constructor(private votesService: VotesService) {
     super();
   }
 
-  public castVoteOnPost = async (
-    req: express.Request,
-    res: express.Response,
-  ) => {
+  async executeImpl(req: express.Request, res: express.Response) {
     const commandOrError = VoteOnPostCommand.create({
       postId: req.params.postId as string,
       voteType: req.body.voteType,
@@ -34,5 +30,5 @@ export class VotesController extends BaseController {
     }
 
     return this.ok(res, result.getValue().toDTO());
-  };
+  }
 }

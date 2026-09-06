@@ -1,9 +1,9 @@
-import { MemberCommentVotesRoundup } from '../../application/read-models/member-comment-votes-roundup';
-import { MemberPostVotesRoundup } from '../../application/read-models/member-post-votes-roundup';
 import { CommentVote } from '../../domain/entities/comment-vote';
 import { PostVote } from '../../domain/entities/post-vote';
+import { MemberCommentVotesRoundup } from '../read-models/member-comment-votes-roundup';
+import { MemberPostVotesRoundup } from '../read-models/member-post-votes-roundup';
 
-export interface IVoteRepository {
+export interface IVotesRepository {
   findVoteByMemberAndPostId(
     memberId: string,
     postId: string,

@@ -4,28 +4,27 @@ import { Result, success, type IUseCase } from '@forumate/core';
 import { NotFoundError, ValidationError } from '@forumate/errors/application';
 import { DatabaseError } from '@forumate/errors/server';
 
-import { type IMembersRepository } from '../../../../members/repos/ports/members-repository';
-import { type IPostsRepository } from '../../../../posts/repos/ports/posts-repository';
+import type { IMembersRepository } from '../../../../members/application/ports/members-repository';
+import type { IPostsRepository } from '../../../../posts/application/ports/posts-repository';
 import { PostVote } from '../../../domain/entities/post-vote';
 import { CanVoteOnPostPolicy } from '../../../domain/policies/can-vote-on-post';
-import { type IVoteRepository } from '../../../repos/ports/vote-repository';
+import type { IVotesRepository } from '../../ports/votes-repository';
 
 type VoteOnPostError = ValidationError | NotFoundError | DatabaseError;
+type VoteOnPostResponse = Result<PostVote, VoteOnPostError>;
 
-export class VoteOnPost implements IUseCase<
+export class VoteOnPostUseCase implements IUseCase<
   VoteOnPostCommand,
-  Result<PostVote, VoteOnPostError>
+  VoteOnPostResponse
 > {
   constructor(
     private memberRepository: IMembersRepository,
     private postRepository: IPostsRepository,
-    private voteRepository: IVoteRepository,
+    private voteRepository: IVotesRepository,
     private eventBus: IEventBus,
   ) {}
 
-  async execute(
-    request: VoteOnPostCommand,
-  ): Promise<Result<PostVote, VoteOnPostError>> {
+  async execute(request: VoteOnPostCommand): Promise<VoteOnPostResponse> {
     // implement
     throw new Error('Not yet implemented');
   }

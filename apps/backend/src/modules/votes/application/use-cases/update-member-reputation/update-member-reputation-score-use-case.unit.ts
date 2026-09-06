@@ -8,12 +8,12 @@ import { PrismaDatabase } from '@forumate/database';
 import { Config } from '../../../../../shared/config';
 import { Member } from '../../../../members/domain/entities/member';
 import { MemberUsername } from '../../../../members/domain/value-objects/member-username';
-import { ProductionMembersRepository } from '../../../../members/repos/adapters/production-members-repository';
-import { ProductionVotesRepository } from '../../../../votes/repos/adapters/production-votes-repo';
+import { PrismaMembersRepository } from '../../../../members/infrastructure/repositories/prisma-members-repository';
+import { prismaVotesRepository } from '../../../infrastructure/repositories/prisma-votes-repo';
 import { MemberCommentVotesRoundup } from '../../read-models/member-comment-votes-roundup';
 import { MemberPostVotesRoundup } from '../../read-models/member-post-votes-roundup';
 
-import { UpdateMemberReputationScore } from './update-member-reputation-score';
+import { UpdateMemberReputationScoreUseCase } from './update-member-reputation-score-use-case';
 
 function setupTest({
   useCase,
@@ -21,7 +21,7 @@ function setupTest({
   postVotes,
   member: { reputationLevel, reputationScore },
 }: {
-  useCase: UpdateMemberReputationScore;
+  useCase: UpdateMemberReputationScoreUseCase;
   commentVotes: { upvotes: number; downvotes: number; count: number };
   postVotes: { upvotes: number; downvotes: number; count: number };
   member: { reputationLevel: ReputationLevel; reputationScore: number };
@@ -67,11 +67,11 @@ describe('updateMemberReputationScore', () => {
   const config = new Config('test:unit');
   const database = new PrismaDatabase();
 
-  const membersRepo = new ProductionMembersRepository(database);
-  const votesRepo = new ProductionVotesRepository(database);
+  const membersRepo = new PrismaMembersRepository(database);
+  const votesRepo = new prismaVotesRepository(database);
   const eventBus = new InMemoryEventBus();
 
-  const useCase = new UpdateMemberReputationScore(
+  const useCase = new UpdateMemberReputationScoreUseCase(
     membersRepo,
     votesRepo,
     eventBus,

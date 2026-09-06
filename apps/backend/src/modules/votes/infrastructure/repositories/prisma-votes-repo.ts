@@ -1,12 +1,12 @@
 import { type IDatabase, Prisma } from '@forumate/database';
 
+import type { IVotesRepository } from '../../application/ports/votes-repository';
 import { MemberCommentVotesRoundup } from '../../application/read-models/member-comment-votes-roundup';
 import { MemberPostVotesRoundup } from '../../application/read-models/member-post-votes-roundup';
 import { CommentVote } from '../../domain/entities/comment-vote';
 import { PostVote } from '../../domain/entities/post-vote';
-import { type IVoteRepository } from '../ports/vote-repository';
 
-export class ProductionVotesRepository implements IVoteRepository {
+export class prismaVotesRepository implements IVotesRepository {
   constructor(private database: IDatabase) {}
 
   async getMemberCommentVotesRoundup(

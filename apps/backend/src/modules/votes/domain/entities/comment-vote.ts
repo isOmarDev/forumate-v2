@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import { type VoteType } from '@forumate/api/votes';
+import type { VoteType } from '@forumate/api/votes';
 import { AggregateRoot } from '@forumate/core';
 
 import { CommentDownvoted } from '../events/comment-downvoted';

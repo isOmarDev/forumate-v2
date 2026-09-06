@@ -4,30 +4,34 @@ import { Result, type IUseCase } from '@forumate/core';
 import { NotFoundError } from '@forumate/errors/application';
 import { DatabaseError } from '@forumate/errors/server';
 
+import type { IMembersRepository } from '../../../../members/application/ports/members-repository';
 import { Member } from '../../../../members/domain/entities/member';
-import { MemberNotFoundError } from '../../../../members/member-errors';
-import { type IMembersRepository } from '../../../../members/repos/ports/members-repository';
-import { type IVoteRepository } from '../../../../votes/repos/ports/vote-repository';
+import { MemberNotFoundError } from '../../../../members/domain/errors/member-errors';
+import type { IVotesRepository } from '../../ports/votes-repository';
 
 type UpdateMemberReputationError = NotFoundError | DatabaseError;
+type UpdateMemberReputationResponse = Result<
+  Member,
+  UpdateMemberReputationError
+>;
 
 // Note: This is also something which could be done on a cron job
 // We could have a cron job that runs every 24 hours and updates the reputation score of all members using
 // the read models. This would be a good way to ensure that the reputation score is always up to date.
 
-export class UpdateMemberReputationScore implements IUseCase<
+export class UpdateMemberReputationScoreUseCase implements IUseCase<
   UpdateMemberReputationScoreCommand,
-  Result<Member, UpdateMemberReputationError>
+  UpdateMemberReputationResponse
 > {
   constructor(
     private memberRepository: IMembersRepository,
-    private votesRepository: IVoteRepository,
+    private votesRepository: IVotesRepository,
     private eventBus: IEventBus,
   ) {}
 
   async execute(
     request: UpdateMemberReputationScoreCommand,
-  ): Promise<Result<Member, UpdateMemberReputationError>> {
+  ): Promise<UpdateMemberReputationResponse> {
     const { memberId } = request.props;
 
     const [memberOrNull, commentVotesRoundup, postVotesRoundup] =
