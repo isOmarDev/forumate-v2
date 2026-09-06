@@ -1,4 +1,4 @@
-import { Comment } from '../entities/comment';
+import { Comment } from '../../domain/entities/comment';
 
 // Not yet used.
 

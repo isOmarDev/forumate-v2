@@ -1,16 +1,16 @@
 import { CommentsService } from '../../../application/comments-service';
 
-import { GetCommentsByPostId } from './get-comments-by-post-id';
-import { PostComment } from './post-comment';
+import { GetCommentsByPostIdController } from './get-comments-by-post-id-controller';
+import { PostCommentController } from './post-comment-controller';
 
-export class CommentsControllers {
+export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  public postComment(): PostComment {
-    return new PostComment(this.commentsService);
+  public postComment(): PostCommentController {
+    return new PostCommentController(this.commentsService);
   }
 
-  public getCommentsByPostId(): GetCommentsByPostId {
-    return new GetCommentsByPostId(this.commentsService);
+  public getCommentsByPostId(): GetCommentsByPostIdController {
+    return new GetCommentsByPostIdController(this.commentsService);
   }
 }

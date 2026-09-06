@@ -4,19 +4,19 @@ import { type IDatabase } from '@forumate/database';
 import { Config } from '../../shared/config';
 import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
-import { IMembersRepository } from '../members/repos/ports/members-repository';
-import { IPostsRepository } from '../posts/repos/ports/posts-repository';
+import type { IMembersRepository } from '../members/application/ports/members-repository';
+import type { IPostsRepository } from '../posts/application/ports/posts-repository';
 
 import { CommentsService } from './application/comments-service';
-import { ICommentsRepository } from './domain/ports/comments-repository';
-import { PrismaCommentsRepository } from './infrastructure/repositories/prisma-comment-repository';
-import { CommentsControllers } from './presentation/http/controllers';
+import type { ICommentsRepository } from './application/ports/comments-repository';
+import { PrismaCommentsRepository } from './infrastructure/repositories/prisma-comments-repository';
+import { CommentsController } from './presentation/http/controllers';
 import { CommentsRouter } from './presentation/http/routes/comments-router';
 
 export class CommentsModule extends ApplicationModule {
   private commentsRepository: ICommentsRepository;
   private commentsService: CommentsService;
-  private commentsControllers: CommentsControllers;
+  private commentsController: CommentsController;
   private commentsRouter: CommentsRouter;
 
   private constructor(
@@ -30,7 +30,7 @@ export class CommentsModule extends ApplicationModule {
 
     this.commentsRepository = this.createCommentRepository();
     this.commentsService = this.createCommentsService();
-    this.commentsControllers = this.createCommentsControllers();
+    this.commentsController = this.createCommentsController();
     this.commentsRouter = this.createCommentsRouter();
 
     this.registerRoutes();
@@ -66,12 +66,12 @@ export class CommentsModule extends ApplicationModule {
     );
   }
 
-  private createCommentsControllers(): CommentsControllers {
-    return new CommentsControllers(this.commentsService);
+  private createCommentsController(): CommentsController {
+    return new CommentsController(this.commentsService);
   }
 
   private createCommentsRouter() {
-    return new CommentsRouter(this.commentsControllers);
+    return new CommentsRouter(this.commentsController);
   }
 
   public mountRouter(webServer: WebServer) {
@@ -93,6 +93,6 @@ export class CommentsModule extends ApplicationModule {
   }
 
   public getCommentsControllers() {
-    return this.commentsControllers;
+    return this.commentsController;
   }
 }

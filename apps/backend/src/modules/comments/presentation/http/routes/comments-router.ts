@@ -1,27 +1,18 @@
 import { BaseRouter } from '../../../../../shared/infra/http';
-import { CommentsControllers } from '../controllers';
+import { CommentsController } from '../controllers';
 
 export class CommentsRouter extends BaseRouter {
   public readonly basePath: string = '/posts';
 
-  constructor(private controllers: CommentsControllers) {
+  constructor(private controller: CommentsController) {
     super();
   }
 
   protected setupRoutes(): void {
-    const controllers = this.createControllers();
+    const getCommentsByPostId = this.controller.getCommentsByPostId();
+    const postComment = this.controller.postComment();
 
-    this.router.get(
-      '/:postId/comments',
-      controllers.getCommentsByPostId.execute,
-    );
-    this.router.post('/:postId/comments', controllers.postComment.execute);
-  }
-
-  private createControllers() {
-    return {
-      getCommentsByPostId: this.controllers.getCommentsByPostId(),
-      postComment: this.controllers.postComment(),
-    };
+    this.router.get('/:postId/comments', getCommentsByPostId.execute);
+    this.router.post('/:postId/comments', postComment.execute);
   }
 }

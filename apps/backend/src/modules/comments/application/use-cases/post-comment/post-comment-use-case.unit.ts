@@ -5,22 +5,22 @@ import { PrismaDatabase } from '@forumate/database';
 import { setupTestWithLevel1Member } from '../../../../../../tests/fixtures/unit/members';
 import { withExistingPostByRandomMember } from '../../../../../../tests/fixtures/unit/posts';
 import { Config } from '../../../../../shared/config';
-import { ProductionMembersRepository } from '../../../../members/repos/adapters/production-members-repository';
-import { ProductionPostsRepository } from '../../../../posts/repos/adapters/production-posts-repository';
+import { PrismaMembersRepository } from '../../../../members/infrastructure/repositories/prisma-members-repository';
+import { PrismaPostsRepository } from '../../../../posts/infrastructure/repositories/prisma-posts-repository';
 import { Comment } from '../../../domain/entities/comment';
 import { CommentPosted } from '../../../domain/events/comment-posted';
-import { PrismaCommentsRepository } from '../../../infrastructure/repositories/prisma-comment-repository';
+import { PrismaCommentsRepository } from '../../../infrastructure/repositories/prisma-comments-repository';
 
-import { PostComment } from './post-comment';
+import { PostCommentUseCase } from './post-comment-use-case';
 
 describe('postComment', () => {
   const config = new Config('test:unit');
   const database = new PrismaDatabase();
   const commentsRepo = new PrismaCommentsRepository(database);
-  const postsRepo = new ProductionPostsRepository(database);
-  const membersRepo = new ProductionMembersRepository(database);
+  const postsRepo = new PrismaPostsRepository(database);
+  const membersRepo = new PrismaMembersRepository(database);
   const eventBus = new InMemoryEventBus();
-  const useCase = new PostComment(
+  const useCase = new PostCommentUseCase(
     commentsRepo,
     postsRepo,
     membersRepo,

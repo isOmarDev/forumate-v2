@@ -1,16 +1,16 @@
-import { PostCommentCommand } from '@forumate/api';
+import {
+  GetCommentsByPostIdQuery,
+  PostCommentCommand,
+} from '@forumate/api/comments';
 import { IEventBus } from '@forumate/bus';
 import { Result } from '@forumate/core';
 
-import { IMembersRepository } from '../../members/repos/ports/members-repository';
-import { IPostsRepository } from '../../posts/repos/ports/posts-repository';
+import type { IMembersRepository } from '../../members/application/ports/members-repository';
+import type { IPostsRepository } from '../../posts/application/ports/posts-repository';
 import { Comment } from '../domain/entities/comment';
-import type { ICommentsRepository } from '../domain/ports/comments-repository';
 
-import {
-  PostComment,
-  PostCommentError,
-} from './use-cases/post-comment/post-comment';
+import type { ICommentsRepository } from './ports/comments-repository';
+import { GetCommentsByPostIdUseCase, PostCommentUseCase } from './use-cases';
 
 export class CommentsService {
   constructor(
@@ -20,10 +20,8 @@ export class CommentsService {
     private eventBus: IEventBus,
   ) {}
 
-  async postComment(
-    command: PostCommentCommand,
-  ): Promise<Result<Comment, PostCommentError>> {
-    return new PostComment(
+  async postComment(command: PostCommentCommand) {
+    return new PostCommentUseCase(
       this.commentRepo,
       this.postRepo,
       this.membersRepo,
@@ -31,10 +29,10 @@ export class CommentsService {
     ).execute(command);
   }
 
-  async getCommentsByPostId(
-    postId: string,
-  ): Promise<Result<Comment[], PostCommentError>> {
-    const comments = await this.commentRepo.getCommentsByPostId(postId);
-    return Result.success(comments);
+  async getCommentsByPostId(query: GetCommentsByPostIdQuery) {
+    return new GetCommentsByPostIdUseCase(
+      this.commentRepo,
+      this.postRepo,
+    ).execute(query);
   }
 }

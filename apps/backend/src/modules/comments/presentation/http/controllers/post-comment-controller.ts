@@ -5,7 +5,7 @@ import { PostCommentCommand } from '@forumate/api/comments';
 import { BaseController } from '../../../../../shared/infra/http';
 import { CommentsService } from '../../../application/comments-service';
 
-export class PostComment extends BaseController {
+export class PostCommentController extends BaseController {
   constructor(private commentsService: CommentsService) {
     super();
   }

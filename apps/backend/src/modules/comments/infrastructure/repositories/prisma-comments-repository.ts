@@ -1,7 +1,7 @@
 import { type IDatabase, Prisma } from '@forumate/database';
 
+import type { ICommentsRepository } from '../../application/ports/comments-repository';
 import { Comment } from '../../domain/entities/comment';
-import type { ICommentsRepository } from '../../domain/ports/comments-repository';
 
 export class PrismaCommentsRepository implements ICommentsRepository {
   constructor(private database: IDatabase) {}
