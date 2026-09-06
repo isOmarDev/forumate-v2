@@ -7,20 +7,20 @@ import {
   setupTestWithLevel2Member,
 } from '../../../../../../tests/fixtures/unit/members';
 import { Config } from '../../../../../shared/config';
-import { ProductionMembersRepository } from '../../../../members/repos/adapters/production-members-repository';
-import { ProductionPostsRepository } from '../../../repos/adapters/production-posts-repository';
+import { PrismaMembersRepository } from '../../../../members/infrastructure/repositories/prisma-members-repository';
+import { PrismaPostsRepository } from '../../../infrastructure/repositories/prisma-posts-repository';
 
-import { CreatePost } from './create-post';
+import { CreatePostUseCase } from './create-post-use-case';
 
 describe('createPost', () => {
   const config = new Config('test:unit');
-  const database = new PrismaDatabase(config);
+  const database = new PrismaDatabase();
 
-  const membersRepo = new ProductionMembersRepository(database);
-  const postsRepo = new ProductionPostsRepository(database);
+  const membersRepo = new PrismaMembersRepository(database);
+  const postsRepo = new PrismaPostsRepository(database);
   const eventBus = new InMemoryEventBus();
 
-  const useCase = new CreatePost(postsRepo, membersRepo, eventBus);
+  const useCase = new CreatePostUseCase(postsRepo, membersRepo, eventBus);
 
   describe('permissions & identity', () => {
     test('if the member was not found, they should not be able to create the post', async () => {

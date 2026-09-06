@@ -2,9 +2,9 @@ import { GetPostsQuery } from '@forumate/api/posts';
 import { DomainEvent } from '@forumate/core';
 import { DatabaseError } from '@forumate/errors/server';
 
+import type { IPostsRepository } from '../../application/ports/posts-repository';
 import { PostReadModel } from '../../application/read-models/post-read-model';
 import { Post } from '../../domain/entities/post';
-import { type IPostsRepository } from '../ports/posts-repository';
 
 export class InMemoryPostsRepository implements IPostsRepository {
   private posts: PostReadModel[];

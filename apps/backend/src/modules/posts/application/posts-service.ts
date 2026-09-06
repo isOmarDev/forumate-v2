@@ -1,11 +1,19 @@
-import { CreatePostCommand, GetPostsQuery } from '@forumate/api/posts';
+import {
+  CreatePostCommand,
+  GetPostByIdQuery,
+  GetPostsQuery,
+} from '@forumate/api/posts';
 import { IEventBus } from '@forumate/bus';
 
-import { IMembersRepository } from '../../members/repos/ports/members-repository';
-import { IPostsRepository } from '../repos/ports/posts-repository';
+import type { IMembersRepository } from '../../members/application/ports/members-repository';
 
-import { CreatePost } from './use-cases/create-post/create-post';
-import { GetPostDetails } from './use-cases/get-post-details/get-post-details';
+import type { IPostsRepository } from './ports/posts-repository';
+import {
+  CreatePostUseCase,
+  GetPostByIdUseCase,
+  GetPostDetailsByIdUseCase,
+  GetPostsUseCase,
+} from './use-cases';
 
 export class PostsService {
   constructor(
@@ -14,23 +22,23 @@ export class PostsService {
     private eventBus: IEventBus,
   ) {}
 
-  async getPosts(query: GetPostsQuery) {
-    return this.postsRepo.findPosts(query);
-  }
-
   async createPost(command: CreatePostCommand) {
-    return new CreatePost(
+    return new CreatePostUseCase(
       this.postsRepo,
       this.membersRepo,
       this.eventBus,
     ).execute(command);
   }
 
-  async getPostById(id: string) {
-    return this.postsRepo.getPostById(id);
+  async getPosts(query: GetPostsQuery) {
+    return new GetPostsUseCase(this.postsRepo).execute(query);
+  }
+
+  async getPostById(query: GetPostByIdQuery) {
+    return new GetPostByIdUseCase(this.postsRepo).execute(query);
   }
 
   async getPostDetailsById(id: string) {
-    return new GetPostDetails(this.postsRepo).execute(id);
+    return new GetPostDetailsByIdUseCase(this.postsRepo).execute(id);
   }
 }

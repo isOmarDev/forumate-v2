@@ -8,15 +8,15 @@ import {
 import { DatabaseError } from '@forumate/errors/server';
 
 import { MemberReadModel } from '../../../members/application/read-models/member-read-model';
+import type { IPostsRepository } from '../../application/ports/posts-repository';
 import { PostReadModel } from '../../application/read-models/post-read-model';
 import { Post } from '../../domain/entities/post';
-import { type IPostsRepository } from '../ports/posts-repository';
 
 type PostModelWithMember = PostModel & {
   memberPostedBy: MemberModel;
 };
 
-export class ProductionPostsRepository implements IPostsRepository {
+export class PrismaPostsRepository implements IPostsRepository {
   constructor(private database: IDatabase) {}
 
   async getPostById(id: string): Promise<Post | null> {

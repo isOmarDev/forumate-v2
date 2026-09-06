@@ -4,14 +4,14 @@ import { IDatabase } from '@forumate/database';
 import { Config } from '../../shared/config';
 import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
-import { IMembersRepository } from '../members/repos/ports/members-repository';
+import type { IMembersRepository } from '../members/application/ports/members-repository';
 
+import type { IPostsRepository } from './application/ports/posts-repository';
 import { PostsService } from './application/posts-service';
-import { PostsController } from './posts-controller';
-import { PostsRouter } from './posts-router';
-import { InMemoryPostsRepository } from './repos/adapters/in-memory-posts-repository';
-import { ProductionPostsRepository } from './repos/adapters/production-posts-repository';
-import { IPostsRepository } from './repos/ports/posts-repository';
+import { InMemoryPostsRepository } from './infrastructure/repositories/in-memory-posts-repository';
+import { PrismaPostsRepository } from './infrastructure/repositories/prisma-posts-repository';
+import { PostsController } from './presentation/http/controllers';
+import { PostsRouter } from './presentation/http/routes/posts-router';
 
 export class PostsModule extends ApplicationModule {
   private postsRepository: IPostsRepository;
@@ -28,7 +28,7 @@ export class PostsModule extends ApplicationModule {
     super(config);
 
     this.postsRepository = this.createPostsRepository();
-    this.postsService = this.createPostsService(membersRepository);
+    this.postsService = this.createPostsService();
     this.postsController = this.createPostsController();
     this.postsRouter = this.createPostsRouter();
 
@@ -39,7 +39,7 @@ export class PostsModule extends ApplicationModule {
     db: IDatabase,
     config: Config,
     eventBus: IEventBus,
-    membersRepository: IMembersRepository,  
+    membersRepository: IMembersRepository,
   ) {
     return new PostsModule(config, db, eventBus, membersRepository);
   }
@@ -49,13 +49,13 @@ export class PostsModule extends ApplicationModule {
       return new InMemoryPostsRepository();
     }
 
-    return new ProductionPostsRepository(this.database);
+    return new PrismaPostsRepository(this.database);
   }
 
-  private createPostsService(membersRepository: IMembersRepository) {
+  private createPostsService() {
     return new PostsService(
       this.postsRepository,
-      membersRepository,
+      this.membersRepository,
       this.eventBus,
     );
   }
