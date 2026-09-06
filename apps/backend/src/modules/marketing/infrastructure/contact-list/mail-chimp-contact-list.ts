@@ -1,6 +1,6 @@
 import { type EmailSubscriptionDto } from '@forumate/api/marketing';
 
-import { type IContactListApi } from '../ports/contact-list-api';
+import { type IContactListApi } from '../../application/ports/contact-list-api';
 
 export class MailchimpContactList implements IContactListApi {
   async addEmailToList(email: string): Promise<EmailSubscriptionDto> {

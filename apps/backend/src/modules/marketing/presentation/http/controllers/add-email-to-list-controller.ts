@@ -1,20 +1,16 @@
 import express from 'express';
 
-import { AddEmailToListCommand } from '@forumate/api';
+import { AddEmailToListCommand } from '@forumate/api/marketing';
 
-import { BaseController } from '../../shared/infra/http';
+import { BaseController } from '../../../../../shared/infra/http';
+import { MarketingService } from '../../../application/marketing-service';
 
-import { MarketingService } from './application/marketing-service';
-
-export class MarketingController extends BaseController {
+export class AddEmailToListController extends BaseController {
   constructor(private marketingService: MarketingService) {
     super();
   }
 
-  public addEmailToList = async (
-    req: express.Request,
-    res: express.Response,
-  ) => {
+  async executeImpl(req: express.Request, res: express.Response) {
     const commandOrError = AddEmailToListCommand.create(req.body);
 
     if (commandOrError.isFailure) {
@@ -27,5 +23,5 @@ export class MarketingController extends BaseController {
     );
 
     this.created(res, { subscription: resultOrError });
-  };
+  }
 }
