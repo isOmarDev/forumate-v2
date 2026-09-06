@@ -3,11 +3,11 @@ import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
 
 import { MarketingService } from './application/marketing-service';
-import { ContactListApiSpy } from './contact-list/adapters/contact-list-spy';
-import { MailchimpContactList } from './contact-list/adapters/mail-chimp-contact-list';
-import { IContactListApi } from './contact-list/ports/contact-list-api';
-import { MarketingController } from './marketing-controller';
-import { MarketingRouter } from './marketing-router';
+import { IContactListApi } from './application/ports/contact-list-api';
+import { ContactListApiSpy } from './infrastructure/contact-list/contact-list-spy';
+import { MailchimpContactList } from './infrastructure/contact-list/mail-chimp-contact-list';
+import { MarketingController } from './presentation/http/controllers';
+import { MarketingRouter } from './presentation/http/routes/marketing-router';
 
 export class MarketingModule extends ApplicationModule {
   private contactListApi: IContactListApi;
@@ -67,7 +67,7 @@ export class MarketingModule extends ApplicationModule {
     return this.marketingService;
   }
 
-  public getMarketingController() {
+  public getMarketingControllers() {
     return this.marketingController;
   }
 }

@@ -10,12 +10,24 @@ import { CATEGORY_TO_STATUS } from './http-status';
 import { toApiError } from './to-api-error';
 
 export abstract class BaseController {
-  public ok<T>(
+  abstract executeImpl(
+    req: express.Request,
+    res: express.Response,
+  ): Promise<void>;
+
+  public execute = (
+    req: express.Request,
+    res: express.Response,
+  ): Promise<void> => {
+    return this.executeImpl(req, res);
+  };
+
+  protected ok<T>(
     res: express.Response<SuccessApiResponse<T>>,
     dto: T,
     status: 200 | 201 = 200,
   ) {
-    return res.status(status).json({
+    res.status(status).json({
       success: true,
       status,
       data: dto,
@@ -23,17 +35,17 @@ export abstract class BaseController {
     });
   }
 
-  public created<T>(res: express.Response<SuccessApiResponse<T>>, dto: T) {
-    return this.ok(res, dto, 201);
+  protected created<T>(res: express.Response<SuccessApiResponse<T>>, dto: T) {
+    this.ok(res, dto, 201);
   }
 
-  public fail(
+  protected fail(
     res: express.Response<FailureApiResponse<ErrorCode>>,
     error: CustomError,
   ) {
     const status = CATEGORY_TO_STATUS[error.category];
 
-    return res.status(status).json({
+    res.status(status).json({
       success: false,
       data: null,
       status,
@@ -41,11 +53,11 @@ export abstract class BaseController {
     });
   }
 
-  public noContent(res: express.Response) {
+  protected noContent(res: express.Response) {
     return res.sendStatus(204);
   }
 
-  public setCookie(
+  protected setCookie(
     res: express.Response,
     name: string,
     value: string,
@@ -54,7 +66,7 @@ export abstract class BaseController {
     res.cookie(name, value, options);
   }
 
-  public clearCookie(
+  protected clearCookie(
     res: express.Response,
     name: string,
     options?: express.CookieOptions,
@@ -62,11 +74,15 @@ export abstract class BaseController {
     res.clearCookie(name, options);
   }
 
-  public redirect(res: express.Response, url: string, status: 301 | 302 = 302) {
+  protected redirect(
+    res: express.Response,
+    url: string,
+    status: 301 | 302 = 302,
+  ) {
     return res.redirect(status, url);
   }
 
-  public download(res: express.Response, path: string, filename?: string) {
+  protected download(res: express.Response, path: string, filename?: string) {
     if (filename !== undefined) {
       return res.download(path, filename);
     }
@@ -74,7 +90,7 @@ export abstract class BaseController {
     return res.download(path);
   }
 
-  public sendFile(res: express.Response, path: string) {
+  protected sendFile(res: express.Response, path: string) {
     return res.sendFile(path);
   }
 }

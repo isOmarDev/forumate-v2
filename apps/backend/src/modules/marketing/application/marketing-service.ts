@@ -3,7 +3,8 @@ import {
   type EmailSubscriptionDto,
 } from '@forumate/api/marketing';
 
-import { type IContactListApi } from '../contact-list/ports/contact-list-api';
+import { type IContactListApi } from './ports/contact-list-api';
+import { AddEmailToListUseCase } from './use-cases/add-email-to-list/add-email-to-list-use-case';
 
 export class MarketingService {
   constructor(private contactListApi: IContactListApi) {}
@@ -11,7 +12,6 @@ export class MarketingService {
   async addEmailToList(
     command: AddEmailToListCommand,
   ): Promise<EmailSubscriptionDto> {
-    const result = await this.contactListApi.addEmailToList(command.email);
-    return result;
+    return new AddEmailToListUseCase(this.contactListApi).execute(command);
   }
 }

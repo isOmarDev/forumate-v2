@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { ValueObject } from '@forumate/core';
 import { ValidationError } from '@forumate/errors/application';
 
-import { InvalidMemberUsernameError } from '../../member-errors';
+import { InvalidMemberUsernameError } from '../errors/member-errors';
 
 // Note: It's debatable whether you should validate the commands or validate the
 // value objects in the use cases.

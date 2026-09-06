@@ -1,7 +1,7 @@
 import { IEventBus } from '@forumate/bus';
 
 import { MemberReputationLevelUpgraded } from '../../../members/domain/events/member-reputation-level-upgraded';
-import { SendNotificationCommand } from '../../notification-commands';
+import { SendNotificationCommand } from '../../notifications-commands';
 import { NotificationsService } from '../notifications-service';
 
 export class NotificationsSubscriptions {

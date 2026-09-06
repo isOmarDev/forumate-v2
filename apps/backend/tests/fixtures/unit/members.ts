@@ -2,10 +2,10 @@
 
 import { ReputationLevel } from '@forumate/api';
 
-import { PostComment } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment';
+import { PostComment } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment-use-case';
 import { Member } from '../../../src/modules/members/domain/entities/member';
 import { MemberUsername } from '../../../src/modules/members/domain/value-objects/member-username';
-import { CreatePost } from '../../../src/modules/posts/application/use-cases/create-post/create-post';
+import { CreatePost } from '../../../src/modules/posts/application/use-cases/create-post/create-post-use-case';
 
 export function setupTestWithLevel2Member(useCase: CreatePost | PostComment) {
   jest.resetAllMocks();

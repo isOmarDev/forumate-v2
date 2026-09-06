@@ -3,3 +3,4 @@ export * from './commands';
 export * from './dtos';
 export * from './inputs';
 export * from './responses';
+export * from './queries';

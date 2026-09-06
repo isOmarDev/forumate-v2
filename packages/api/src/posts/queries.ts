@@ -22,6 +22,28 @@ export class GetPostByIdQuery {
 
   static create(
     input: unknown,
+  ): Result<GetPostDetailsByIdQuery, InvalidRequestQueryParamsError> {
+    const inputResult = validateQueryInput(getPostByIdQueryInputSchema, input);
+
+    if (inputResult.isFailure) {
+      return fail(inputResult.getError());
+    }
+
+    return success(new GetPostByIdQuery(inputResult.getValue()));
+  }
+}
+
+// Get Post By ID
+
+export class GetPostByIdQuery {
+  private constructor(private readonly props: GetPostByIdQueryInput) {}
+
+  get postId() {
+    return this.props.postId;
+  }
+
+  static create(
+    input: unknown,
   ): Result<GetPostByIdQuery, InvalidRequestQueryParamsError> {
     const inputResult = validateQueryInput(getPostByIdQueryInputSchema, input);
 

@@ -6,10 +6,10 @@ import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
 
 import { MembersService } from './application/members-service';
-import { MembersController } from './members-controller';
-import { MembersRouter } from './members-routers';
-import { ProductionMembersRepository } from './repos/adapters/production-members-repository';
-import { type IMembersRepository } from './repos/ports/members-repository';
+import type { IMembersRepository } from './application/ports/members-repository';
+import { PrismaMembersRepository } from './infrastructure/repositories/prisma-members-repository';
+import { MembersController } from './presentation/http/controllers';
+import { MembersRouter } from './presentation/http/routes/members-router';
 
 export class MembersModule extends ApplicationModule {
   private membersRepository: IMembersRepository;
@@ -26,7 +26,7 @@ export class MembersModule extends ApplicationModule {
     // Create the tree in reverse (repos, services, controllers)
     this.membersRepository = this.createMembersRepository(db);
     this.membersService = this.createMembersService();
-    this.membersController = this.createMembersController(config);
+    this.membersController = this.createMembersController();
     this.membersRouter = this.createMembersRouter();
 
     this.setupRoutes();
@@ -37,15 +37,15 @@ export class MembersModule extends ApplicationModule {
   }
 
   private createMembersRepository(db: IDatabase) {
-    return new ProductionMembersRepository(db);
+    return new PrismaMembersRepository(db);
   }
 
   private createMembersService() {
     return new MembersService(this.membersRepository, this.eventBus);
   }
 
-  private createMembersController(config: Config) {
-    return new MembersController(this.membersService, config);
+  private createMembersController() {
+    return new MembersController(this.membersService);
   }
 
   private createMembersRouter() {
@@ -70,7 +70,7 @@ export class MembersModule extends ApplicationModule {
     return this.membersService;
   }
 
-  public getMembersController() {
+  public getMembersControllers() {
     return this.membersController;
   }
 }

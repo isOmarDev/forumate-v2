@@ -6,7 +6,10 @@ import { type CreatePostInput } from '@forumate/api/posts';
 import { AggregateRoot } from '@forumate/core';
 import { type Post as PostModel } from '@forumate/database';
 
-import { mapPostValidationError, PostCreationError } from '../../posts-errors';
+import {
+  mapPostValidationError,
+  PostCreationError,
+} from '../errors/posts-errors';
 import { PostCreated } from '../events/post-created';
 import { PostSlug } from '../value-objects/post-slug';
 

@@ -4,17 +4,17 @@ import { type IDatabase } from '@forumate/database';
 import { Config } from '../../shared/config';
 import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
-import { IMembersRepository } from '../members/repos/ports/members-repository';
-import { IPostsRepository } from '../posts/repos/ports/posts-repository';
+import type { IMembersRepository } from '../members/application/ports/members-repository';
+import type { IPostsRepository } from '../posts/application/ports/posts-repository';
 
 import { CommentsService } from './application/comments-service';
-import { CommentsController } from './comments-controller';
-import { CommentsRouter } from './comments-router';
-import { ProductionCommentsRepository } from './repos/adapters/production-comment-repository';
-import { ICommentRepository } from './repos/ports/comment-repository';
+import type { ICommentsRepository } from './application/ports/comments-repository';
+import { PrismaCommentsRepository } from './infrastructure/repositories/prisma-comments-repository';
+import { CommentsController } from './presentation/http/controllers';
+import { CommentsRouter } from './presentation/http/routes/comments-router';
 
 export class CommentsModule extends ApplicationModule {
-  private commentsRepository: ICommentRepository;
+  private commentsRepository: ICommentsRepository;
   private commentsService: CommentsService;
   private commentsController: CommentsController;
   private commentsRouter: CommentsRouter;
@@ -33,7 +33,7 @@ export class CommentsModule extends ApplicationModule {
     this.commentsController = this.createCommentsController();
     this.commentsRouter = this.createCommentsRouter();
 
-    this.setupRoutes();
+    this.registerRoutes();
   }
 
   static build(
@@ -54,7 +54,7 @@ export class CommentsModule extends ApplicationModule {
 
   private createCommentRepository() {
     if (this.commentsRepository) return this.commentsRepository;
-    return new ProductionCommentsRepository(this.db);
+    return new PrismaCommentsRepository(this.db);
   }
 
   private createCommentsService() {
@@ -66,7 +66,7 @@ export class CommentsModule extends ApplicationModule {
     );
   }
 
-  private createCommentsController() {
+  private createCommentsController(): CommentsController {
     return new CommentsController(this.commentsService);
   }
 
@@ -80,7 +80,7 @@ export class CommentsModule extends ApplicationModule {
     webServer.mountRouter(path, router);
   }
 
-  private setupRoutes() {
+  private registerRoutes() {
     this.commentsRouter.register();
   }
 
@@ -90,5 +90,9 @@ export class CommentsModule extends ApplicationModule {
 
   public getCommentsService() {
     return this.commentsService;
+  }
+
+  public getCommentsControllers() {
+    return this.commentsController;
   }
 }
