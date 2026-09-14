@@ -1,8 +1,8 @@
 import { GetPostsQuery } from '@forumate/api/posts';
 import {
   type IDatabase,
-  type Member as MemberModel,
-  type Post as PostModel,
+  type MemberModel,
+  type PostModel,
   Prisma,
 } from '@forumate/database';
 import { DatabaseError } from '@forumate/errors/server';
