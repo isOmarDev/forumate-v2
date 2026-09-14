@@ -3,6 +3,7 @@ import express from 'express';
 import { CreateMemberCommand } from '@forumate/api/members';
 
 import { BaseController } from '../../../../../shared/infra/http';
+import { MemberMap } from '../../../application/mappers/member-map';
 import { MembersService } from '../../../application/members-service';
 
 export class CreateMemberController extends BaseController {
@@ -25,6 +26,6 @@ export class CreateMemberController extends BaseController {
       return this.fail(res, resultOrError.getError());
     }
 
-    return this.created(res, resultOrError.getValue());
+    return this.created(res, MemberMap.toDTO(resultOrError.getValue()));
   }
 }
