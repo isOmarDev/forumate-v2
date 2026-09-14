@@ -17,7 +17,7 @@ export class UsersModule extends ApplicationModule {
   private constructor(config: Config) {
     super(config);
 
-    this.identityServiceApi = this.createIdentityServiceApi(config);
+    this.identityServiceApi = this.createIdentityServiceApi();
     this.usersService = this.createUsersService();
     this.usersController = this.createUsersController();
     this.usersRouter = this.createUserRouter();
@@ -28,7 +28,7 @@ export class UsersModule extends ApplicationModule {
     return new UsersModule(config);
   }
 
-  private createIdentityServiceApi(config: Config) {
+  private createIdentityServiceApi() {
     return new FirebaseAuth();
   }
 
