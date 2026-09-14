@@ -1,7 +1,7 @@
-import { PostComment } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment-use-case';
+import { PostCommentUseCase } from '../../../src/modules/comments/application/use-cases';
 import { Post } from '../../../src/modules/posts/domain/entities/post';
 
-export function withExistingPostByRandomMember(useCase: PostComment) {
+export function withExistingPostByRandomMember(useCase: PostCommentUseCase) {
   const existingPost = Post.create({
     memberId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
     title: 'Test Post',
@@ -11,7 +11,7 @@ export function withExistingPostByRandomMember(useCase: PostComment) {
 
   expect(existingPost instanceof Post).toBe(true);
 
-  useCase['postRepository'].getPostById = jest
+  useCase['postsRepository'].getPostById = jest
     .fn()
     .mockResolvedValue(existingPost as Post);
 
