@@ -32,19 +32,32 @@ export class InMemoryEventBus implements IEventBus {
     eventTypeName: string,
     handler: EventHandler<T>,
   ): void {
-    const handlers = this.subscriptions.get(eventTypeName) || [];
+    const handlers = this.subscriptions.get(eventTypeName) ?? [];
+
     handlers.push(handler as EventHandler<DomainEvent>);
+
     this.subscriptions.set(eventTypeName, handlers);
   }
 
   unsubscribe(eventTypeName: string, handler: EventHandler<DomainEvent>): void {
     const handlers = this.subscriptions.get(eventTypeName);
 
-    if (handlers) {
-      const index = handlers.indexOf(handler);
-      if (index !== -1) {
-        handlers.splice(index, 1);
-      }
+    if (!handlers) {
+      return;
     }
+
+    const index = handlers.indexOf(handler);
+
+    if (index !== -1) {
+      handlers.splice(index, 1);
+    }
+
+    if (handlers.length === 0) {
+      this.subscriptions.delete(eventTypeName);
+    }
+  }
+
+  clear(): void {
+    this.subscriptions.clear();
   }
 }
