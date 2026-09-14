@@ -80,6 +80,7 @@ export class CompositionRoot {
   public async stop(): Promise<void> {
     await this.webServer.stop();
     await this.eventBus.stop();
+    await this.dbConnection.disconnect();
   }
 
   // ---------------------------------------------------------------------------
