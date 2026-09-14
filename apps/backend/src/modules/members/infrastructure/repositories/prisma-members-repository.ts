@@ -1,5 +1,6 @@
-import { type IDatabase, Prisma } from '@forumate/database';
+import { Prisma, type IDatabase } from '@forumate/database';
 
+import { MemberMap } from '../../application/mappers/member-map';
 import { type IMembersRepository } from '../../application/ports/members-repository';
 import { Member } from '../../domain/entities/member';
 
@@ -16,7 +17,7 @@ export class PrismaMembersRepository implements IMembersRepository {
       return null;
     }
 
-    return Member.toDomain(memberData);
+    return MemberMap.toDomain(memberData);
   }
 
   async findUserByUsername(username: string): Promise<Member | null> {
@@ -29,7 +30,7 @@ export class PrismaMembersRepository implements IMembersRepository {
       return null;
     }
 
-    return Member.toDomain(memberData);
+    return MemberMap.toDomain(memberData);
   }
 
   async getMemberById(memberId: string): Promise<Member | null> {
@@ -42,13 +43,13 @@ export class PrismaMembersRepository implements IMembersRepository {
       return null;
     }
 
-    return Member.toDomain(memberData);
+    return MemberMap.toDomain(memberData);
   }
 
   async save(member: Member, transaction?: Prisma.TransactionClient) {
     const prismaInstance = transaction || this.database.getClient();
 
-    const memberData = member.toPersistence();
+    const memberData = MemberMap.toPersistence(member);
 
     try {
       await prismaInstance.member.upsert({
