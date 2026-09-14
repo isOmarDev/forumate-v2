@@ -7,6 +7,7 @@ import { ApplicationModule } from '../../shared/modules/application-module';
 
 import { MembersService } from './application/members-service';
 import type { IMembersRepository } from './application/ports/members-repository';
+import { InMemoryMembersRepository } from './infrastructure/repositories/in-memory-members-repository';
 import { PrismaMembersRepository } from './infrastructure/repositories/prisma-members-repository';
 import { MembersController } from './presentation/http/controllers';
 import { MembersRouter } from './presentation/http/routes/members-router';
@@ -37,6 +38,10 @@ export class MembersModule extends ApplicationModule {
   }
 
   private createMembersRepository(db: IDatabase) {
+    if (this.shouldBuildFakeRepository) {
+      return new InMemoryMembersRepository();
+    }
+
     return new PrismaMembersRepository(db);
   }
 
