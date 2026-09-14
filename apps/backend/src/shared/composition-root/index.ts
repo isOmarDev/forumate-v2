@@ -10,7 +10,7 @@ import {
   MembersModule,
   VotesModule,
 } from '../../modules';
-import { Application } from '../application/application-interface';
+import { IApplication } from '../application/application-interface';
 import { Config } from '../config';
 import { errorHandler } from '../errors';
 import { WebServer } from '../infra/http';
@@ -86,9 +86,10 @@ export class CompositionRoot {
   // Public API — Accessors
   // ---------------------------------------------------------------------------
 
-  public getApplication(): Application {
+  public getApplication(): IApplication {
     return {
       users: this.usersModule.getUsersService(),
+      members: this.membersModule.getMembersService(),
       posts: this.postsModule.getPostsService(),
       marketing: this.marketingModule.getMarketingService(),
       notifications: this.notificationsModule.getNotificationsService(),
