@@ -25,9 +25,8 @@ export class DatabaseFixture {
         connection.member.deleteMany(),
       ]);
     } catch (error) {
-      console.error(error);
-    } finally {
-      await connection.$disconnect();
+      console.error('Failed to reset test database:', error);
+      throw error;
     }
   }
 
