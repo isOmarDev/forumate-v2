@@ -8,35 +8,42 @@ export class ProcessService {
         : `lsof -i:${port} -t`;
 
     exec(killCommand, (error, stdout, stderr) => {
-      if (error) {
-        // console.error(`Failed to execute the command: ${error.message}`);
+      if (error || stderr) {
         return cb ? cb() : '';
       }
 
-      if (stderr) {
-        // console.error(`Command execution returned an error: ${stderr}`);
+      // Windows netstat emits one line per protocol (IPv4 + IPv6); the PID is
+      // the last whitespace-delimited token of every LISTENING line.
+      const processIds =
+        process.platform === 'win32'
+          ? stdout
+              .split(/\r?\n/)
+              .map((line) => line.trim())
+              .filter(Boolean)
+              .map((line) => line.split(/\s+/).pop() || '')
+              .filter((pid) => /^\d+$/.test(pid))
+          : stdout
+              .split(/\r?\n/)
+              .map((line) => line.trim())
+              .filter(Boolean);
+
+      if (processIds.length === 0) {
         return cb ? cb() : '';
       }
 
-      const processId = stdout.trim();
-      if (processId) {
-        const killProcessCommand =
-          process.platform === 'win32'
-            ? `taskkill /F /PID ${processId}`
-            : `kill ${processId}`;
+      const killProcessCommand =
+        process.platform === 'win32'
+          ? `taskkill /F /PID ${processIds.join(' /PID ')}`
+          : `kill ${processIds.join(' ')}`;
 
-        exec(killProcessCommand, (error, _stdout, _stderr) => {
-          if (error) {
-            // console.error(`Failed to kill the process: ${error.message}`);
-            return cb ? cb() : '';
-          }
-          // console.log(`Process running on port ${port} has been killed.`);
+      exec(killProcessCommand, (killError, _stdout, _stderr) => {
+        if (killError) {
+          // console.error(`Failed to kill the process: ${killError.message}`);
           return cb ? cb() : '';
-        });
-      } else {
-        // console.log(`No process found running on port ${port}.`);
+        }
+        // console.log(`Process running on port ${port} has been killed.`);
         return cb ? cb() : '';
-      }
+      });
     });
   }
 }
