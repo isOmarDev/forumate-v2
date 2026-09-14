@@ -59,7 +59,7 @@ export class UpdateMemberReputationScoreUseCase implements IUseCase<
 
     try {
       await this.memberRepository.save(memberOrNull);
-      await this.eventBus.publishEvents(memberOrNull.getDomainEvents());
+      this.eventBus.publishEvents(memberOrNull.getDomainEvents());
       return Result.success(memberOrNull);
     } catch (err) {
       return Result.failure(new DatabaseError());
