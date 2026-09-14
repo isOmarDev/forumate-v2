@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { PostTypeSchema } from './types';
 
 // Create post
-const TextPostSchema = z.object({
+export const TextPostSchema = z.object({
   title: z
     .string()
     .min(5, 'Post title must be at least 5 characters')
@@ -18,7 +18,7 @@ const TextPostSchema = z.object({
   memberId: z.string().min(1, 'Member ID is required'),
 });
 
-const LinkPostSchema = z.object({
+export const LinkPostSchema = z.object({
   title: z
     .string()
     .min(5, 'Post title must be at least 5 characters')
