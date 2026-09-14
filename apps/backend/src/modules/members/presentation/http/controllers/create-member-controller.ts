@@ -11,7 +11,7 @@ export class CreateMemberController extends BaseController {
   }
 
   async executeImpl(req: express.Request, res: express.Response) {
-    const commandOrError = CreateMemberCommand.create(req.user);
+    const commandOrError = CreateMemberCommand.create(req.body);
 
     if (commandOrError.isFailure) {
       return this.fail(res, commandOrError.getError());
