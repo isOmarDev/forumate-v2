@@ -2,12 +2,32 @@
 
 import { ReputationLevel } from '@forumate/api';
 
-import { PostComment } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment-use-case';
+import { PostCommentUseCase } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment-use-case';
 import { Member } from '../../../src/modules/members/domain/entities/member';
 import { MemberUsername } from '../../../src/modules/members/domain/value-objects/member-username';
-import { CreatePost } from '../../../src/modules/posts/application/use-cases/create-post/create-post-use-case';
+import { CreatePostUseCase } from '../../../src/modules/posts/application/use-cases/create-post/create-post-use-case';
 
-export function setupTestWithLevel2Member(useCase: CreatePost | PostComment) {
+export function setupTestWithLevel1Member(
+  useCase: CreatePostUseCase | PostCommentUseCase,
+) {
+  const level1MemberOrError = Member.create({
+    userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
+    username: 'jill1234',
+  });
+
+  expect(level1MemberOrError.isSuccess).toBe(true);
+
+  const member = level1MemberOrError.getValue();
+  useCase['membersRepository'].getMemberById = jest
+    .fn()
+    .mockResolvedValue(member);
+
+  return member;
+}
+
+export function setupTestWithLevel2Member(
+  useCase: CreatePostUseCase | PostCommentUseCase,
+) {
   jest.resetAllMocks();
 
   const level2Member = Member.toDomain({
@@ -23,20 +43,4 @@ export function setupTestWithLevel2Member(useCase: CreatePost | PostComment) {
     .mockResolvedValue(level2Member);
 
   return level2Member;
-}
-
-export function setupTestWithLevel1Member(useCase: CreatePost | PostComment) {
-  const level1MemberOrError = Member.create({
-    userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
-    username: 'jill1234',
-  });
-
-  expect(level1MemberOrError.isSuccess()).toBe(true);
-
-  const member = level1MemberOrError.getValue();
-  useCase['memberRepository'].getMemberById = jest
-    .fn()
-    .mockResolvedValue(member);
-
-  return member;
 }
