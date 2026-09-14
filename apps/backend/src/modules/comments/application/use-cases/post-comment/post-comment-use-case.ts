@@ -16,9 +16,9 @@ export class PostCommentUseCase implements IUseCase<
   PostCommentResponse
 > {
   constructor(
-    private commentRepository: ICommentsRepository,
-    private postRepository: IPostsRepository,
-    private memberRepository: IMembersRepository,
+    private commentsRepository: ICommentsRepository,
+    private postsRepository: IPostsRepository,
+    private membersRepository: IMembersRepository,
     private eventBus: IEventBus,
   ) {}
 

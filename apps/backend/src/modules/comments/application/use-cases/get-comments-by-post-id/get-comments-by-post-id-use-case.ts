@@ -13,20 +13,20 @@ export class GetCommentsByPostIdUseCase implements IUseCase<
   GetCommentsByPostIdResponse
 > {
   constructor(
-    private commentRepository: ICommentsRepository,
-    private postRepository: IPostsRepository,
+    private commentsRepository: ICommentsRepository,
+    private postsRepository: IPostsRepository,
   ) {}
 
   async execute(
     query: GetCommentsByPostIdQuery,
   ): Promise<GetCommentsByPostIdResponse> {
-    const post = await this.postRepository.getPostById(query.postId);
+    const post = await this.postsRepository.getPostById(query.postId);
 
     if (!post) {
       return fail(new PostNotFoundError());
     }
 
-    const comments = await this.commentRepository.getCommentsByPostId(
+    const comments = await this.commentsRepository.getCommentsByPostId(
       query.postId,
     );
 
