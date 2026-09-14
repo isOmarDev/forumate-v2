@@ -8,9 +8,12 @@ export async function setupLevel1Member(
   authToken: string,
   userId: string,
 ) {
+
+  // arrange 
   const username = `khalilstemmler-${NumberUtil.generateRandomInteger(10000, 99999)}`;
   const email = `${username}@test.com`;
 
+  // act 
   const response = await apiClient.members.register(
     {
       username,
@@ -20,6 +23,7 @@ export async function setupLevel1Member(
     authToken,
   );
 
+  // assert 
   if (!response.success) {
     throw new Error(`Failed to create member: ${response.error}`);
   }
