@@ -16,7 +16,7 @@ export const RegisterPage = observer(() => {
 
   useEffect(() => {
     setVm(vm);
-  }, [registration.vm]);
+  }, [registration.vm, vm]);
 
   return (
     <LayoutContainer>
