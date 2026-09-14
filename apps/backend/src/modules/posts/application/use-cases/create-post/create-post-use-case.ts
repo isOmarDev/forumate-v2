@@ -16,8 +16,8 @@ export class CreatePostUseCase implements IUseCase<
   CreatePostResponse
 > {
   constructor(
-    private postRepository: IPostsRepository,
-    private memberRepository: IMembersRepository,
+    private postsRepository: IPostsRepository,
+    private membersRepository: IMembersRepository,
     private eventBus: IEventBus,
   ) {}
 
