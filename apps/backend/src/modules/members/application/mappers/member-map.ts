@@ -1,19 +1,29 @@
 import { MemberDto, ReputationLevel } from '@forumate/api/members';
-import { Mapper } from '@forumate/core/application';
+import {
+  ToDomainMapper,
+  ToDtoMapper,
+  ToPersistenceMapper,
+} from '@forumate/core';
 import { MemberModel } from '@forumate/database';
 
 import { Member } from '../../domain/entities/member';
-import { MemberUsername } from '../../domain/value-objects/member-username';
+
+import { MemberUsernameMap } from './member-username-map';
 
 type MemberPersistence = Omit<MemberModel, 'dateCreated' | 'lastUpdated'>;
 
-class MemberMapImpl extends Mapper<Member, MemberPersistence, MemberDto> {
+class MemberMapImpl
+  implements
+    ToDomainMapper<Member, MemberPersistence>,
+    ToDtoMapper<Member, MemberDto>,
+    ToPersistenceMapper<Member, MemberPersistence>
+{
   toDomain(persistence: MemberModel): Member {
     return Member.reconstitute({
       id: persistence.id,
       reputationScore: persistence.reputationScore,
       userId: persistence.userId,
-      username: MemberUsername.toDomain(persistence.username),
+      username: MemberUsernameMap.toDomain(persistence.username),
       reputationLevel: persistence.reputationLevel as ReputationLevel,
     });
   }
