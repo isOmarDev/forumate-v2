@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-import { ValueObject } from '@forumate/core';
-import { ValidationError } from '@forumate/errors/application';
+import { Result, success, ValueObject } from '@forumate/core';
 
 import { InvalidMemberUsernameError } from '../errors/member-errors';
 
@@ -29,13 +28,9 @@ export class MemberUsername extends ValueObject<MemberUsernameProps> {
     return this.props.value;
   }
 
-  public static toDomain(value: string): MemberUsername {
-    return new MemberUsername({ value });
-  }
-
   public static create(
     input: string | undefined,
-  ): MemberUsername | ValidationError {
+  ): Result<MemberUsername, InvalidMemberUsernameError> {
     /**
      * Handle validation rules here. There are many possibilities for types of validation rules
      * we could use here.
@@ -44,9 +39,9 @@ export class MemberUsername extends ValueObject<MemberUsernameProps> {
     const result = memberUsernameSchema.safeParse(input);
 
     if (result.success) {
-      return new MemberUsername({ value: input as string });
+      return success(new MemberUsername({ value: input as string }));
     }
 
-    return new InvalidMemberUsernameError();
+    return fail(new InvalidMemberUsernameError());
   }
 }
