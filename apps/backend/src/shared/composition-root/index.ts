@@ -25,7 +25,7 @@ export class CompositionRoot {
   private config: Config;
   private eventBus: IEventBus;
   private dbConnection: PrismaDatabase;
-  private webServer!: WebServer;
+  private webServer: WebServer;
 
   private usersModule!: UsersModule;
   private marketingModule!: MarketingModule;
