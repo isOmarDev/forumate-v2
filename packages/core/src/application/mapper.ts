@@ -1,11 +1,11 @@
-export interface ToDomainMapper<Domain, Persistence> {
+export interface IToDomainMapper<Domain, Persistence> {
   toDomain(persistence: Persistence): Domain;
 }
 
-export interface ToDtoMapper<Domain, DTO> {
+export interface IToDtoMapper<Domain, DTO> {
   toDTO(domain: Domain): DTO;
 }
 
-export interface ToPersistenceMapper<Domain, Persistence> {
+export interface IToPersistenceMapper<Domain, Persistence> {
   toPersistence(domain: Domain): Persistence;
 }
