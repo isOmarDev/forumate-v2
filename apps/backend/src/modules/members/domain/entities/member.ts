@@ -98,13 +98,17 @@ export class Member extends AggregateRoot {
     );
   }
 
-  public static reconstitute(input: ReconstituteMemberInput): Member {
-    return new Member({
-      id: input.id,
-      userId: input.userId,
-      username: input.username,
-      reputationScore: input.reputationScore,
-      reputationLevel: input.reputationLevel,
-    });
+  public static reconstitute(
+    input: ReconstituteMemberInput,
+  ): Result<Member, void> {
+    return success(
+      new Member({
+        id: input.id,
+        userId: input.userId,
+        username: input.username,
+        reputationScore: input.reputationScore,
+        reputationLevel: input.reputationLevel,
+      }),
+    );
   }
 }
