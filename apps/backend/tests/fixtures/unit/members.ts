@@ -3,6 +3,7 @@
 import { ReputationLevel } from '@forumate/api';
 
 import { PostCommentUseCase } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment-use-case';
+import { MemberMap } from '../../../src/modules/members/application/mappers/member-map';
 import { Member } from '../../../src/modules/members/domain/entities/member';
 import { MemberUsername } from '../../../src/modules/members/domain/value-objects/member-username';
 import { CreatePostUseCase } from '../../../src/modules/posts/application/use-cases/create-post/create-post-use-case';
@@ -12,7 +13,7 @@ export function setupTestWithLevel1Member(
 ) {
   const level1MemberOrError = Member.create({
     userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
-    username: 'jill1234',
+    username: MemberUsername.create('jill1234').getValue(),
   });
 
   expect(level1MemberOrError.isSuccess).toBe(true);
@@ -30,12 +31,12 @@ export function setupTestWithLevel2Member(
 ) {
   jest.resetAllMocks();
 
-  const level2Member = Member.toDomain({
+  const level2Member = MemberMap.toDomain({
+    id: 'bf6b4773-feea-44cd-a951-f0ffd68625ea',
     userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
-    username: MemberUsername.toDomain('jill-12345'),
+    username: 'jill-12345',
     reputationScore: 10,
     reputationLevel: ReputationLevel.Level2,
-    id: 'bf6b4773-feea-44cd-a951-f0ffd68625ea',
   });
 
   useCase['memberRepository'].getMemberById = jest
