@@ -1,8 +1,8 @@
 import { MemberDto, ReputationLevel } from '@forumate/api/members';
 import {
-  ToDomainMapper,
-  ToDtoMapper,
-  ToPersistenceMapper,
+  IToDomainMapper,
+  IToDtoMapper,
+  IToPersistenceMapper,
 } from '@forumate/core';
 import { MemberModel } from '@forumate/database';
 
@@ -12,20 +12,22 @@ import { MemberUsernameMap } from './member-username-map';
 
 type MemberPersistence = Omit<MemberModel, 'dateCreated' | 'lastUpdated'>;
 
-class MemberMapImpl
+class MemberMapper
   implements
-    ToDomainMapper<Member, MemberPersistence>,
-    ToDtoMapper<Member, MemberDto>,
-    ToPersistenceMapper<Member, MemberPersistence>
+    IToDomainMapper<Member, MemberPersistence>,
+    IToDtoMapper<Member, MemberDto>,
+    IToPersistenceMapper<Member, MemberPersistence>
 {
-  toDomain(persistence: MemberModel): Member {
-    return Member.reconstitute({
+  toDomain(persistence: MemberPersistence): Member {
+    const memberOrError = Member.reconstitute({
       id: persistence.id,
-      reputationScore: persistence.reputationScore,
       userId: persistence.userId,
       username: MemberUsernameMap.toDomain(persistence.username),
+      reputationScore: persistence.reputationScore,
       reputationLevel: persistence.reputationLevel as ReputationLevel,
     });
+
+    return memberOrError.getValue();
   }
 
   toDTO(domain: Member): MemberDto {
@@ -49,4 +51,4 @@ class MemberMapImpl
   }
 }
 
-export const MemberMap = new MemberMapImpl();
+export const MemberMap = new MemberMapper();
