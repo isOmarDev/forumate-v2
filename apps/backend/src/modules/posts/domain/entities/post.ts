@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { type CreatePostInput } from '@forumate/api/posts';
 import { AggregateRoot } from '@forumate/core';
-import { type Post as PostModel } from '@forumate/database';
+import { type PostModel } from '@forumate/database';
 
 import {
   mapPostValidationError,
