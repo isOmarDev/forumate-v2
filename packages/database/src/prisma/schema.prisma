@@ -113,6 +113,6 @@ model Event {
   status      String   @default("INITIAL")
   retries     Int      @default(0)
   data        String
-  dateCreated DateTime @default(now())
-  lastUpdated DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
