@@ -1,19 +1,19 @@
 import { z } from 'zod';
 
-import { Result, success, ValueObject } from '@forumate/core';
+import { Result, success, fail } from '@forumate/core/application';
+import { ValueObject } from '@forumate/core/domain';
 
 import { InvalidMemberUsernameError } from '../errors/member-errors';
 
-// Note: It's debatable whether you should validate the commands or validate the
-// value objects in the use cases.
-// Actually, the most intelligent approach would be to validate within the commands
-// and then return a validated command object comprised of pure value objects.
-// UnvalidatedCommand -> ValidatedCommandWithValueObjects -> passed to use case which does not
-// need to question whether the value objects are valid or not.
-// This keeps the domain model pure. Of course, this approach takes a bit more work but it
-// would be the most safe, accurate approach.
-
-const memberUsernameSchema = z.string().min(5).max(20);
+const memberUsernameSchema = z
+  .string()
+  .min(5, 'Username must be at least 5 characters')
+  .max(15, 'Username must be at most 15 characters')
+  .toLowerCase()
+  .regex(
+    /^[a-zA-Z0-9]+$/,
+    'Username can only contain letters and numbers without spaces',
+  );
 
 interface MemberUsernameProps {
   value: string;
@@ -29,19 +29,15 @@ export class MemberUsername extends ValueObject<MemberUsernameProps> {
   }
 
   public static create(
-    input: string | undefined,
+    input: string,
   ): Result<MemberUsername, InvalidMemberUsernameError> {
-    /**
-     * Handle validation rules here. There are many possibilities for types of validation rules
-     * we could use here.
-     */
-
     const result = memberUsernameSchema.safeParse(input);
 
-    if (result.success) {
-      return success(new MemberUsername({ value: input as string }));
+    if (!result.success) {
+      const message = result.error.issues[0]?.message ?? 'Invalid username';
+      return fail(new InvalidMemberUsernameError(message));
     }
 
-    return fail(new InvalidMemberUsernameError());
+    return success(new MemberUsername({ value: result.data }));
   }
 }
