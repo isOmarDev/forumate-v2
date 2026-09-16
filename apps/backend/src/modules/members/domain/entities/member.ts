@@ -2,7 +2,6 @@ import { randomUUID } from 'node:crypto';
 
 import { ReputationLevel } from '@forumate/api/members';
 import { AggregateRoot, Result, success } from '@forumate/core';
-import { ValidationError } from '@forumate/errors/application';
 
 import { MemberReputationLevelUpgraded } from '../events/member-reputation-level-upgraded';
 import { MemberUsername } from '../value-objects/member-username';
@@ -85,9 +84,7 @@ export class Member extends AggregateRoot {
     }
   }
 
-  public static create(
-    inputProps: CreateMemberInput,
-  ): Result<Member, ValidationError> {
+  public static create(inputProps: CreateMemberInput): Result<Member, never> {
     return success(
       new Member({
         ...inputProps,
@@ -100,7 +97,7 @@ export class Member extends AggregateRoot {
 
   public static reconstitute(
     input: ReconstituteMemberInput,
-  ): Result<Member, void> {
+  ): Result<Member, never> {
     return success(
       new Member({
         id: input.id,
