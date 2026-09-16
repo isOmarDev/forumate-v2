@@ -2,14 +2,13 @@ import { randomUUID } from 'node:crypto';
 
 import { DomainEvent } from './domain-event';
 import { DomainEventStatus } from './domain-event';
-import { EventModel } from './event-model';
 
 interface TestEventProps {
   aggregateId: string;
   testDataField: string;
 }
 
-export class TestEvent extends DomainEvent {
+export class TestEvent extends DomainEvent<TestEventProps> {
   private constructor(
     props: TestEventProps,
     id?: string,
@@ -19,8 +18,8 @@ export class TestEvent extends DomainEvent {
   ) {
     super(
       'TestEvent',
-      props,
       props.aggregateId,
+      props,
       id,
       retries,
       status,
@@ -30,18 +29,6 @@ export class TestEvent extends DomainEvent {
 
   public static create(data: TestEventProps) {
     return new TestEvent(data);
-  }
-
-  public static toDomain(prismaEventModel: EventModel) {
-    const data = JSON.parse(prismaEventModel.data) as TestEventProps;
-
-    return new TestEvent(
-      data,
-      prismaEventModel.id,
-      prismaEventModel.retries,
-      prismaEventModel.status as DomainEventStatus,
-      prismaEventModel.dateCreated.toISOString(),
-    );
   }
 }
 
@@ -60,36 +47,36 @@ describe('domainEvent', () => {
 
   it('should be able to get the event props', () => {
     const event = TestEvent.create({ testDataField: 'John', aggregateId });
-    expect(event.data).toEqual({ testDataField: 'John' });
+    expect(event.data).toEqual({ testDataField: 'John', aggregateId });
   });
 
   it('should start out in the initial state', () => {
     const event = TestEvent.create({ testDataField: 'John', aggregateId });
-    expect(event.getStatus()).toEqual('INITIAL');
+    expect(event.status).toEqual('INITIAL');
   });
 
   it('should be able to transition to the published state', () => {
     const event = TestEvent.create({ testDataField: 'John', aggregateId });
     event.markPublished();
-    expect(event.getStatus()).toEqual('PUBLISHED');
+    expect(event.status).toEqual('PUBLISHED');
   });
 
   it('should be able to record a failure to publish', () => {
     const event = TestEvent.create({ testDataField: 'John', aggregateId });
-    expect(event.getRetries()).toEqual(0);
+    expect(event.retries).toEqual(0);
     event.recordFailureToProcess();
 
-    expect(event.getRetries()).toEqual(1);
-    expect(event.getStatus()).toEqual('RETRYING');
-
-    event.recordFailureToProcess();
-
-    expect(event.getRetries()).toEqual(2);
-    expect(event.getStatus()).toEqual('RETRYING');
+    expect(event.retries).toEqual(1);
+    expect(event.status).toEqual('RETRYING');
 
     event.recordFailureToProcess();
 
-    expect(event.getRetries()).toEqual(3);
-    expect(event.getStatus()).toEqual('FAILED');
+    expect(event.retries).toEqual(2);
+    expect(event.status).toEqual('RETRYING');
+
+    event.recordFailureToProcess();
+
+    expect(event.retries).toEqual(3);
+    expect(event.status).toEqual('FAILED');
   });
 });

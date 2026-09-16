@@ -1,42 +1,26 @@
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 import { EventModel } from './event-model';
 
 export type DomainEventStatus = 'INITIAL' | 'RETRYING' | 'PUBLISHED' | 'FAILED';
 
-// Define the expected structure instead of importing from Prisma
-
-export class DomainEvent {
+export class DomainEvent<T> {
   constructor(
-    public readonly aggregateId: string,
-    public readonly data: any,
     public readonly name: string,
-    public readonly id: string = uuidv4(),
-    private retries: number = 0,
-    private status: DomainEventStatus = 'INITIAL',
+    public readonly aggregateId: string,
+    public readonly data: T,
+    public readonly id: string = randomUUID(),
+    private _retries: number = 0,
+    private _status: DomainEventStatus = 'INITIAL',
     public readonly createdAt: string = new Date().toISOString(),
   ) {}
 
-  getStatus() {
-    return this.status;
+  get retries() {
+    return this._retries;
   }
 
-  markPublished() {
-    return (this.status = 'PUBLISHED');
-  }
-
-  recordFailureToProcess() {
-    this.retries++;
-    if (this.retries === 3) {
-      this.status = 'FAILED';
-      return;
-    }
-
-    this.status = 'RETRYING';
-  }
-
-  getRetries() {
-    return this.retries;
+  get status() {
+    return this._status;
   }
 
   public serializeData() {
@@ -47,15 +31,30 @@ export class DomainEvent {
     return JSON.stringify(this);
   }
 
-  public static toDomain(eventModel: EventModel): DomainEvent {
-    return new DomainEvent(
+  public markPublished() {
+    this._status = 'PUBLISHED';
+  }
+
+  public recordFailureToProcess() {
+    this._retries++;
+
+    if (this.retries === 3) {
+      this._status = 'FAILED';
+      return;
+    }
+
+    this._status = 'RETRYING';
+  }
+
+  public static toDomain<T>(eventModel: EventModel): DomainEvent<T> {
+    return new DomainEvent<T>(
       eventModel.name,
-      JSON.parse(eventModel.data),
       eventModel.aggregateId,
+      JSON.parse(eventModel.data) as T,
       eventModel.id,
       eventModel.retries,
       eventModel.status as DomainEventStatus,
-      eventModel.dateCreated.toISOString(),
+      eventModel.createdAt.toISOString(),
     );
   }
 }
