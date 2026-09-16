@@ -63,7 +63,9 @@ export class CommentVote extends AggregateRoot {
       return;
     }
     this.props.voteState = 'Upvoted';
-    this.domainEvents.push(new CommentUpvoted(this.id, this.props.memberId));
+    this.domainEvents.push(
+      new CommentUpvoted(this.id, this.commentId, this.props.memberId),
+    );
   }
 
   private downvote() {
@@ -71,7 +73,9 @@ export class CommentVote extends AggregateRoot {
       return;
     }
     this.props.voteState = 'Downvoted';
-    this.domainEvents.push(new CommentDownvoted(this.id, this.props.memberId));
+    this.domainEvents.push(
+      new CommentDownvoted(this.id, this.props.commentId, this.props.memberId),
+    );
   }
 
   public static toDomain(props: CommentVoteProps): CommentVote {
