@@ -25,6 +25,7 @@ type NetworkError = 'NETWORK_ERROR';
 export type VoteOnPostError =
   | PostNotFoundError
   | MemberNotFoundError
+  | CommentNotFoundError
   | ForbiddenError
   | RequestError
   | ServerError

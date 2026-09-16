@@ -10,7 +10,7 @@ import {
   MembersModule,
   VotesModule,
 } from '../../modules';
-import { Application } from '../application/application-interface';
+import { IApplication } from '../application/application-interface';
 import { Config } from '../config';
 import { errorHandler } from '../errors';
 import { WebServer } from '../infra/http';
@@ -25,7 +25,7 @@ export class CompositionRoot {
   private config: Config;
   private eventBus: IEventBus;
   private dbConnection: PrismaDatabase;
-  private webServer!: WebServer;
+  private webServer: WebServer;
 
   private usersModule!: UsersModule;
   private marketingModule!: MarketingModule;
@@ -80,15 +80,17 @@ export class CompositionRoot {
   public async stop(): Promise<void> {
     await this.webServer.stop();
     await this.eventBus.stop();
+    await this.dbConnection.disconnect();
   }
 
   // ---------------------------------------------------------------------------
   // Public API — Accessors
   // ---------------------------------------------------------------------------
 
-  public getApplication(): Application {
+  public getApplication(): IApplication {
     return {
       users: this.usersModule.getUsersService(),
+      members: this.membersModule.getMembersService(),
       posts: this.postsModule.getPostsService(),
       marketing: this.marketingModule.getMarketingService(),
       notifications: this.notificationsModule.getNotificationsService(),

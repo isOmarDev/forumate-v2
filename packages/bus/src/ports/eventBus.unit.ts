@@ -2,7 +2,7 @@ import { DomainEvent } from '@forumate/core';
 
 import { InMemoryEventBus } from '../adapters/inMemoryEventBus';
 
-import { EventBus } from './eventBus';
+import { IEventBus } from './eventBus';
 
 class TestEvent extends DomainEvent {
   constructor(public data: string) {
@@ -17,7 +17,7 @@ class AnotherTestEvent extends DomainEvent {
 }
 
 describe('EventBus', () => {
-  let eventBus: EventBus;
+  let eventBus: IEventBus;
 
   beforeEach(() => {
     eventBus = new InMemoryEventBus();

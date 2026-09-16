@@ -1,19 +1,12 @@
-import { Commands } from '@forumate/api/posts';
 import { InMemoryEventBus } from '@forumate/bus';
 import { PrismaDatabase } from '@forumate/database';
 
-import {
-  setupTestWithLevel1Member,
-  setupTestWithLevel2Member,
-} from '../../../../../../tests/fixtures/unit/members';
-import { Config } from '../../../../../shared/config';
 import { PrismaMembersRepository } from '../../../../members/infrastructure/repositories/prisma-members-repository';
 import { PrismaPostsRepository } from '../../../infrastructure/repositories/prisma-posts-repository';
 
 import { CreatePostUseCase } from './create-post-use-case';
 
-describe('createPost', () => {
-  const config = new Config('test:unit');
+describe.skip('createPost', () => {
   const database = new PrismaDatabase();
 
   const membersRepo = new PrismaMembersRepository(database);

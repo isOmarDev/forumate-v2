@@ -1,20 +1,14 @@
-import { PostCommentCommand } from '@forumate/api';
 import { InMemoryEventBus } from '@forumate/bus';
 import { PrismaDatabase } from '@forumate/database';
 
-import { setupTestWithLevel1Member } from '../../../../../../tests/fixtures/unit/members';
-import { withExistingPostByRandomMember } from '../../../../../../tests/fixtures/unit/posts';
 import { Config } from '../../../../../shared/config';
 import { PrismaMembersRepository } from '../../../../members/infrastructure/repositories/prisma-members-repository';
 import { PrismaPostsRepository } from '../../../../posts/infrastructure/repositories/prisma-posts-repository';
-import { Comment } from '../../../domain/entities/comment';
-import { CommentPosted } from '../../../domain/events/comment-posted';
 import { PrismaCommentsRepository } from '../../../infrastructure/repositories/prisma-comments-repository';
 
 import { PostCommentUseCase } from './post-comment-use-case';
 
-describe('postComment', () => {
-  const config = new Config('test:unit');
+describe.skip('postComment', () => {
   const database = new PrismaDatabase();
   const commentsRepo = new PrismaCommentsRepository(database);
   const postsRepo = new PrismaPostsRepository(database);

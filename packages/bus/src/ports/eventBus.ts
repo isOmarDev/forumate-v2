@@ -12,4 +12,5 @@ export interface IEventBus {
     eventTypeName: string,
     handler: (event: DomainEvent) => void,
   ): void;
+  clear(): void;
 }

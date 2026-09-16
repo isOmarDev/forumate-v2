@@ -17,11 +17,6 @@ type RequestError = RequestErrorCode;
 type ServerError = ServerErrorCode;
 type NetworkError = 'NETWORK_ERROR';
 
-// Get Posts Response
-export type GetPostsErrors = ServerError | NetworkError | RequestError;
-
-export type GetPostsApiResponse = ApiResponse<PostDto[], GetPostsErrors>;
-
 // Create Post Response
 export type CreatePostError =
   | MemberNotFoundError
@@ -32,8 +27,14 @@ export type CreatePostError =
 
 export type CreatePostApiResponse = ApiResponse<PostDto, CreatePostError>;
 
+// Get Posts Response
+export type GetPostsErrors = ServerError | NetworkError | RequestError;
+
+export type GetPostsApiResponse = ApiResponse<PostDto[], GetPostsErrors>;
+
 // Get Post by ID Response
 export type GetPostByIdError = ServerError | NetworkError | RequestError;
+
 export type GetPostByIdApiResponse = ApiResponse<PostDto, GetPostByIdError>;
 
 // Get Post Details Response

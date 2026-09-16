@@ -1,5 +1,4 @@
 import { GetPostsQuery } from '@forumate/api/posts';
-import { DomainEvent } from '@forumate/core';
 import { DatabaseError } from '@forumate/errors/server';
 
 import type { IPostsRepository } from '../../application/ports/posts-repository';

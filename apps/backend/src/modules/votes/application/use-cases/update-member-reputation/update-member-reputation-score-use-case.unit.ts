@@ -5,9 +5,7 @@ import { UpdateMemberReputationScoreCommand } from '@forumate/api/votes';
 import { InMemoryEventBus } from '@forumate/bus';
 import { PrismaDatabase } from '@forumate/database';
 
-import { Config } from '../../../../../shared/config';
-import { Member } from '../../../../members/domain/entities/member';
-import { MemberUsername } from '../../../../members/domain/value-objects/member-username';
+import { MemberMap } from '../../../../members/application/mappers/member-map';
 import { PrismaMembersRepository } from '../../../../members/infrastructure/repositories/prisma-members-repository';
 import { prismaVotesRepository } from '../../../infrastructure/repositories/prisma-votes-repo';
 import { MemberCommentVotesRoundup } from '../../read-models/member-comment-votes-roundup';
@@ -28,12 +26,12 @@ function setupTest({
 }) {
   jest.resetAllMocks();
 
-  const member = Member.toDomain({
+  const member = MemberMap.toDomain({
+    id: randomUUID(),
     userId: randomUUID(),
-    username: MemberUsername.toDomain('jill1234'),
+    username: 'jill1234',
     reputationScore,
     reputationLevel,
-    id: randomUUID(),
   });
 
   const commentVotesRoundup = MemberCommentVotesRoundup.toDomain({
@@ -64,7 +62,6 @@ function setupTest({
 }
 
 describe('updateMemberReputationScore', () => {
-  const config = new Config('test:unit');
   const database = new PrismaDatabase();
 
   const membersRepo = new PrismaMembersRepository(database);
@@ -103,7 +100,7 @@ describe('updateMemberReputationScore', () => {
 
       const response = await useCase.execute(command);
 
-      expect(response.isSuccess()).toBe(true);
+      expect(response.isSuccess).toBe(true);
       const updatedMember = response.getValue();
       expect(updatedMember.reputationScore).toBe(6);
       expect(updatedMember.reputationLevel).toBe(ReputationLevel.Level2);

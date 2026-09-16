@@ -1,5 +1,3 @@
-import { Types } from '@forumate/api';
-
 import { Member } from '../../../members/domain/entities/member';
 
 export class CanCreatePostPolicy {

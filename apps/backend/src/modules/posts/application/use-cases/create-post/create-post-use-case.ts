@@ -5,7 +5,6 @@ import { NotFoundError, ValidationError } from '@forumate/errors/application';
 
 import type { IMembersRepository } from '../../../../members/application/ports/members-repository';
 import { Post } from '../../../domain/entities/post';
-import { CanCreatePostPolicy } from '../../../domain/policies/can-create-post';
 import type { IPostsRepository } from '../../ports/posts-repository';
 
 export type CreatePostError = ValidationError | NotFoundError;
@@ -16,8 +15,8 @@ export class CreatePostUseCase implements IUseCase<
   CreatePostResponse
 > {
   constructor(
-    private postRepository: IPostsRepository,
-    private memberRepository: IMembersRepository,
+    private postsRepository: IPostsRepository,
+    private membersRepository: IMembersRepository,
     private eventBus: IEventBus,
   ) {}
 

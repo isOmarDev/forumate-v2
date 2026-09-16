@@ -3,11 +3,9 @@ import {
   PostCommentCommand,
 } from '@forumate/api/comments';
 import { IEventBus } from '@forumate/bus';
-import { Result } from '@forumate/core';
 
 import type { IMembersRepository } from '../../members/application/ports/members-repository';
 import type { IPostsRepository } from '../../posts/application/ports/posts-repository';
-import { Comment } from '../domain/entities/comment';
 
 import type { ICommentsRepository } from './ports/comments-repository';
 import { GetCommentsByPostIdUseCase, PostCommentUseCase } from './use-cases';
