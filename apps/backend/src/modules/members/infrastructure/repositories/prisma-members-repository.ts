@@ -7,7 +7,7 @@ import { Member } from '../../domain/entities/member';
 export class PrismaMembersRepository implements IMembersRepository {
   constructor(private database: IDatabase) {}
 
-  async getMemberByUserId(userId: string): Promise<Member | null> {
+  async getByUserId(userId: string): Promise<Member | null> {
     const connection = this.database.getClient();
     const memberData = await connection.member.findUnique({
       where: { userId: userId },
@@ -20,7 +20,7 @@ export class PrismaMembersRepository implements IMembersRepository {
     return MemberMap.toDomain(memberData);
   }
 
-  async findUserByUsername(username: string): Promise<Member | null> {
+  async getByUsername(username: string): Promise<Member | null> {
     const connection = this.database.getClient();
     const memberData = await connection.member.findUnique({
       where: { username: username },
@@ -33,7 +33,7 @@ export class PrismaMembersRepository implements IMembersRepository {
     return MemberMap.toDomain(memberData);
   }
 
-  async getMemberById(memberId: string): Promise<Member | null> {
+  async getById(memberId: string): Promise<Member | null> {
     const connection = this.database.getClient();
     const memberData = await connection.member.findUnique({
       where: { id: memberId },
