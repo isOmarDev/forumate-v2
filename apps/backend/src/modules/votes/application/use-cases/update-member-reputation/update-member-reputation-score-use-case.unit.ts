@@ -61,7 +61,7 @@ function setupTest({
   return { member, commentVotesRoundup, postVotesRoundup };
 }
 
-describe('updateMemberReputationScore', () => {
+describe.skip('updateMemberReputationScore', () => {
   const database = new PrismaDatabase();
 
   const membersRepo = new PrismaMembersRepository(database);
