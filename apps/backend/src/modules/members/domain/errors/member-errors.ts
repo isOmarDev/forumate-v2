@@ -2,6 +2,7 @@ import {
   ValidationError,
   NotFoundError,
   ForbiddenError,
+  ConflictError,
 } from '@forumate/errors/application';
 import { memberErrorCodes } from '@forumate/errors/domain';
 
@@ -26,5 +27,21 @@ export class InsufficientMemberLevelError extends ForbiddenError {
 
   constructor() {
     super('You do not have permission to create a post.');
+  }
+}
+
+export class MemberAlreadyExistsError extends ConflictError {
+  readonly code = memberErrorCodes.MEMBER_ALREADY_EXISTS;
+
+  constructor() {
+    super('A member already exists for this user.');
+  }
+}
+
+export class MemberUsernameAlreadyExistsError extends ConflictError {
+  readonly code = memberErrorCodes.MEMBER_USERNAME_ALREADY_EXISTS;
+
+  constructor() {
+    super('This username is already taken.');
   }
 }
