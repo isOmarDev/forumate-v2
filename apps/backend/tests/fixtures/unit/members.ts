@@ -3,7 +3,6 @@
 import { ReputationLevel } from '@forumate/api';
 
 import { PostCommentUseCase } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment-use-case';
-import { MemberMap } from '../../../src/modules/members/application/mappers/member-map';
 import { Member } from '../../../src/modules/members/domain/entities/member';
 import { MemberUsername } from '../../../src/modules/members/domain/value-objects/member-username';
 import { CreatePostUseCase } from '../../../src/modules/posts/application/use-cases/create-post/create-post-use-case';
@@ -31,10 +30,10 @@ export function setupTestWithLevel2Member(
 ) {
   jest.resetAllMocks();
 
-  const level2Member = MemberMap.toDomain({
+  const level2Member = Member.reconstitute({
     id: 'bf6b4773-feea-44cd-a951-f0ffd68625ea',
     userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
-    username: 'jill-12345',
+    username: MemberUsername.create('jill-12345').getValue(),
     reputationScore: 10,
     reputationLevel: ReputationLevel.Level2,
   });
