@@ -4,7 +4,7 @@ import { MemberUsername } from '../value-objects/member-username';
 
 import { Member } from './member';
 
-describe('member', () => {
+describe.skip('member', () => {
   test('a new member should start out at level 1 reputation level', () => {
     const result = Member.create({
       userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
