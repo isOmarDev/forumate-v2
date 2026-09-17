@@ -2,11 +2,12 @@ import { randomUUID } from 'node:crypto';
 
 import { CreateMemberCommand } from '@forumate/api';
 import { IEventBus, InMemoryEventBus } from '@forumate/bus';
+import { memberErrorCodes } from '@forumate/errors/domain';
 
 import { CreateMemberInputBuilder } from '../../../../../../tests/builders/inputs/member-input-builders';
-import { UsernameAlreadyTakenError } from '../../../../users/domain/errors/users-errors';
+import { setupLevel1Member } from '../../../../../../tests/fixtures/unit/members';
 import { Member } from '../../../domain/entities/member';
-import { MemberUsername } from '../../../domain/value-objects/member-username';
+import { MemberUsernameAlreadyExistsError } from '../../../domain/errors/member-errors';
 import { InMemoryMembersRepository } from '../../../infrastructure/repositories/in-memory-members-repository';
 
 import { CreateMemberUseCase } from './create-member-use-case';
@@ -46,41 +47,29 @@ describe('createMember', () => {
     expect(membersRepositorySpy.getTimesMethodCalled('save')).toBe(1);
   });
 
-  test.only('should fail if username is already taken', async () => {
-    const existingMemberInput = new CreateMemberInputBuilder()
-      .withUsername('omarimik')
+  test('should fail if username is already taken', async () => {
+    const existingMember = setupLevel1Member(membersRepositorySpy);
+    console.log(existingMember);
+
+    const memberInput = new CreateMemberInputBuilder()
+      .withUsername(existingMember.username.value)
       .build();
 
-    const memberUsername = MemberUsername.create(
-      existingMemberInput.username,
-    ).getValue();
-
-    const member = Member.create({
-      userId: existingMemberInput.userId,
-      username: memberUsername,
-    }).getValue();
-
-    await membersRepositorySpy.save(member);
-
-    const createMemberInput = new CreateMemberInputBuilder()
-      .withUsername('omarimik')
-      .build();
-
-    const commandOrError = CreateMemberCommand.create(createMemberInput);
+    const commandOrError = CreateMemberCommand.create(memberInput);
     const result = await createMemberUseCase.execute(commandOrError.getValue());
 
     expect(result.isFailure).toBe(true);
-    expect(result.getError()).toBeInstanceOf(UsernameAlreadyTakenError);
-    expect(result.getError().code).toBe('MEMBER_USERNAME_TAKEN');
+    expect(result.getError()).toBeInstanceOf(MemberUsernameAlreadyExistsError);
+    expect(result.getError().code).toBe(
+      memberErrorCodes.MEMBER_USERNAME_ALREADY_EXISTS,
+    );
     expect(result.getError().message).toBeDefined();
 
+    expect(membersRepositorySpy.getTimesMethodCalled('getByUsername')).toBe(1);
     expect(membersRepositorySpy.getTimesMethodCalled('save')).toBe(0);
-    expect(
-      membersRepositorySpy.getTimesMethodCalled('findUserByUsername'),
-    ).toBe(1);
   });
 
-  test('should fail if validation fails', async () => {
+  test.only('should fail if validation fails', async () => {
     // Implement
     throw new Error('Not yet implemented');
   });
