@@ -4,7 +4,7 @@ import { CreateMemberInput } from '@forumate/api';
 
 export class CreateMemberInputBuilder {
   private props: CreateMemberInput = {
-    username: faker.internet.username(),
+    username: faker.string.alphanumeric({ length: { min: 5, max: 15 } }),
     email: faker.internet.email(),
     userId: faker.string.uuid(),
   };
