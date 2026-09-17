@@ -5,7 +5,9 @@ import { ReputationLevel } from '@forumate/api';
 import { PostCommentUseCase } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment-use-case';
 import { Member } from '../../../src/modules/members/domain/entities/member';
 import { MemberUsername } from '../../../src/modules/members/domain/value-objects/member-username';
+import { InMemoryMembersRepository } from '../../../src/modules/members/infrastructure/repositories/in-memory-members-repository';
 import { CreatePostUseCase } from '../../../src/modules/posts/application/use-cases/create-post/create-post-use-case';
+import { CreateMemberInputBuilder } from '../../builders/inputs/member-input-builders';
 
 export function setupTestWithLevel1Member(
   useCase: CreatePostUseCase | PostCommentUseCase,
@@ -43,4 +45,21 @@ export function setupTestWithLevel2Member(
     .mockResolvedValue(level2Member);
 
   return level2Member;
+}
+
+export function setupLevel1Member(repositorySpy: InMemoryMembersRepository) {
+  const memberInput = new CreateMemberInputBuilder()
+    .withUsername('omar124')
+    .build();
+
+  const username = MemberUsername.create(memberInput.username).getValue();
+
+  const member = Member.create({
+    userId: memberInput.userId,
+    username,
+  }).getValue();
+
+  repositorySpy.seed(member);
+
+  return member;
 }
