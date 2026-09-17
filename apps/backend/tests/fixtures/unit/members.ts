@@ -48,9 +48,7 @@ export function setupTestWithLevel2Member(
 }
 
 export function setupLevel1Member(repositorySpy: InMemoryMembersRepository) {
-  const memberInput = new CreateMemberInputBuilder()
-    .withUsername('omar124')
-    .build();
+  const memberInput = new CreateMemberInputBuilder().build();
 
   const username = MemberUsername.create(memberInput.username).getValue();
 
