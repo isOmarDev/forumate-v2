@@ -7,7 +7,10 @@ import { memberErrorCodes } from '@forumate/errors/domain';
 import { CreateMemberInputBuilder } from '../../../../../../tests/builders/inputs/member-input-builders';
 import { setupLevel1Member } from '../../../../../../tests/fixtures/unit/members';
 import { Member } from '../../../domain/entities/member';
-import { MemberUsernameAlreadyExistsError } from '../../../domain/errors/member-errors';
+import {
+  MemberAlreadyExistsError,
+  MemberUsernameAlreadyExistsError,
+} from '../../../domain/errors/member-errors';
 import { InMemoryMembersRepository } from '../../../infrastructure/repositories/in-memory-members-repository';
 
 import { CreateMemberUseCase } from './create-member-use-case';
@@ -49,7 +52,6 @@ describe('createMember', () => {
 
   test('should fail if username is already taken', async () => {
     const existingMember = setupLevel1Member(membersRepositorySpy);
-    console.log(existingMember);
 
     const memberInput = new CreateMemberInputBuilder()
       .withUsername(existingMember.username.value)
@@ -69,8 +71,22 @@ describe('createMember', () => {
     expect(membersRepositorySpy.getTimesMethodCalled('save')).toBe(0);
   });
 
-  test.only('should fail if validation fails', async () => {
-    // Implement
-    throw new Error('Not yet implemented');
+  test.only('should fail if member already exists', async () => {
+    const existingMember = setupLevel1Member(membersRepositorySpy);
+
+    const memberInput = new CreateMemberInputBuilder()
+      .withUserId(existingMember.userId)
+      .build();
+
+    const commandOrError = CreateMemberCommand.create(memberInput);
+    const result = await createMemberUseCase.execute(commandOrError.getValue());
+
+    expect(result.isFailure).toBe(true);
+    expect(result.getError()).toBeInstanceOf(MemberAlreadyExistsError);
+    expect(result.getError().code).toBe(memberErrorCodes.MEMBER_ALREADY_EXISTS);
+    expect(result.getError().message).toBeDefined();
+
+    expect(membersRepositorySpy.getTimesMethodCalled('getByUserId')).toBe(1);
+    expect(membersRepositorySpy.getTimesMethodCalled('save')).toBe(0);
   });
 });
