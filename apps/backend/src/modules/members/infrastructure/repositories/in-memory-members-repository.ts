@@ -8,24 +8,24 @@ export class InMemoryMembersRepository
 {
   private members: Member[] = [];
 
-  public findUserByUsername(username: string): Promise<Member | null> {
-    this.addCall('findUserByUsername', [username]);
+  public getByUsername(username: string): Promise<Member | null> {
+    this.addCall('getByUsername', [username]);
 
     return Promise.resolve(
       this.members.find((member) => member.username.value === username) ?? null,
     );
   }
 
-  public getMemberByUserId(userId: string): Promise<Member | null> {
-    this.addCall('getMemberByUserId', [userId]);
+  public getByUserId(userId: string): Promise<Member | null> {
+    this.addCall('getByUserId', [userId]);
 
     return Promise.resolve(
       this.members.find((member) => member.userId === userId) ?? null,
     );
   }
 
-  public getMemberById(memberId: string): Promise<Member | null> {
-    this.addCall('getMemberById', [memberId]);
+  public getById(memberId: string): Promise<Member | null> {
+    this.addCall('getById', [memberId]);
 
     return Promise.resolve(
       this.members.find((member) => member.id === memberId) ?? null,
@@ -43,5 +43,13 @@ export class InMemoryMembersRepository
   public async reset(): Promise<void> {
     this.members = [];
     this.calls = [];
+  }
+
+  public seed(...members: Member[]): void {
+    this.members.push(...members);
+  }
+
+  public getAll(): Member[] {
+    return this.members;
   }
 }
