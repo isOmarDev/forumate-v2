@@ -32,6 +32,7 @@
     "db:reset": "pnpm --filter @forumate/database reset",
     "db:studio": "pnpm --filter @forumate/database studio",
     "test:unit:back": "pnpm --filter @forumate/backend test:unit",
+    "test:unit:back:watch": "pnpm --filter @forumate/backend test:unit:watch",
     "test:infra:back": "pnpm --filter @forumate/backend test:infra",
     "test:e2e:back": "pnpm --filter @forumate/backend test:e2e",
     "test:e2e:front": "pnpm --filter @forumate/frontend test:e2e"
