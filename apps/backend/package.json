@@ -11,6 +11,7 @@
     "test:e2e": "tsx run-jest.ts -c jest.config.e2e.ts",
     "test:infra": "tsx run-jest.ts -c jest.config.infra.ts",
     "test:unit": "tsx run-jest.ts -c jest.config.unit.ts",
+    "test:unit:watch": "pnpm test:unit --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
