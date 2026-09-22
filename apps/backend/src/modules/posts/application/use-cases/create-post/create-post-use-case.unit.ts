@@ -1,32 +1,67 @@
-import { InMemoryEventBus } from '@forumate/bus';
-import { PrismaDatabase } from '@forumate/database';
+import { CreatePostCommand } from '@forumate/api';
+import { IEventBus, InMemoryEventBus } from '@forumate/bus';
+import { memberErrorCodes } from '@forumate/errors';
 
-import { PrismaMembersRepository } from '../../../../members/infrastructure/repositories/prisma-members-repository';
-import { PrismaPostsRepository } from '../../../infrastructure/repositories/prisma-posts-repository';
+import { CreateTextPostInputBuilder } from '../../../../../../tests/builders/inputs/post-input-builders';
+import { setupLevel1Member } from '../../../../../../tests/fixtures/unit/members';
+import { InsufficientMemberLevelError } from '../../../../members/domain/errors/member-errors';
+import { InMemoryMembersRepository } from '../../../../members/infrastructure/repositories/in-memory-members-repository';
+import { InMemoryPostsRepository } from '../../../infrastructure/repositories/in-memory-posts-repository';
 
 import { CreatePostUseCase } from './create-post-use-case';
 
-describe.skip('createPost', () => {
-  const database = new PrismaDatabase();
+describe('createPost', () => {
+  let createPostUseCase: CreatePostUseCase;
+  let postsRepositorySpy: InMemoryPostsRepository;
+  let membersRepositorySpy: InMemoryMembersRepository;
+  let eventBus: IEventBus;
 
-  const membersRepo = new PrismaMembersRepository(database);
-  const postsRepo = new PrismaPostsRepository(database);
-  const eventBus = new InMemoryEventBus();
+  beforeEach(() => {
+    postsRepositorySpy = new InMemoryPostsRepository();
+    membersRepositorySpy = new InMemoryMembersRepository();
+    eventBus = new InMemoryEventBus();
 
-  const useCase = new CreatePostUseCase(postsRepo, membersRepo, eventBus);
+    createPostUseCase = new CreatePostUseCase(
+      postsRepositorySpy,
+      membersRepositorySpy,
+      eventBus,
+    );
+  });
+
+  afterEach(() => {
+    postsRepositorySpy.reset();
+    membersRepositorySpy.reset();
+    eventBus.clear();
+  });
 
   describe('permissions & identity', () => {
-    test('if the member was not found, they should not be able to create the post', async () => {
-      // Implement!
-      throw new Error('To be implemented');
-    });
+    test.only('as a level 1 member, I should not be able to create a new post', async () => {
+      const level1Member = setupLevel1Member(membersRepositorySpy);
+      const eventBusSpy = jest.spyOn(eventBus, 'publishEvents');
 
-    test('as a level 1 member, I should not be able to create a new post', async () => {
-      // Implement!
-      throw new Error('To be implemented');
+      const textPostInput = new CreateTextPostInputBuilder()
+        .withMemberId(level1Member.id)
+        .build();
+      const commandOrError = CreatePostCommand.create(textPostInput);
+      const result = await createPostUseCase.execute(commandOrError.getValue());
+
+      expect(result.isFailure).toBe(true);
+      expect(result.getError()).toBeInstanceOf(InsufficientMemberLevelError);
+      expect(result.getError().code).toBe(
+        memberErrorCodes.INSUFFICIENT_MEMBER_LEVEL,
+      );
+      expect(result.getError().message).toBeDefined();
+
+      expect(postsRepositorySpy.getTimesMethodCalled('save')).toBe(0);
+      expect(eventBusSpy).not.toHaveBeenCalled();
     });
 
     test('as a level 2 member, I should be able to create a new post', async () => {
+      // Implement!
+      throw new Error('To be implemented');
+    });
+
+    test('if the member was not found, they should not be able to create the post', async () => {
       // Implement!
       throw new Error('To be implemented');
     });
