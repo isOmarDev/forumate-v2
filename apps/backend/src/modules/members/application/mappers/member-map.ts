@@ -14,20 +14,18 @@ type MemberPersistence = Omit<MemberModel, 'dateCreated' | 'lastUpdated'>;
 
 class MemberMapper
   implements
-    IToDomainMapper<Member, MemberPersistence>,
+    IToDomainMapper<MemberModel, Member>,
     IToDtoMapper<Member, MemberDto>,
     IToPersistenceMapper<Member, MemberPersistence>
 {
-  toDomain(persistence: MemberPersistence): Member {
-    const memberOrError = Member.reconstitute({
+  toDomain(persistence: MemberModel): Member {
+    return Member.reconstitute({
       id: persistence.id,
       userId: persistence.userId,
       username: MemberUsernameMap.toDomain(persistence.username),
       reputationScore: persistence.reputationScore,
       reputationLevel: persistence.reputationLevel as ReputationLevel,
     });
-
-    return memberOrError.getValue();
   }
 
   toDTO(domain: Member): MemberDto {
