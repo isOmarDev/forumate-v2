@@ -38,7 +38,7 @@ model Member {
 model Post {
   id             String     @id @default(uuid())
   memberPostedBy Member     @relation(fields: [memberId], references: [id])
-  memberId       String // Foreign key to the Member table
+  memberId       String
   postType       PostType
   title          String
   content        String?
@@ -48,7 +48,7 @@ model Post {
   lastUpdated    DateTime   @updatedAt
   postVotes      PostVote[]
   voteScore      Int        @default(0)
-  slug           String
+  slug           String     @unique
 }
 
 model Comment {
