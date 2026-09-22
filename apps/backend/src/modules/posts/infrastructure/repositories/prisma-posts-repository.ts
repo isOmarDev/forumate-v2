@@ -8,7 +8,8 @@ import {
 import { DatabaseError } from '@forumate/errors/server';
 
 import { MemberReadModel } from '../../../members/application/read-models/member-read-model';
-import type { IPostsRepository } from '../../application/ports/posts-repository';
+import { PostMap } from '../../application/mappers/post-map';
+import type { IPostsRepository, IPostsQueries } from '../../application/ports';
 import { PostReadModel } from '../../application/read-models/post-read-model';
 import { Post } from '../../domain/entities/post';
 
@@ -16,7 +17,7 @@ type PostModelWithMember = PostModel & {
   memberPostedBy: MemberModel;
 };
 
-export class PrismaPostsRepository implements IPostsRepository {
+export class PrismaPostsRepository implements IPostsRepository, IPostsQueries {
   constructor(private database: IDatabase) {}
 
   async getPostById(id: string): Promise<Post | null> {
@@ -32,7 +33,44 @@ export class PrismaPostsRepository implements IPostsRepository {
       return null;
     }
 
-    return Post.toDomain(post);
+    return PostMap.toDomain(post);
+  }
+
+  async save(
+    post: Post,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<void> {
+    const prismaInstance = transaction ?? this.database.getClient();
+
+    const content = post.postType === 'text' ? post.content : null;
+    const link = post.postType === 'link' ? post.link : null;
+
+    try {
+      await prismaInstance.post.upsert({
+        where: { id: post.id },
+        update: {
+          memberId: post.memberId,
+          title: post.title,
+          content,
+          link,
+          voteScore: post.voteScore,
+          slug: post.slug,
+        },
+        create: {
+          id: post.id,
+          memberId: post.memberId,
+          title: post.title,
+          content,
+          link,
+          postType: post.postType,
+          voteScore: post.voteScore,
+          slug: post.slug,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      throw new DatabaseError();
+    }
   }
 
   async findPosts(query: GetPostsQuery): Promise<PostReadModel[]> {
@@ -96,41 +134,6 @@ export class PrismaPostsRepository implements IPostsRepository {
       { ...post, voteScore },
       MemberReadModel.fromPrisma(post.memberPostedBy),
     );
-  }
-
-  async save(
-    post: Post,
-    transaction?: Prisma.TransactionClient,
-  ): Promise<void | DatabaseError> {
-    const prismaInstance = transaction
-      ? transaction
-      : this.database.getClient();
-
-    try {
-      await prismaInstance.post.upsert({
-        where: { id: post.id },
-        update: {
-          title: post.title,
-          content: post.content,
-          voteScore: post.voteScore,
-          memberId: post.memberId,
-          slug: post.slug,
-        },
-        create: {
-          id: post.id,
-          title: post.title,
-          postType: post.postType,
-          content: post.content,
-          link: post.link,
-          voteScore: post.voteScore,
-          memberId: post.memberId,
-          slug: post.slug,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-      throw new DatabaseError();
-    }
   }
 
   async getPostBySlug(slug: string): Promise<PostReadModel | null> {
