@@ -9,10 +9,11 @@ export class DomainEvent<T> {
     public readonly name: string,
     public readonly aggregateId: string,
     public readonly data: T,
+
     public readonly id: string = randomUUID(),
+    public readonly createdAt: string = new Date().toISOString(),
     private _retries: number = 0,
     private _status: DomainEventStatus = 'INITIAL',
-    public readonly createdAt: string = new Date().toISOString(),
   ) {}
 
   get retries() {
@@ -52,9 +53,9 @@ export class DomainEvent<T> {
       eventModel.aggregateId,
       JSON.parse(eventModel.data) as T,
       eventModel.id,
+      eventModel.createdAt.toISOString(),
       eventModel.retries,
       eventModel.status as DomainEventStatus,
-      eventModel.createdAt.toISOString(),
     );
   }
 }
