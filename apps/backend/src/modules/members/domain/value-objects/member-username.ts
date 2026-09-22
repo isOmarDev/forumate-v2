@@ -40,4 +40,8 @@ export class MemberUsername extends ValueObject<MemberUsernameProps> {
 
     return success(new MemberUsername({ value: result.data }));
   }
+
+  public static reconstitute(value: string): MemberUsername {
+    return new MemberUsername({ value });
+  }
 }
