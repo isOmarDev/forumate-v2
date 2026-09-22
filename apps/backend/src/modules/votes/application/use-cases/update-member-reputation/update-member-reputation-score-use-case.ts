@@ -4,9 +4,9 @@ import { Result, type IUseCase } from '@forumate/core';
 import { NotFoundError } from '@forumate/errors/application';
 import { DatabaseError } from '@forumate/errors/server';
 
+import { MemberNotFoundError } from '../../../../members/application/errors/member-errors';
 import type { IMembersRepository } from '../../../../members/application/ports/members-repository';
 import { Member } from '../../../../members/domain/entities/member';
-import { MemberNotFoundError } from '../../../../members/domain/errors/member-errors';
 import type { IVotesRepository } from '../../ports/votes-repository';
 
 type UpdateMemberReputationError = NotFoundError | DatabaseError;
@@ -24,7 +24,7 @@ export class UpdateMemberReputationScoreUseCase implements IUseCase<
   UpdateMemberReputationResponse
 > {
   constructor(
-    private memberRepository: IMembersRepository,
+    private membersRepository: IMembersRepository,
     private votesRepository: IVotesRepository,
     private eventBus: IEventBus,
   ) {}
@@ -36,7 +36,7 @@ export class UpdateMemberReputationScoreUseCase implements IUseCase<
 
     const [memberOrNull, commentVotesRoundup, postVotesRoundup] =
       await Promise.all([
-        this.memberRepository.getMemberById(memberId),
+        this.membersRepository.getById(memberId),
         this.votesRepository.getMemberCommentVotesRoundup(memberId),
         this.votesRepository.getMemberPostVotesRoundup(memberId),
       ]);
@@ -58,7 +58,7 @@ export class UpdateMemberReputationScoreUseCase implements IUseCase<
     memberOrNull.updateReputationScore(newScore);
 
     try {
-      await this.memberRepository.save(memberOrNull);
+      await this.membersRepository.save(memberOrNull);
       this.eventBus.publishEvents(memberOrNull.getDomainEvents());
       return Result.success(memberOrNull);
     } catch (err) {
