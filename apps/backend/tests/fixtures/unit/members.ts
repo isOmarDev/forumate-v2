@@ -52,10 +52,14 @@ export function setupLevel1Member(repositorySpy: InMemoryMembersRepository) {
 
   const username = MemberUsername.create(memberInput.username).getValue();
 
-  const member = Member.create({
+  const memberOrError = Member.create({
     userId: memberInput.userId,
     username,
-  }).getValue();
+  });
+
+  expect(memberOrError.isSuccess).toBe(true);
+
+  const member = memberOrError.getValue();
 
   repositorySpy.seed(member);
 
