@@ -16,10 +16,10 @@ export class GetPostByIdUseCase implements IUseCase<
   GetPostByIdQuery,
   GetPostByIdResponse
 > {
-  constructor(private postsRepo: IPostsRepository) {}
+  constructor(private postsRepository: IPostsRepository) {}
 
   async execute(query: GetPostByIdQuery): Promise<GetPostByIdResponse> {
-    const post = await this.postsRepo.getPostById(query.postId);
+    const post = await this.postsRepository.getPostById(query.postId);
 
     if (!post) {
       return fail(new PostNotFoundError());
