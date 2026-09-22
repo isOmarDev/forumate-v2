@@ -2,11 +2,13 @@ import { DomainEvent } from '@forumate/core';
 
 import { IEventBus } from '../ports/eventBus';
 
-type EventHandler<T extends DomainEvent> = (event: T) => void;
+type EventHandler<T extends DomainEvent<unknown>> = (event: T) => void;
 
 export class InMemoryEventBus implements IEventBus {
-  private subscriptions: Map<string, Array<EventHandler<DomainEvent>>> =
-    new Map();
+  private subscriptions: Map<
+    string,
+    Array<EventHandler<DomainEvent<unknown>>>
+  > = new Map();
 
   async initialize(): Promise<void> {
     // No-op
@@ -16,9 +18,9 @@ export class InMemoryEventBus implements IEventBus {
     // No-op
   }
 
-  publishEvents(events: DomainEvent[]): void {
+  publishEvents(events: DomainEvent<unknown>[]): void {
     events.forEach((event) => {
-      const eventType = event.constructor.name;
+      const eventType = event.name;
       const handlers = this.subscriptions.get(eventType);
 
       if (handlers) {
@@ -28,18 +30,21 @@ export class InMemoryEventBus implements IEventBus {
     });
   }
 
-  subscribe<T extends DomainEvent>(
+  subscribe<T extends DomainEvent<unknown>>(
     eventTypeName: string,
     handler: EventHandler<T>,
   ): void {
     const handlers = this.subscriptions.get(eventTypeName) ?? [];
 
-    handlers.push(handler as EventHandler<DomainEvent>);
+    handlers.push(handler as EventHandler<DomainEvent<unknown>>);
 
     this.subscriptions.set(eventTypeName, handlers);
   }
 
-  unsubscribe(eventTypeName: string, handler: EventHandler<DomainEvent>): void {
+  unsubscribe(
+    eventTypeName: string,
+    handler: EventHandler<DomainEvent<unknown>>,
+  ): void {
     const handlers = this.subscriptions.get(eventTypeName);
 
     if (!handlers) {
