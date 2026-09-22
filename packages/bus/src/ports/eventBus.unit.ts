@@ -4,15 +4,19 @@ import { InMemoryEventBus } from '../adapters/inMemoryEventBus';
 
 import { IEventBus } from './eventBus';
 
-class TestEvent extends DomainEvent {
-  constructor(public data: string) {
-    super('testEventId', new Date(), 'TestEvent');
+type EventData = { data: string };
+type TestEventData = EventData;
+type AnotherTestEventData = EventData;
+
+class TestEvent extends DomainEvent<TestEventData> {
+  constructor(data: string) {
+    super('TestEvent', 'testEventId', { data });
   }
 }
 
-class AnotherTestEvent extends DomainEvent {
-  constructor(public data: string) {
-    super('anotherTestEventId', new Date(), 'AnotherTestEvent');
+class AnotherTestEvent extends DomainEvent<AnotherTestEventData> {
+  constructor(data: string) {
+    super('AnotherTestEvent', 'anotherTestEventId', { data });
   }
 }
 
