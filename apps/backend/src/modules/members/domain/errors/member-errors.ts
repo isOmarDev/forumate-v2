@@ -1,6 +1,5 @@
 import {
   ValidationError,
-  NotFoundError,
   ForbiddenError,
   ConflictError,
 } from '@forumate/errors/application';
@@ -14,19 +13,13 @@ export class InvalidMemberUsernameError extends ValidationError {
   }
 }
 
-export class MemberNotFoundError extends NotFoundError {
-  readonly code = memberErrorCodes.MEMBER_NOT_FOUND;
-
-  constructor() {
-    super('Member not found');
-  }
-}
-
 export class InsufficientMemberLevelError extends ForbiddenError {
   readonly code = memberErrorCodes.INSUFFICIENT_MEMBER_LEVEL;
 
-  constructor() {
-    super('You do not have permission to create a post.');
+  constructor(
+    message: string = 'Member level is insufficient for this action.',
+  ) {
+    super(message);
   }
 }
 
