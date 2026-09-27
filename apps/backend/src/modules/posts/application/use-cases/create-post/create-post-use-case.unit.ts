@@ -1,5 +1,5 @@
 import { CreatePostCommand } from '@forumate/api';
-import { IEventBus, InMemoryEventBus } from '@forumate/bus';
+import { type IEventBus, InMemoryEventBus } from '@forumate/bus';
 import { memberErrorCodes } from '@forumate/errors';
 
 import { CreateTextPostInputBuilder } from '../../../../../../tests/builders/inputs/post-input-builders';
