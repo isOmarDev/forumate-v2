@@ -32,6 +32,8 @@ function setupTest({
     username: 'jill1234',
     reputationScore,
     reputationLevel,
+    dateCreated: new Date(),
+    lastUpdated: new Date(),
   });
 
   const commentVotesRoundup = MemberCommentVotesRoundup.toDomain({
@@ -48,9 +50,7 @@ function setupTest({
     memberId: member.id,
   });
 
-  useCase['memberRepository'].getMemberById = jest
-    .fn()
-    .mockResolvedValue(member);
+  useCase['membersRepository'].getById = jest.fn().mockResolvedValue(member);
   useCase['votesRepository'].getMemberPostVotesRoundup = jest
     .fn()
     .mockResolvedValue(postVotesRoundup);
@@ -91,7 +91,7 @@ describe.skip('updateMemberReputationScore', () => {
       });
 
       const saveSpy = jest
-        .spyOn(useCase['memberRepository'], 'save')
+        .spyOn(useCase['membersRepository'], 'save')
         .mockImplementation(async () => {});
 
       const command = new UpdateMemberReputationScoreCommand({

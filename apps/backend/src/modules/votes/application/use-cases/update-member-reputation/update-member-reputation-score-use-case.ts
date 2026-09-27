@@ -4,9 +4,9 @@ import { Result, type IUseCase } from '@forumate/core';
 import { NotFoundError } from '@forumate/errors/application';
 import { DatabaseError } from '@forumate/errors/server';
 
-import { MemberNotFoundError } from '../../../../members/application/errors/member-errors';
 import type { IMembersRepository } from '../../../../members/application/ports/members-repository';
 import { Member } from '../../../../members/domain/entities/member';
+import { MemberNotFoundError } from '../../../../members/domain/errors/member-errors';
 import type { IVotesRepository } from '../../ports/votes-repository';
 
 type UpdateMemberReputationError = NotFoundError | DatabaseError;
