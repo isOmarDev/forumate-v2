@@ -7,6 +7,7 @@ import { IEventBus } from '@forumate/bus';
 
 import type { IMembersRepository } from '../../members/application/ports/members-repository';
 
+import { IPostsQueries } from './ports';
 import type { IPostsRepository } from './ports/posts-repository';
 import {
   CreatePostUseCase,
@@ -17,28 +18,28 @@ import {
 
 export class PostsService {
   constructor(
-    private postsRepo: IPostsRepository,
-    private membersRepo: IMembersRepository,
+    private postsRepository: IPostsRepository & IPostsQueries,
+    private membersRepository: IMembersRepository,
     private eventBus: IEventBus,
   ) {}
 
   async createPost(command: CreatePostCommand) {
     return new CreatePostUseCase(
-      this.postsRepo,
-      this.membersRepo,
+      this.postsRepository,
+      this.membersRepository,
       this.eventBus,
     ).execute(command);
   }
 
   async getPosts(query: GetPostsQuery) {
-    return new GetPostsUseCase(this.postsRepo).execute(query);
+    return new GetPostsUseCase(this.postsRepository).execute(query);
   }
 
   async getPostById(query: GetPostByIdQuery) {
-    return new GetPostByIdUseCase(this.postsRepo).execute(query);
+    return new GetPostByIdUseCase(this.postsRepository).execute(query);
   }
 
   async getPostDetailsById(id: string) {
-    return new GetPostDetailsByIdUseCase(this.postsRepo).execute(id);
+    return new GetPostDetailsByIdUseCase(this.postsRepository).execute(id);
   }
 }
