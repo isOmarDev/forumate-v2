@@ -8,6 +8,10 @@ import { AddEmailToListInput, addEmailToListSchema } from './inputs';
 export class AddEmailToListCommand {
   private constructor(readonly props: AddEmailToListInput) {}
 
+  get email() {
+    return this.props.email;
+  }
+
   static create(
     input: unknown,
   ): Result<AddEmailToListCommand, InvalidRequestInputError> {
@@ -18,9 +22,5 @@ export class AddEmailToListCommand {
     }
 
     return success(new AddEmailToListCommand(inputOrError.getValue()));
-  }
-
-  get email() {
-    return this.props.email;
   }
 }
