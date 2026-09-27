@@ -1,8 +1,11 @@
 import { Member } from '../../../members/domain/entities/member';
 
 export class CanCreatePostPolicy {
+  private static readonly REQUIRED_LEVEL_VALUE = 2;
+
   public static isAllowed(member: Member): boolean {
-    // Implement!
-    throw new Error('To be implemented');
+    return member.hasReputationLevelAtLeast(
+      CanCreatePostPolicy.REQUIRED_LEVEL_VALUE,
+    );
   }
 }
