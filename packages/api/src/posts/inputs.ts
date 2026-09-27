@@ -3,27 +3,17 @@ import { z } from 'zod';
 
 import { PostTypeSchema } from './types';
 
-// Create post
+// Create text/link post
 export const TextPostSchema = z.object({
-  title: z
-    .string()
-    .min(5, 'Post title must be at least 5 characters')
-    .max(100, 'Post title must not exceed 100 characters'),
-
-  content: z
-    .string()
-    .min(5, 'Post content must be at least 5 characters')
-    .max(3000, 'Post content must not exceed 3000 characters'),
+  title: z.string().trim().min(1, 'Title is required'),
+  content: z.string().trim().min(1, 'Post content is required'),
   postType: z.literal(PostTypeSchema.enum.text),
   memberId: z.string().min(1, 'Member ID is required'),
 });
 
 export const LinkPostSchema = z.object({
-  title: z
-    .string()
-    .min(5, 'Post title must be at least 5 characters')
-    .max(100, 'Post title must not exceed 100 characters'),
-  link: z.url('Post link must be a valid URL'),
+  title: z.string().trim().min(1, 'Title is required'),
+  link: z.string().trim().min(1, 'Post link is required'),
   postType: z.literal(PostTypeSchema.enum.link),
   memberId: z.string().min(1, 'Member ID is required'),
 });
