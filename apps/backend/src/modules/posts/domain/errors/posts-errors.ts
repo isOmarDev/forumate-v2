@@ -1,7 +1,11 @@
 import z from 'zod';
 
 import { type CreatePostInput } from '@forumate/api/posts';
-import { ValidationError, NotFoundError } from '@forumate/errors/application';
+import {
+  ValidationError,
+  NotFoundError,
+  ForbiddenError,
+} from '@forumate/errors/application';
 import { postErrorCodes } from '@forumate/errors/domain';
 
 export type PostCreationError =
@@ -67,6 +71,14 @@ export class InvalidPostTypeError extends ValidationError {
 }
 
 export class PostNotFoundError extends NotFoundError {
+  readonly code = postErrorCodes.POST_NOT_FOUND;
+
+  constructor() {
+    super('Post not found');
+  }
+}
+
+export class MemberNotAllowedToCreatePostError extends ForbiddenError {
   readonly code = postErrorCodes.POST_NOT_FOUND;
 
   constructor() {
