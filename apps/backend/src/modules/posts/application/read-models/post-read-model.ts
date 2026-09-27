@@ -1,5 +1,5 @@
 import { type PostType, type PostDto } from '@forumate/api/posts';
-import { type Post as PostModel } from '@forumate/database';
+import { type PostModel } from '@forumate/database';
 
 import { MemberReadModel } from '../../../members/application/read-models/member-read-model';
 
