@@ -1,31 +1,21 @@
-import {
-  memberErrorCodes,
-  userErrorCodes,
-  RequestErrorCode,
-} from '@forumate/errors';
-import { ServerErrorCode } from '@forumate/errors/server';
+import { memberErrorCodes, userErrorCodes } from '@forumate/errors';
 
 import { ApiResponse } from '../types';
 
 import { MemberDto } from './dtos';
 
-// Errors
-type MemberNotFoundError = typeof memberErrorCodes.MEMBER_NOT_FOUND;
-type UsernameAlreadyTakenError = typeof userErrorCodes.USERNAME_ALREADY_TAKEN;
-
-type RequestError = RequestErrorCode;
-type ServerError = ServerErrorCode;
-type NetworkError = 'NETWORK_ERROR';
-
 // Create Member Response
-export type CreateMemberError =
-  UsernameAlreadyTakenError | ServerError | RequestError | NetworkError;
+export type CreateMemberDomainError =
+  | typeof memberErrorCodes.MEMBER_NOT_FOUND
+  | typeof userErrorCodes.USERNAME_ALREADY_TAKEN;
 
-export type CreateMemberApiResponse = ApiResponse<MemberDto, CreateMemberError>;
+export type CreateMemberApiResponse = ApiResponse<
+  MemberDto,
+  CreateMemberDomainError
+>;
 
 // Get Member Details Response
-export type GetMemberDetailsError =
-  MemberNotFoundError | ServerError | 'NETWORK_ERROR';
+export type GetMemberDetailsError = typeof memberErrorCodes.MEMBER_NOT_FOUND;
 
 export type GetMemberDetailsApiResponse = ApiResponse<
   MemberDto,
