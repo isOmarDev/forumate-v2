@@ -12,7 +12,7 @@ export class InMemoryMembersRepository
     this.addCall('getByUsername', [username]);
 
     return Promise.resolve(
-      this.members.find((member) => member.username.value === username) ?? null,
+      this.members.find((member) => member.username === username) ?? null,
     );
   }
 
