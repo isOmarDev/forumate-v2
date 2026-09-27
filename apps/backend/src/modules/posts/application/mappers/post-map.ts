@@ -7,7 +7,10 @@ import {
   type PostProps,
 } from '../../domain/entities/post';
 
+import { PostContentMap } from './post-content-map';
+import { PostLinkMap } from './post-link-map';
 import { PostSlugMap } from './post-slug-map';
+import { PostTitleMap } from './post-title-map';
 
 type PostPersistence = Omit<PostModel, 'dateCreated' | 'lastUpdated'>;
 
@@ -20,51 +23,44 @@ class PostMapper
     const base: BasePostProps = {
       id: persistence.id,
       memberId: persistence.memberId,
-      title: persistence.title,
+      title: PostTitleMap.toDomain(persistence.title),
       voteScore: persistence.voteScore,
       slug: PostSlugMap.toDomain(persistence.slug),
     };
 
     const postProps: PostProps =
-      persistence.postType === 'link'
+      persistence.postType === 'text'
         ? {
             ...base,
-            postType: 'link',
-            link: persistence.link!,
+            postType: 'text',
+            content: PostContentMap.toDomain(persistence.content!),
           }
         : {
             ...base,
-            postType: 'text',
-            content: persistence.content!,
+            postType: 'link',
+            link: PostLinkMap.toDomain(persistence.link!),
           };
 
     return Post.reconstitute(postProps);
   }
 
   toPersistence(domain: Post): PostPersistence {
-    if (domain.postType === 'link') {
-      return {
-        id: domain.id,
-        memberId: domain.memberId,
-        postType: 'link',
-        title: domain.title,
-        link: domain.link ?? null,
-        content: null,
-        slug: domain.slug.value,
-        voteScore: domain.voteScore,
-      };
-    }
-
-    return {
+    const base = {
       id: domain.id,
       memberId: domain.memberId,
-      postType: 'text',
       title: domain.title,
-      content: domain.content ?? null,
-      link: null,
-      slug: domain.slug.value,
+      slug: domain.slug,
       voteScore: domain.voteScore,
     };
+
+    return domain.postType === 'link'
+      ? { ...base, postType: 'link', link: domain.link!, content: null }
+      : {
+          ...base,
+          postType: 'text',
+          content: domain.content!,
+          link: null,
+        };
   }
 }
 
