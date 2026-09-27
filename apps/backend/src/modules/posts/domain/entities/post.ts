@@ -1,98 +1,72 @@
 import { randomUUID } from 'node:crypto';
 
-import { z } from 'zod';
+import { AggregateRoot, Result, success } from '@forumate/core';
 
-import { type CreatePostInput } from '@forumate/api/posts';
-import { AggregateRoot } from '@forumate/core';
-import { type PostModel } from '@forumate/database';
-
-import {
-  mapPostValidationError,
-  PostCreationError,
-} from '../errors/posts-errors';
 import { PostCreated } from '../events/post-created';
-import { PostSlug } from '../value-objects/post-slug';
+import { PostContent, PostLink, PostTitle, PostSlug } from '../value-objects';
 
-interface BasePostProps {
+export type CreateTextPostProps = {
+  memberId: string;
+  title: PostTitle;
+  content: PostContent;
+  postType: 'text';
+};
+
+export type CreateLinkPostProps = {
+  memberId: string;
+  title: PostTitle;
+  link: PostLink;
+  postType: 'link';
+};
+
+export type CreatePostProps = CreateTextPostProps | CreateLinkPostProps;
+
+export interface BasePostProps {
   id: string;
   memberId: string;
-  title: string;
+  title: PostTitle;
   voteScore: number;
   slug: PostSlug;
 }
 
 interface TextPostProps extends BasePostProps {
   postType: 'text';
-  content: string;
-  link?: undefined;
+  content: PostContent;
 }
 
 interface LinkPostProps extends BasePostProps {
   postType: 'link';
-  link: string;
-  content?: undefined;
+  link: PostLink;
 }
 
-type PostProps = TextPostProps | LinkPostProps;
-
-// These could be value objects too
-const createTextPostSchema = z.object({
-  postType: z.literal('text'),
-
-  title: z
-    .string()
-    .min(5, 'Post title must be at least 5 characters')
-    .max(100, 'Post title must not exceed 100 characters'),
-
-  content: z
-    .string()
-    .min(5, 'Post content must be at least 5 characters')
-    .max(3000, 'Post content must not exceed 3000 characters'),
-
-  link: z.never().optional(),
-});
-
-const createLinkPostSchema = z.object({
-  postType: z.literal('link'),
-
-  title: z
-    .string()
-    .min(5, 'Post title must be at least 5 characters')
-    .max(100, 'Post title must not exceed 100 characters'),
-
-  link: z.url('Post link must be a valid URL'),
-
-  content: z.never().optional(),
-});
-
-const createPostSchema = z.discriminatedUnion('postType', [
-  createTextPostSchema,
-  createLinkPostSchema,
-]);
+export type PostProps = TextPostProps | LinkPostProps;
 
 export class Post extends AggregateRoot {
-  constructor(private props: PostProps) {
+  private constructor(private props: PostProps) {
     super();
+    this.props = props;
   }
 
   get id() {
     return this.props.id;
   }
 
-  get title() {
-    return this.props.title;
-  }
-
-  get link() {
-    return this.props.link;
-  }
-
   get memberId() {
     return this.props.memberId;
   }
 
-  get content() {
-    return this.props.content;
+  get title() {
+    return this.props.title.value;
+  }
+
+  get content(): string | undefined {
+    return this.props.postType === 'text'
+      ? this.props.content.value
+      : undefined;
+  }
+
+  get link(): string | undefined {
+    return this.props.postType === 'link' ? this.props.link.value : undefined;
   }
 
   get postType() {
@@ -107,49 +81,27 @@ export class Post extends AggregateRoot {
     return this.props.slug.value;
   }
 
-  public static create(input: CreatePostInput): Post | PostCreationError {
-    const { memberId, ...postInput } = input;
-
-    const result = createPostSchema.safeParse(postInput);
-
-    if (!result.success) {
-      return mapPostValidationError(result.error, input);
-    }
-
-    const postId = randomUUID();
-
-    const post = new Post({
-      ...result.data,
-      memberId,
-      id: postId,
+  public static create(input: CreatePostProps): Result<Post, never> {
+    const baseProps = {
+      id: randomUUID(),
+      memberId: input.memberId,
+      title: input.title,
       voteScore: 0,
-      slug: PostSlug.create(result.data.title),
-    });
+      slug: PostSlug.create(input.title.value),
+    };
 
-    post.domainEvents.push(new PostCreated(postId, input.memberId));
+    const props: PostProps =
+      input.postType === 'text'
+        ? { ...baseProps, postType: 'text', content: input.content }
+        : { ...baseProps, postType: 'link', link: input.link };
 
-    return post;
+    const post = new Post(props);
+    post.domainEvents.push(new PostCreated(post.id, post.memberId));
+
+    return success(post);
   }
 
-  public static toDomain(prismaModel: PostModel): Post {
-    const postVariant =
-      prismaModel.postType === 'text'
-        ? {
-            postType: 'text' as const,
-            content: prismaModel.content!,
-          }
-        : {
-            postType: 'link' as const,
-            link: prismaModel.link!,
-          };
-
-    return new Post({
-      id: prismaModel.id,
-      memberId: prismaModel.memberId,
-      title: prismaModel.title,
-      voteScore: prismaModel.voteScore,
-      slug: PostSlug.toDomain(prismaModel.slug),
-      ...postVariant,
-    });
+  public static reconstitute(props: PostProps): Post {
+    return new Post(props);
   }
 }
