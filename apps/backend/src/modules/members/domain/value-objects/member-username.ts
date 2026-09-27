@@ -1,8 +1,9 @@
 import { z } from 'zod';
 
-import { Result, success, fail } from '@forumate/core/application';
+import { Result } from '@forumate/core/application';
 import { ValueObject } from '@forumate/core/domain';
 
+import { parseWithSchema } from '../../../../shared/validation/parse-with-schema';
 import { InvalidMemberUsernameError } from '../errors/member-errors';
 
 const memberUsernameSchema = z
@@ -31,14 +32,12 @@ export class MemberUsername extends ValueObject<MemberUsernameProps> {
   public static create(
     input: string,
   ): Result<MemberUsername, InvalidMemberUsernameError> {
-    const result = memberUsernameSchema.safeParse(input);
-
-    if (!result.success) {
-      const message = result.error.issues[0]?.message ?? 'Invalid username';
-      return fail(new InvalidMemberUsernameError(message));
-    }
-
-    return success(new MemberUsername({ value: result.data }));
+    return parseWithSchema(
+      memberUsernameSchema,
+      input,
+      (message) => new InvalidMemberUsernameError(message),
+      (data) => new MemberUsername({ value: data }),
+    );
   }
 
   public static reconstitute(value: string): MemberUsername {
