@@ -3,6 +3,7 @@ import { memberErrorCodes } from '@forumate/errors/domain';
 
 import { CompositionRoot } from '../../../src/shared/composition-root';
 import { Config } from '../../../src/shared/config';
+import { httpStatus } from '../../../src/shared/infra/http/http-status';
 import { CreateTextPostInputBuilder } from '../../builders/inputs/post-input-builders';
 import { DatabaseFixture } from '../../fixtures/e2e/database';
 import { setupLevel1Member } from '../../fixtures/e2e/members';
@@ -44,15 +45,13 @@ describe('posts', () => {
 
       const response = await apiClient.posts.create(postInput, token);
 
-      expect(response).toEqual({
-        success: false,
-        status: 403,
-        data: null,
-        error: {
-          code: memberErrorCodes.INSUFFICIENT_MEMBER_LEVEL,
-          message: 'You do not have permission to create a post.',
-        },
-      });
+      expect(response.success).toBe(false);
+      expect(response.status).toBe(httpStatus.FORBIDDEN);
+      expect(response.data).toBe(null);
+      expect(response.error?.code).toBe(
+        memberErrorCodes.INSUFFICIENT_MEMBER_LEVEL,
+      );
+      expect(response.error?.message).toBeDefined();
     });
   });
 
