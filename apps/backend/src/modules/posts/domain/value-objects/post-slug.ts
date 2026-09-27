@@ -5,7 +5,7 @@ type PostSlugProps = {
 };
 
 export class PostSlug extends ValueObject<PostSlugProps> {
-  constructor(props: PostSlugProps) {
+  private constructor(props: PostSlugProps) {
     super(props);
   }
 
