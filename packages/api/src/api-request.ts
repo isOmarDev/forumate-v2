@@ -1,19 +1,22 @@
 import axios, { AxiosResponse } from 'axios';
 
-import { NetworkErrorCode, networkErrorCodes } from '@forumate/errors/network';
+import { GenericErrorCode, networkErrorCodes } from '@forumate/errors';
 
 import { ApiResponse } from './types';
 
-export async function apiRequest<T, U extends string>(
-  request: () => Promise<AxiosResponse<ApiResponse<T, U>>>,
-): Promise<ApiResponse<T, U | NetworkErrorCode>> {
+export async function apiRequest<TData, TDomainError extends string>(
+  request: () => Promise<AxiosResponse<ApiResponse<TData, TDomainError>>>,
+): Promise<ApiResponse<TData, TDomainError | GenericErrorCode>> {
   try {
     const response = await request();
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
-        return error.response.data as ApiResponse<T, U>;
+        return error.response.data as ApiResponse<
+          TData,
+          TDomainError | GenericErrorCode
+        >;
       }
 
       if (error.code === 'ECONNABORTED') {
@@ -22,8 +25,8 @@ export async function apiRequest<T, U extends string>(
           success: false,
           status: null,
           error: {
+            code: networkErrorCodes.TIMEOUT_ERROR,
             message: 'Request timed out',
-            code: networkErrorCodes.timeoutError,
           },
         };
       }
@@ -34,8 +37,8 @@ export async function apiRequest<T, U extends string>(
           data: null,
           status: null,
           error: {
+            code: networkErrorCodes.NETWORK_ERROR,
             message: 'No response received from server',
-            code: networkErrorCodes.networkError,
           },
         };
       }
@@ -45,8 +48,8 @@ export async function apiRequest<T, U extends string>(
         data: null,
         status: null,
         error: {
+          code: networkErrorCodes.REQUEST_ERROR,
           message: error.message,
-          code: networkErrorCodes.requestError,
         },
       };
     }
@@ -56,8 +59,8 @@ export async function apiRequest<T, U extends string>(
       data: null,
       status: null,
       error: {
+        code: networkErrorCodes.UNKNOWN_ERROR,
         message: 'Unexpected error',
-        code: networkErrorCodes.unknownError,
       },
     };
   }
