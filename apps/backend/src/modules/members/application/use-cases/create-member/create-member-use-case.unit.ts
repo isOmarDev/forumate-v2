@@ -54,7 +54,7 @@ describe('createMember', () => {
     const existingMember = setupLevel1Member(membersRepositorySpy);
 
     const memberInput = new CreateMemberInputBuilder()
-      .withUsername(existingMember.username.value)
+      .withUsername(existingMember.username)
       .build();
 
     const commandOrError = CreateMemberCommand.create(memberInput);
@@ -71,7 +71,7 @@ describe('createMember', () => {
     expect(membersRepositorySpy.getTimesMethodCalled('save')).toBe(0);
   });
 
-  test.only('should fail if member already exists', async () => {
+  test('should fail if member already exists', async () => {
     const existingMember = setupLevel1Member(membersRepositorySpy);
 
     const memberInput = new CreateMemberInputBuilder()
