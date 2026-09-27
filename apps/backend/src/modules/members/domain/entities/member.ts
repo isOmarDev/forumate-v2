@@ -1,9 +1,12 @@
 import { randomUUID } from 'node:crypto';
 
-import { ReputationLevel } from '@forumate/api/members';
 import { AggregateRoot, Result, success } from '@forumate/core';
 
 import { MemberReputationLevelUpgraded } from '../events/member-reputation-level-upgraded';
+import {
+  MemberReputationLevel,
+  ReputationLevel,
+} from '../value-objects/member-reputation-level';
 import { MemberUsername } from '../value-objects/member-username';
 
 interface CreateMemberInput {
@@ -11,20 +14,12 @@ interface CreateMemberInput {
   username: MemberUsername;
 }
 
-interface ReconstituteMemberInput {
-  id: string;
-  userId: string;
-  username: MemberUsername;
-  reputationScore: number;
-  reputationLevel: ReputationLevel;
-}
-
 interface MemberProps {
   id: string;
   userId: string;
   username: MemberUsername;
   reputationScore: number;
-  reputationLevel: ReputationLevel;
+  reputationLevel: MemberReputationLevel;
 }
 
 export class Member extends AggregateRoot {
@@ -51,23 +46,46 @@ export class Member extends AggregateRoot {
   }
 
   get username() {
-    return this.props.username;
+    return this.props.username.value;
   }
 
   get reputationLevel() {
-    return this.props.reputationLevel;
+    return this.props.reputationLevel.value;
   }
 
-  updateReputationScore(newScore: number) {
+  get reputationLevelNumeric() {
+    return this.props.reputationLevel.numericValue;
+  }
+
+  public static create(input: CreateMemberInput): Result<Member, never> {
+    return success(
+      new Member({
+        ...input,
+        id: randomUUID(),
+        reputationScore: 0,
+        reputationLevel: MemberReputationLevel.initial(),
+      }),
+    );
+  }
+
+  public static reconstitute(props: MemberProps): Member {
+    return new Member(props);
+  }
+
+  public updateReputationScore(newScore: number) {
     const oldScore = this.props.reputationScore;
     this.props.reputationScore = newScore;
-
     console.log('score', newScore);
+
     if (
       oldScore < Member.REPUTATION_SCORE_THRESH.Level1 &&
       newScore >= Member.REPUTATION_SCORE_THRESH.Level1
     ) {
-      this.props.reputationLevel = ReputationLevel.Level2;
+      const reputationLevel2 = MemberReputationLevel.create(
+        ReputationLevel.Level2,
+      ).getValue();
+      this.props.reputationLevel = reputationLevel2;
+
       this.domainEvents.push(
         new MemberReputationLevelUpgraded(this.id, this.reputationLevel),
       );
@@ -76,32 +94,19 @@ export class Member extends AggregateRoot {
       oldScore < Member.REPUTATION_SCORE_THRESH.Level2 &&
       newScore >= Member.REPUTATION_SCORE_THRESH.Level2
     ) {
-      this.props.reputationLevel = ReputationLevel.Level3;
+      const reputationLevel3 = MemberReputationLevel.create(
+        ReputationLevel.Level3,
+      ).getValue();
+      this.props.reputationLevel = reputationLevel3;
       console.log('going to level 3!');
+
       this.domainEvents.push(
         new MemberReputationLevelUpgraded(this.id, this.reputationLevel),
       );
     }
   }
 
-  public static create(inputProps: CreateMemberInput): Result<Member, never> {
-    return success(
-      new Member({
-        ...inputProps,
-        id: randomUUID(),
-        reputationScore: 0,
-        reputationLevel: ReputationLevel.Level1,
-      }),
-    );
-  }
-
-  public static reconstitute(input: ReconstituteMemberInput): Member {
-    return new Member({
-      id: input.id,
-      userId: input.userId,
-      username: input.username,
-      reputationScore: input.reputationScore,
-      reputationLevel: input.reputationLevel,
-    });
+  public hasReputationLevelAtLeast(level: number): boolean {
+    return this.props.reputationLevel.isAtLeast(level);
   }
 }
