@@ -1,9 +1,11 @@
 // Fixtures (hvut fixtures)
 
-import { ReputationLevel } from '@forumate/api';
-
 import { PostCommentUseCase } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment-use-case';
 import { Member } from '../../../src/modules/members/domain/entities/member';
+import {
+  MemberReputationLevel,
+  ReputationLevel,
+} from '../../../src/modules/members/domain/value-objects/member-reputation-level';
 import { MemberUsername } from '../../../src/modules/members/domain/value-objects/member-username';
 import { InMemoryMembersRepository } from '../../../src/modules/members/infrastructure/repositories/in-memory-members-repository';
 import { CreatePostUseCase } from '../../../src/modules/posts/application/use-cases/create-post/create-post-use-case';
@@ -37,10 +39,12 @@ export function setupTestWithLevel2Member(
     userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
     username: MemberUsername.create('jill-12345').getValue(),
     reputationScore: 10,
-    reputationLevel: ReputationLevel.Level2,
+    reputationLevel: MemberReputationLevel.create(
+      ReputationLevel.Level2,
+    ).getValue(),
   });
 
-  useCase['memberRepository'].getMemberById = jest
+  useCase['membersRepository'].getMemberById = jest
     .fn()
     .mockResolvedValue(level2Member);
 
