@@ -12,7 +12,7 @@ import { ReputationLevel } from '../../domain/value-objects/member-reputation-le
 import { MemberReputationLevelMap } from './member-reputation-level-map';
 import { MemberUsernameMap } from './member-username-map';
 
-type MemberPersistence = Omit<MemberModel, 'dateCreated' | 'lastUpdated'>;
+type MemberPersistence = Omit<MemberModel, 'createdAt' | 'updatedAt'>;
 
 class MemberMapper
   implements
@@ -36,8 +36,8 @@ class MemberMapper
     return {
       userId: domain.userId,
       memberId: domain.id,
-      username: domain.username,
-      reputationLevel: domain.reputationLevel,
+      username: domain.username.value,
+      reputationLevel: domain.reputationLevel.value,
       reputationScore: domain.reputationScore,
     };
   }
@@ -46,9 +46,9 @@ class MemberMapper
     return {
       id: domain.id,
       userId: domain.userId,
-      username: domain.username,
+      username: domain.username.value,
+      reputationLevel: domain.reputationLevel.value,
       reputationScore: domain.reputationScore,
-      reputationLevel: domain.reputationLevel,
     };
   }
 }
