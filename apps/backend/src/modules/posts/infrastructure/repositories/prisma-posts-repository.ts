@@ -41,31 +41,14 @@ export class PrismaPostsRepository implements IPostsRepository, IPostsQueries {
     transaction?: Prisma.TransactionClient,
   ): Promise<void> {
     const prismaInstance = transaction ?? this.database.getClient();
-
-    const content = post.postType === 'text' ? post.content : null;
-    const link = post.postType === 'link' ? post.link : null;
+    const postData = PostMap.toPersistence(post);
+    const { id, ...updateData } = postData;
 
     try {
       await prismaInstance.post.upsert({
-        where: { id: post.id },
-        update: {
-          memberId: post.memberId,
-          title: post.title,
-          content,
-          link,
-          voteScore: post.voteScore,
-          slug: post.slug,
-        },
-        create: {
-          id: post.id,
-          memberId: post.memberId,
-          title: post.title,
-          content,
-          link,
-          postType: post.postType,
-          voteScore: post.voteScore,
-          slug: post.slug,
-        },
+        where: { id },
+        update: updateData,
+        create: postData,
       });
     } catch (error) {
       console.error(error);
@@ -98,7 +81,7 @@ export class PrismaPostsRepository implements IPostsRepository, IPostsQueries {
     const posts = await connection.post.findMany(sqlQuery);
 
     return posts.map((post: PostModelWithMember) =>
-      PostReadModel.fromPrismaToDomain(
+      PostReadModel.fromPersistence(
         post,
         MemberReadModel.fromPrisma(post.memberPostedBy),
       ),
@@ -130,7 +113,7 @@ export class PrismaPostsRepository implements IPostsRepository, IPostsQueries {
       })
       .then((result) => result._sum.value || 0);
 
-    return PostReadModel.fromPrismaToDomain(
+    return PostReadModel.fromPersistence(
       { ...post, voteScore },
       MemberReadModel.fromPrisma(post.memberPostedBy),
     );
@@ -153,6 +136,6 @@ export class PrismaPostsRepository implements IPostsRepository, IPostsQueries {
     if (!post) return null;
 
     const member = MemberReadModel.fromPrisma(post.memberPostedBy);
-    return PostReadModel.fromPrismaToDomain(post, member);
+    return PostReadModel.fromPersistence(post, member);
   }
 }
