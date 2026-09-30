@@ -54,7 +54,7 @@ describe('createMember', () => {
     const existingMember = setupLevel1Member(membersRepositorySpy);
 
     const memberInput = new CreateMemberInputBuilder()
-      .withUsername(existingMember.username)
+      .withUsername(existingMember.username.value)
       .build();
 
     const commandOrError = CreateMemberCommand.create(memberInput);
