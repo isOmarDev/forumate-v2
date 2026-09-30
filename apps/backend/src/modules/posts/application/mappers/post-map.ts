@@ -12,7 +12,7 @@ import { PostLinkMap } from './post-link-map';
 import { PostSlugMap } from './post-slug-map';
 import { PostTitleMap } from './post-title-map';
 
-type PostPersistence = Omit<PostModel, 'dateCreated' | 'lastUpdated'>;
+type PostPersistence = Omit<PostModel, 'createdAt' | 'updatedAt'>;
 
 class PostMapper
   implements
@@ -48,19 +48,33 @@ class PostMapper
     const base = {
       id: domain.id,
       memberId: domain.memberId,
-      title: domain.title,
-      slug: domain.slug,
+      title: domain.title.value,
+      slug: domain.slug.value,
       voteScore: domain.voteScore,
     };
 
-    return domain.postType === 'link'
-      ? { ...base, postType: 'link', link: domain.link!, content: null }
-      : {
+    switch (domain.postType) {
+      case 'text':
+        return {
           ...base,
-          postType: 'text',
-          content: domain.content!,
+          postType: domain.postType,
+          content: domain.content.value,
           link: null,
         };
+
+      case 'link':
+        return {
+          ...base,
+          postType: domain.postType,
+          link: domain.link.value,
+          content: null,
+        };
+
+      default: {
+        const _exhaustiveCheck: never = domain.postType;
+        throw new Error(`Unhandled post type: ${_exhaustiveCheck}`);
+      }
+    }
   }
 }
 
