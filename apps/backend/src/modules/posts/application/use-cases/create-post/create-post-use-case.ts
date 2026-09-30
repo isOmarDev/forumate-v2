@@ -23,6 +23,7 @@ import {
   PostContent,
   PostLink,
   PostTitle,
+  PostType,
 } from '../../../domain/value-objects';
 import type { IPostsRepository } from '../../ports/posts-repository';
 
@@ -62,6 +63,11 @@ export class CreatePostUseCase implements IUseCase<
       return fail(titleOrError.getError());
     }
 
+    const postTypeOrError = PostType.create(props.postType);
+    if (postTypeOrError.isFailure) {
+      return fail(titleOrError.getError());
+    }
+
     let createProps: CreatePostProps;
 
     if (props.postType === 'text') {
@@ -71,10 +77,10 @@ export class CreatePostUseCase implements IUseCase<
       }
 
       createProps = {
-        postType: 'text',
         memberId: props.memberId,
         title: titleOrError.getValue(),
         content: contentOrError.getValue(),
+        postType: postTypeOrError.getValue(),
       };
     } else {
       const linkOrError = PostLink.create(props.link);
@@ -83,10 +89,10 @@ export class CreatePostUseCase implements IUseCase<
       }
 
       createProps = {
-        postType: 'link',
         memberId: props.memberId,
         title: titleOrError.getValue(),
         link: linkOrError.getValue(),
+        postType: postTypeOrError.getValue(),
       };
     }
 
