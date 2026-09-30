@@ -8,10 +8,10 @@ export type PostDto = {
   title: string;
   content?: string;
   link?: string;
-  dateCreated: string;
+  slug: string;
   member: MemberDto;
   numComments: number;
   voteScore: number;
-  lastUpdated: string;
-  slug: string;
+  createdAt: string;
+  updatedAt: string;
 };
