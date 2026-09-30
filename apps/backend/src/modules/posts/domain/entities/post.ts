@@ -2,21 +2,31 @@ import { randomUUID } from 'node:crypto';
 
 import { AggregateRoot, Result, success } from '@forumate/core';
 
+import {
+  InvalidLinkPostError,
+  InvalidTextPostError,
+} from '../errors/posts-errors';
 import { PostCreated } from '../events/post-created';
-import { PostContent, PostLink, PostTitle, PostSlug } from '../value-objects';
+import {
+  PostContent,
+  PostLink,
+  PostTitle,
+  PostSlug,
+  PostType,
+} from '../value-objects';
 
 export type CreateTextPostProps = {
   memberId: string;
   title: PostTitle;
   content: PostContent;
-  postType: 'text';
+  postType: PostType;
 };
 
 export type CreateLinkPostProps = {
   memberId: string;
   title: PostTitle;
   link: PostLink;
-  postType: 'link';
+  postType: PostType;
 };
 
 export type CreatePostProps = CreateTextPostProps | CreateLinkPostProps;
@@ -25,8 +35,8 @@ export interface BasePostProps {
   id: string;
   memberId: string;
   title: PostTitle;
-  voteScore: number;
   slug: PostSlug;
+  voteScore: number;
 }
 
 interface TextPostProps extends BasePostProps {
@@ -47,53 +57,76 @@ export class Post extends AggregateRoot {
     this.props = props;
   }
 
-  get id() {
+  get id(): string {
     return this.props.id;
   }
 
-  get memberId() {
+  get memberId(): string {
     return this.props.memberId;
   }
 
-  get title() {
-    return this.props.title.value;
+  get title(): PostTitle {
+    return this.props.title;
   }
 
-  get content(): string | undefined {
-    return this.props.postType === 'text'
-      ? this.props.content.value
-      : undefined;
+  get content(): PostContent {
+    if (this.props.postType !== 'text') {
+      throw new Error('Cannot access content on a non-text post');
+    }
+
+    return this.props.content;
   }
 
-  get link(): string | undefined {
-    return this.props.postType === 'link' ? this.props.link.value : undefined;
+  get link(): PostLink {
+    if (this.props.postType !== 'link') {
+      throw new Error('Cannot access link on a non-link post');
+    }
+
+    return this.props.link;
   }
 
-  get postType() {
+  get postType(): PostProps['postType'] {
     return this.props.postType;
   }
 
-  get voteScore() {
+  get slug(): PostSlug {
+    return this.props.slug;
+  }
+
+  get voteScore(): number {
     return this.props.voteScore;
   }
 
-  get slug() {
-    return this.props.slug.value;
-  }
-
   public static create(input: CreatePostProps): Result<Post, never> {
+    const { memberId, postType, title } = input;
+
     const baseProps = {
       id: randomUUID(),
-      memberId: input.memberId,
-      title: input.title,
+      memberId,
+      title,
       voteScore: 0,
-      slug: PostSlug.create(input.title.value),
+      slug: PostSlug.create(title.value),
     };
 
-    const props: PostProps =
-      input.postType === 'text'
-        ? { ...baseProps, postType: 'text', content: input.content }
-        : { ...baseProps, postType: 'link', link: input.link };
+    let props: PostProps;
+
+    if (postType.value === 'text') {
+      if ('link' in input) {
+        return fail(
+          new InvalidTextPostError('A text post cannot contain a link'),
+        );
+      }
+
+      props = { ...baseProps, postType: 'text', content: input.content };
+    } else {
+      if ('content' in input) {
+        return fail(
+          new InvalidLinkPostError('A link post cannot contain text content'),
+        );
+      }
+
+      props = { ...baseProps, postType: 'link', link: input.link };
+    }
 
     const post = new Post(props);
     post.domainEvents.push(new PostCreated(post.id, post.memberId));
@@ -103,5 +136,13 @@ export class Post extends AggregateRoot {
 
   public static reconstitute(props: PostProps): Post {
     return new Post(props);
+  }
+
+  public isTextPost(): boolean {
+    return this.props.postType === 'text';
+  }
+
+  public isLinkPost(): boolean {
+    return this.props.postType === 'link';
   }
 }
