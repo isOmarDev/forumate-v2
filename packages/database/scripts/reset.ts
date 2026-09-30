@@ -1,6 +1,6 @@
 import '../scripts/load-environment';
 
-import { PrismaDatabase } from '../src';
+import { PrismaDatabase } from '../src/database';
 
 const database = new PrismaDatabase();
 const prisma = database.getClient();
