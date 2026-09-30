@@ -33,27 +33,27 @@ export class Member extends AggregateRoot {
     this.props = props;
   }
 
-  get id() {
+  get id(): string {
     return this.props.id;
   }
 
-  get userId() {
+  get userId(): string {
     return this.props.userId;
   }
 
-  get reputationScore() {
+  get reputationScore(): number {
     return this.props.reputationScore;
   }
 
-  get username() {
-    return this.props.username.value;
+  get username(): MemberUsername {
+    return this.props.username;
   }
 
-  get reputationLevel() {
-    return this.props.reputationLevel.value;
+  get reputationLevel(): MemberReputationLevel {
+    return this.props.reputationLevel;
   }
 
-  get reputationLevelNumeric() {
+  get reputationLevelNumeric(): number {
     return this.props.reputationLevel.numericValue;
   }
 
@@ -87,7 +87,7 @@ export class Member extends AggregateRoot {
       this.props.reputationLevel = reputationLevel2;
 
       this.domainEvents.push(
-        new MemberReputationLevelUpgraded(this.id, this.reputationLevel),
+        new MemberReputationLevelUpgraded(this.id, this.reputationLevel.value),
       );
       console.log('going to level 2!');
     } else if (
@@ -101,7 +101,7 @@ export class Member extends AggregateRoot {
       console.log('going to level 3!');
 
       this.domainEvents.push(
-        new MemberReputationLevelUpgraded(this.id, this.reputationLevel),
+        new MemberReputationLevelUpgraded(this.id, this.reputationLevel.value),
       );
     }
   }
