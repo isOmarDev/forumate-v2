@@ -37,7 +37,7 @@ export class CreateTextPostInputBuilder {
 export class CreateLinkPostInputBuilder {
   private props: LinkPostInput = {
     title: faker.lorem.words({ min: 3, max: 8 }),
-    link: faker.internet.url(),
+    link: faker.internet.url({ protocol: 'https' }),
     postType: PostTypeSchema.enum.link,
     memberId: faker.string.uuid(),
   };
