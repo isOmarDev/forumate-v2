@@ -34,8 +34,8 @@ class MemberMapper
 
   toDTO(domain: Member): MemberDto {
     return {
+      id: domain.id,
       userId: domain.userId,
-      memberId: domain.id,
       username: domain.username.value,
       reputationLevel: domain.reputationLevel.value,
       reputationScore: domain.reputationScore,
