@@ -30,7 +30,7 @@ export async function setupLevel1Member(
   }
 
   expect(response.data).toBeDefined();
-  expect(response.data?.memberId).toBeDefined();
+  expect(response.data?.id).toBeDefined();
   expect(response.data?.userId).toBeDefined();
   expect(response.data?.username).toBeDefined();
 
@@ -67,7 +67,7 @@ export async function setupLevel2Member(
     const commentResponse = await apiClient.comments.postComment(
       {
         postId: postToCommentOn.id,
-        memberId: member.memberId,
+        memberId: member.id,
         text: `Test comment ${i + 1}`,
       },
       authToken,
@@ -79,7 +79,7 @@ export async function setupLevel2Member(
   }
 
   // verify that the member is now level 2 by checking the database via the fixture
-  const updatedMember = await databaseFixture.getMemberById(member.memberId);
+  const updatedMember = await databaseFixture.getMemberById(member.id);
   if (!updatedMember) {
     throw new Error('Failed to verify member level');
   }
