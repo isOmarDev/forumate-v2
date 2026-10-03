@@ -49,7 +49,7 @@ export class MemberReadModel {
   // Continue to add the remaining properties when necessary
   public toDTO(): MemberDto {
     return {
-      memberId: this.props.id,
+      id: this.props.id,
       username: this.props.username,
       userId: this.props.userId,
       reputationLevel: this.props.reputationLevel,
