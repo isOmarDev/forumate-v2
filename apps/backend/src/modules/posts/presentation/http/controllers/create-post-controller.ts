@@ -17,24 +17,16 @@ export class CreatePostController extends BaseController {
       return this.fail(res, commandOrError.getError());
     }
 
-    const createPostresultOrError = await this.postsService.createPost(
+    const resultOrError = await this.postsService.createPost(
       commandOrError.getValue(),
     );
 
-    if (createPostresultOrError.isFailure) {
-      return this.fail(res, createPostresultOrError.getError());
+    if (resultOrError.isFailure) {
+      return this.fail(res, resultOrError.getError());
     }
 
-    const newPost = createPostresultOrError.getValue();
+    const post = resultOrError.getValue();
 
-    const postDetailsResultOrError = await this.postsService.getPostDetailsById(
-      newPost.id,
-    );
-
-    if (postDetailsResultOrError.isFailure) {
-      return this.fail(res, postDetailsResultOrError.getError());
-    }
-
-    return this.ok(res, postDetailsResultOrError.getValue().toDTO());
+    return this.ok(res, { id: post.id, slug: post.slug.value });
   }
 }
