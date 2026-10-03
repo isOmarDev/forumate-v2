@@ -4,9 +4,15 @@ import { memberErrorCodes } from '@forumate/errors/domain';
 import { CompositionRoot } from '../../../src/shared/composition-root';
 import { Config } from '../../../src/shared/config';
 import { httpStatus } from '../../../src/shared/infra/http/http-status';
-import { CreateTextPostInputBuilder } from '../../builders/inputs/post-input-builders';
+import {
+  CreateLinkPostInputBuilder,
+  CreateTextPostInputBuilder,
+} from '../../builders/inputs/post-input-builders';
 import { DatabaseFixture } from '../../fixtures/e2e/database';
-import { setupLevel1Member } from '../../fixtures/e2e/members';
+import {
+  setupLevel1Member,
+  setupLevel2Member,
+} from '../../fixtures/e2e/members';
 import { createFakeIdToken } from '../../fixtures/e2e/users';
 
 jest.setTimeout(30000);
@@ -40,7 +46,7 @@ describe('posts', () => {
       const { member } = await setupLevel1Member(apiClient, token, userId);
 
       const postInput = new CreateTextPostInputBuilder()
-        .withMemberId(member.memberId)
+        .withMemberId(member.id)
         .build();
 
       const response = await apiClient.posts.create(postInput, token);
@@ -55,10 +61,34 @@ describe('posts', () => {
     });
   });
 
-  describe.skip('creating new posts', () => {
-    it('as a level 2 member, it can create a link post', async () => {
-      // Implement
-      throw new Error('Not yet implemented');
+  describe.only('creating new posts', () => {
+    it.only('it should create a link post as a level 2 member', async () => {
+      const { token, userId } = await createFakeIdToken();
+
+      const { member } = await setupLevel2Member(
+        apiClient,
+        token,
+        userId,
+        databaseFixture,
+      );
+
+      const postInput = new CreateLinkPostInputBuilder()
+        .withMemberId(member.id)
+        .build();
+
+      const response = await apiClient.posts.create(postInput, token);
+
+      expect(response.success).toBe(true);
+      expect(response.status).toBe(httpStatus.CREATED);
+      expect(response.data).toBeDefined();
+      expect(response.data?.id).toBeDefined();
+      expect(response.error).toBe(null);
+
+      const createdPost = await databaseFixture.getPostById(response.data!.id);
+      expect(createdPost?.postType).toBe('link');
+      expect(createdPost?.link).toBe(postInput.link);
+      expect(createdPost?.content).toBeNull();
+      expect(createdPost?.memberId).toBe(member.id);
     });
 
     it('should have an initial upvote when creating a post', async () => {
