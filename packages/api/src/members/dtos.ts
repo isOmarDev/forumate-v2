@@ -8,8 +8,8 @@ export type ReputationLevel =
   (typeof ReputationLevel)[keyof typeof ReputationLevel];
 
 export type MemberDto = {
+  id: string;
   userId: string;
-  memberId: string;
   username: string;
   reputationLevel: ReputationLevel;
   reputationScore: number;
