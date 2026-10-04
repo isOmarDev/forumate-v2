@@ -6,7 +6,9 @@ type PostCreatedData = {
 };
 
 export class PostCreated extends DomainEvent<PostCreatedData> {
+  static readonly eventName = 'PostCreated';
+
   constructor(postId: string, memberId: string) {
-    super('PostCreated', postId, { postId, memberId });
+    super(PostCreated.eventName, postId, { postId, memberId });
   }
 }
