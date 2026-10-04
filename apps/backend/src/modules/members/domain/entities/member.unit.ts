@@ -12,6 +12,7 @@ describe.skip('member', () => {
     });
 
     expect(result.isSuccess).toBe(true);
+
     const member = result.getValue();
     expect(member.reputationLevel).toEqual(ReputationLevel.Level1);
   });
