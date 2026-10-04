@@ -18,7 +18,7 @@ export function withExistingPostByRandomMember(useCase: PostCommentUseCase) {
 
   expect(existingPost instanceof Post).toBe(true);
 
-  useCase['postsRepository'].getPostById = jest
+  useCase['postsRepository'].getById = jest
     .fn()
     .mockResolvedValue(existingPost as Post);
 
