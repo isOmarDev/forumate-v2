@@ -17,19 +17,19 @@ export class VotesSubscriptions {
 
   setupSubscriptions() {
     this.eventBus.subscribe<PostUpvoted>(
-      PostUpvoted.name,
+      PostUpvoted.eventName,
       this.onPostOrCommentVoteChanged.bind(this),
     );
     this.eventBus.subscribe<PostDownvoted>(
-      PostDownvoted.name,
+      PostDownvoted.eventName,
       this.onPostOrCommentVoteChanged.bind(this),
     );
     this.eventBus.subscribe<CommentUpvoted>(
-      CommentUpvoted.name,
+      CommentUpvoted.eventName,
       this.onPostOrCommentVoteChanged.bind(this),
     );
     this.eventBus.subscribe<CommentDownvoted>(
-      CommentDownvoted.name,
+      CommentDownvoted.eventName,
       this.onPostOrCommentVoteChanged.bind(this),
     );
   }
@@ -40,7 +40,7 @@ export class VotesSubscriptions {
     try {
       console.log('updating member reputation score based on post vote');
       const command = new UpdateMemberReputationScoreCommand({
-        memberId: event.memberId,
+        memberId: event.data.memberId,
       });
       const response =
         await this.voteService.updateMemberReputationScore(command);
