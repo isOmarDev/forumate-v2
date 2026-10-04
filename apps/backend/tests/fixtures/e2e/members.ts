@@ -1,4 +1,4 @@
-import { ApiClient, MemberDto } from '@forumate/api';
+import { ApiClient } from '@forumate/api';
 import { NumberUtil } from '@forumate/core';
 
 import { DatabaseFixture } from './database';
@@ -8,11 +8,9 @@ export async function setupLevel1Member(
   authToken: string,
   userId: string,
 ) {
-  // arrange
   const username = `omarimik${NumberUtil.generateRandomInteger(10000, 99999)}`;
   const email = `${username}@test.com`;
 
-  // act
   const response = await apiClient.members.register(
     {
       username,
@@ -22,7 +20,6 @@ export async function setupLevel1Member(
     authToken,
   );
 
-  // assert
   if (!response.success) {
     throw new Error(
       `Failed to create member: ${response.error.code} - ${response.error.message}`,
@@ -34,10 +31,7 @@ export async function setupLevel1Member(
   expect(response.data?.userId).toBeDefined();
   expect(response.data?.username).toBeDefined();
 
-  console.log(`Created a Level 1 member`);
-  console.log(response);
-
-  return { member: response.data as MemberDto };
+  return { member: response.data };
 }
 
 export async function setupLevel2Member(
