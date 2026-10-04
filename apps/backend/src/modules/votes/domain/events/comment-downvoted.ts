@@ -7,12 +7,10 @@ type CommentDownvotedData = {
 };
 
 export class CommentDownvoted extends DomainEvent<CommentDownvotedData> {
-  constructor(
-    public readonly commentVoteId: string,
-    public readonly commentId: string,
-    public readonly memberId: string,
-  ) {
-    super('CommentDownvoted', commentVoteId, {
+  static readonly eventName = 'CommentDownvoted';
+
+  constructor(commentVoteId: string, commentId: string, memberId: string) {
+    super(CommentDownvoted.eventName, commentVoteId, {
       commentVoteId,
       commentId,
       memberId,

@@ -7,8 +7,10 @@ type PostUpvotedData = {
 };
 
 export class PostUpvoted extends DomainEvent<PostUpvotedData> {
+  static readonly eventName = 'PostUpvoted';
+
   constructor(postVoteId: string, postId: string, memberId: string) {
-    super('PostUpvoted', postVoteId, {
+    super(PostUpvoted.eventName, postVoteId, {
       postVoteId,
       postId,
       memberId,
