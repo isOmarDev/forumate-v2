@@ -1,8 +1,6 @@
 import { DomainEvent } from '@forumate/core';
 
-import { IEventBus } from '../ports/eventBus';
-
-type EventHandler<T extends DomainEvent<unknown>> = (event: T) => void;
+import { EventHandler, IEventBus } from '../ports/eventBus';
 
 export class InMemoryEventBus implements IEventBus {
   private subscriptions: Map<
@@ -10,55 +8,68 @@ export class InMemoryEventBus implements IEventBus {
     Array<EventHandler<DomainEvent<unknown>>>
   > = new Map();
 
-  async initialize(): Promise<void> {
-    // No-op
-  }
+  async initialize(): Promise<void> {}
 
-  async stop(): Promise<void> {
-    // No-op
-  }
+  async stop(): Promise<void> {}
 
-  publishEvents(events: DomainEvent<unknown>[]): void {
-    events.forEach((event) => {
+  async publishEvents(events: DomainEvent<unknown>[]): Promise<void> {
+    for (const event of events) {
       const eventType = event.name;
       const handlers = this.subscriptions.get(eventType);
 
-      if (handlers) {
-        console.log(`Publishing event: ${eventType}`);
-        handlers.forEach((handler) => handler(event));
+      if (!handlers) {
+        continue;
       }
-    });
+
+      console.log(`Publishing event: ${eventType}`);
+
+      const results = await Promise.allSettled(
+        handlers.map((handler) => handler(event)),
+      );
+
+      const failures = results.filter(
+        (r): r is PromiseRejectedResult => r.status === 'rejected',
+      );
+
+      if (failures.length > 0) {
+        console.error(
+          `${failures.length} handler(s) failed for event "${eventType}"`,
+          failures.map((f) => f.reason),
+        );
+      }
+    }
   }
 
   subscribe<T extends DomainEvent<unknown>>(
-    eventTypeName: string,
+    eventName: string,
     handler: EventHandler<T>,
   ): void {
-    const handlers = this.subscriptions.get(eventTypeName) ?? [];
+    const handlers = this.subscriptions.get(eventName) ?? [];
 
     handlers.push(handler as EventHandler<DomainEvent<unknown>>);
 
-    this.subscriptions.set(eventTypeName, handlers);
+    this.subscriptions.set(eventName, handlers);
   }
 
-  unsubscribe(
-    eventTypeName: string,
-    handler: EventHandler<DomainEvent<unknown>>,
+  unsubscribe<T extends DomainEvent<unknown>>(
+    eventName: string,
+    handler: EventHandler<T>,
   ): void {
-    const handlers = this.subscriptions.get(eventTypeName);
+    const handlers = this.subscriptions.get(eventName);
 
     if (!handlers) {
       return;
     }
 
-    const index = handlers.indexOf(handler);
-
+    const index = handlers.indexOf(
+      handler as EventHandler<DomainEvent<unknown>>,
+    );
     if (index !== -1) {
       handlers.splice(index, 1);
     }
 
     if (handlers.length === 0) {
-      this.subscriptions.delete(eventTypeName);
+      this.subscriptions.delete(eventName);
     }
   }
 
