@@ -58,7 +58,7 @@ export class CreateMemberUseCase implements IUseCase<
     const member = memberOrError.getValue();
 
     await this.membersRepository.save(member);
-    this.eventBus.publishEvents(member.getDomainEvents());
+    await this.eventBus.publishEvents(member.getDomainEvents());
 
     return success(member);
   }
