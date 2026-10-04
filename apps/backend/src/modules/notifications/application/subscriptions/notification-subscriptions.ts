@@ -14,7 +14,7 @@ export class NotificationsSubscriptions {
 
   private setupSubscriptions() {
     this.eventBus.subscribe<MemberReputationLevelUpgraded>(
-      MemberReputationLevelUpgraded.name,
+      MemberReputationLevelUpgraded.eventName,
       this.onMemberReputationLevelUpgraded.bind(this),
     );
   }
