@@ -2,7 +2,7 @@ import { memberErrorCodes, postErrorCodes } from '@forumate/errors';
 
 import { ApiResponse } from '../types';
 
-import { PostDto } from './dtos';
+import { CreatePostDto, PostDto } from './dtos';
 
 // Create Post Response
 type CreatePostDomainError =
@@ -12,7 +12,10 @@ type CreatePostDomainError =
   | typeof postErrorCodes.INVALID_POST_CONTENT
   | typeof postErrorCodes.INVALID_POST_LINK;
 
-export type CreatePostApiResponse = ApiResponse<PostDto, CreatePostDomainError>;
+export type CreatePostApiResponse = ApiResponse<
+  CreatePostDto,
+  CreatePostDomainError
+>;
 
 // Get Posts Response
 export type GetPostsError = never;
@@ -20,7 +23,7 @@ export type GetPostsError = never;
 export type GetPostsApiResponse = ApiResponse<PostDto[], GetPostsError>;
 
 // Get Post by ID Response
-export type GetPostByIdError = never;
+export type GetPostByIdError = typeof postErrorCodes.POST_NOT_FOUND;
 
 export type GetPostByIdApiResponse = ApiResponse<PostDto, GetPostByIdError>;
 
