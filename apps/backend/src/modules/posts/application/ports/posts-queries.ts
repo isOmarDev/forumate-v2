@@ -6,10 +6,10 @@ export interface IFindPostsQuery {
   findPosts(query: GetPostsQuery): Promise<PostReadModel[]>;
 }
 export interface IGetPostDetailsByIdQuery {
-  getPostDetailsById(id: string): Promise<PostReadModel | null>;
+  getDetailsById(id: string): Promise<PostReadModel | null>;
 }
 export interface IGetPostBySlugQuery {
-  getPostBySlug(slug: string): Promise<PostReadModel | null>;
+  getBySlug(slug: string): Promise<PostReadModel | null>;
 }
 
 export type IPostsQueries = IFindPostsQuery &
