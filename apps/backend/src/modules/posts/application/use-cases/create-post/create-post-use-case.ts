@@ -17,6 +17,7 @@ import {
   InvalidPostContentError,
   InvalidPostLinkError,
   InvalidPostTitleError,
+  InvalidPostTypeError,
 } from '../../../domain/errors/posts-errors';
 import { CanCreatePostPolicy } from '../../../domain/policies/can-create-post';
 import {
@@ -32,7 +33,8 @@ export type CreatePostError =
   | InsufficientMemberLevelError
   | InvalidPostTitleError
   | InvalidPostContentError
-  | InvalidPostLinkError;
+  | InvalidPostLinkError
+  | InvalidPostTypeError;
 export type CreatePostResponse = Result<Post, CreatePostError>;
 
 export class CreatePostUseCase implements IUseCase<
@@ -65,7 +67,7 @@ export class CreatePostUseCase implements IUseCase<
 
     const postTypeOrError = PostType.create(props.postType);
     if (postTypeOrError.isFailure) {
-      return fail(titleOrError.getError());
+      return fail(postTypeOrError.getError());
     }
 
     let createProps: CreatePostProps;
@@ -97,10 +99,14 @@ export class CreatePostUseCase implements IUseCase<
     }
 
     const postOrError = Post.create(createProps);
+    if (postOrError.isFailure) {
+      return fail(postOrError.getError());
+    }
+
     const post = postOrError.getValue();
 
     await this.postsRepository.save(post);
-    this.eventBus.publishEvents(post.getDomainEvents());
+    await this.eventBus.publishEvents(post.getDomainEvents());
 
     return success(post);
   }
