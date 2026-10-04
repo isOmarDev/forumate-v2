@@ -15,3 +15,5 @@ export type PostDto = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type CreatePostDto = { id: string; slug: string };
