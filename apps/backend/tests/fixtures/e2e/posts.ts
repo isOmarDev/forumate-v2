@@ -1,6 +1,6 @@
 import { ApiClient, MemberDto } from '@forumate/api';
 
-import { CreateTextPostInputBuilder } from '../../builders/inputs/post-input-builders';
+import { CreatePostInputBuilder } from '../../builders/inputs/post-input-builders';
 
 interface SetupPostOptions {
   apiClient: ApiClient;
@@ -33,13 +33,12 @@ interface SetupPostOptions {
  * const { post, postInput } = await setupPost({ apiClient, member, authToken: token });
  * expect(post.title).toBe(postInput.title);
  */
-
 export async function setupPost({
   apiClient,
   member,
   authToken,
 }: SetupPostOptions) {
-  const postInput = new CreateTextPostInputBuilder()
+  const postInput = CreatePostInputBuilder.aTextPost()
     .withMemberId(member.id)
     .build();
 
