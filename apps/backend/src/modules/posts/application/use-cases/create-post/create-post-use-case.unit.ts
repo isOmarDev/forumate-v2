@@ -2,7 +2,7 @@ import { CreatePostCommand } from '@forumate/api';
 import { type IEventBus, InMemoryEventBus } from '@forumate/bus';
 import { memberErrorCodes } from '@forumate/errors';
 
-import { CreateTextPostInputBuilder } from '../../../../../../tests/builders/inputs/post-input-builders';
+import { CreatePostInputBuilder } from '../../../../../../tests/builders/inputs/post-input-builders';
 import { setupLevel1Member } from '../../../../../../tests/fixtures/unit/members';
 import { InsufficientMemberLevelError } from '../../../../members/domain/errors/member-errors';
 import { InMemoryMembersRepository } from '../../../../members/infrastructure/repositories/in-memory-members-repository';
@@ -39,7 +39,7 @@ describe('createPost', () => {
       const level1Member = setupLevel1Member(membersRepositorySpy);
       const eventBusSpy = jest.spyOn(eventBus, 'publishEvents');
 
-      const textPostInput = new CreateTextPostInputBuilder()
+      const textPostInput = CreatePostInputBuilder.aTextPost()
         .withMemberId(level1Member.id)
         .build();
       const commandOrError = CreatePostCommand.create(textPostInput);
