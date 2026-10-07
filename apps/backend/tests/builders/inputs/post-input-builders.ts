@@ -3,61 +3,69 @@ import z from 'zod';
 
 import { LinkPostSchema, PostTypeSchema, TextPostSchema } from '@forumate/api';
 
+type PostInput = { title: string; memberId: string; postType: string };
 type TextPostInput = z.infer<typeof TextPostSchema>;
 type LinkPostInput = z.infer<typeof LinkPostSchema>;
 
-export class CreateTextPostInputBuilder {
-  private props: TextPostInput = {
-    title: faker.lorem.words({ min: 3, max: 8 }),
-    content: faker.lorem.sentences({ min: 2, max: 5 }),
-    postType: PostTypeSchema.enum.text,
-    memberId: faker.string.uuid(),
-  };
+abstract class BasePostInputBuilder<T extends PostInput> {
+  protected props: T;
+
+  constructor(defaultProps: T) {
+    this.props = defaultProps;
+  }
 
   withTitle(title: string): this {
     this.props.title = title;
     return this;
+  }
+
+  withMemberId(memberId: string): this {
+    this.props.memberId = memberId;
+    return this;
+  }
+
+  build(): T {
+    return this.props;
+  }
+}
+
+class CreateTextPostInputBuilder extends BasePostInputBuilder<TextPostInput> {
+  constructor() {
+    super({
+      title: faker.lorem.words({ min: 3, max: 8 }),
+      content: faker.lorem.sentences({ min: 2, max: 5 }),
+      postType: PostTypeSchema.enum.text,
+      memberId: faker.string.uuid(),
+    });
   }
 
   withContent(content: string): this {
     this.props.content = content;
     return this;
   }
-
-  withMemberId(memberId: string): this {
-    this.props.memberId = memberId;
-    return this;
-  }
-
-  build() {
-    return this.props;
-  }
 }
 
-export class CreateLinkPostInputBuilder {
-  private props: LinkPostInput = {
-    title: faker.lorem.words({ min: 3, max: 8 }),
-    link: faker.internet.url({ protocol: 'https' }),
-    postType: PostTypeSchema.enum.link,
-    memberId: faker.string.uuid(),
-  };
-
-  withTitle(title: string): this {
-    this.props.title = title;
-    return this;
+class CreateLinkPostInputBuilder extends BasePostInputBuilder<LinkPostInput> {
+  constructor() {
+    super({
+      title: faker.lorem.words({ min: 3, max: 8 }),
+      link: faker.internet.url({ protocol: 'https' }),
+      postType: PostTypeSchema.enum.link,
+      memberId: faker.string.uuid(),
+    });
   }
 
   withLink(link: string): this {
     this.props.link = link;
     return this;
   }
+}
 
-  withMemberId(memberId: string): this {
-    this.props.memberId = memberId;
-    return this;
+export class CreatePostInputBuilder {
+  static aTextPost(): CreateTextPostInputBuilder {
+    return new CreateTextPostInputBuilder();
   }
-
-  build() {
-    return this.props;
+  static aLinkPost(): CreateLinkPostInputBuilder {
+    return new CreateLinkPostInputBuilder();
   }
 }
