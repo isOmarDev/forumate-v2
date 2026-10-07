@@ -75,7 +75,7 @@ export class PrismaPostsRepository implements IPostsRepository, IPostsQueries {
     }
 
     if (query.sort === 'recent') {
-      sqlQuery.orderBy = { dateCreated: 'desc' };
+      sqlQuery.orderBy = { createdAt: 'desc' };
     }
 
     const posts = await connection.post.findMany(sqlQuery);
