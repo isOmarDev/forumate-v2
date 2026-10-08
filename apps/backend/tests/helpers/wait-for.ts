@@ -1,17 +1,17 @@
-interface WaitForConditionOptions {
+interface WaitForOptions {
   timeout?: number;
   interval?: number;
 }
 
 /**
- * Polls `conditionFn` until it returns a truthy value, or throws once
+ * Polls `fn` until it returns a truthy value, or throws once
  * `timeout` elapses. Use this instead of a fixed `setTimeout` sleep when
  * waiting for eventually-consistent state (e.g. an async event handler
  * finishing) — it resolves as soon as the condition is met rather than
  * always waiting the full duration, and fails with a clear timeout error
  * if the condition is never met.
  *
- * @param conditionFn - Checked every `options.interval` ms; return a truthy
+ * @param fn - Checked every `options.interval` ms; return a truthy
  *   value (or resolve one) once the condition is satisfied. Thrown/rejected
  *   errors during a check are swallowed and treated as "not yet" —
  *   only a timeout surfaces as a failure.
@@ -20,16 +20,16 @@ interface WaitForConditionOptions {
  * @throws If the condition is never met within `options.timeout`.
  */
 
-export async function waitForCondition(
-  conditionFn: () => boolean | Promise<boolean>,
-  { timeout = 5000, interval = 100 }: WaitForConditionOptions = {},
+export async function waitFor(
+  fn: () => boolean | Promise<boolean>,
+  { timeout = 5000, interval = 100 }: WaitForOptions = {},
 ): Promise<void> {
   const startTime = Date.now();
   let lastError: unknown;
 
   while (Date.now() - startTime < timeout) {
     try {
-      const result = await conditionFn();
+      const result = await fn();
       if (result) return;
     } catch (error) {
       lastError = error;
