@@ -18,9 +18,12 @@ export type CreatePostApiResponse = ApiResponse<
 >;
 
 // Get Posts Response
+export type GetPostsData = {
+  items: PostDto[];
+};
 export type GetPostsError = never;
 
-export type GetPostsApiResponse = ApiResponse<PostDto[], GetPostsError>;
+export type GetPostsApiResponse = ApiResponse<GetPostsData, GetPostsError>;
 
 // Get Post by ID Response
 export type GetPostByIdError = typeof postErrorCodes.POST_NOT_FOUND;
