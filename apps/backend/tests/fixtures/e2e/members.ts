@@ -2,7 +2,7 @@ import { ApiClient } from '@forumate/api';
 
 import { ReputationLevel } from '../../../src/modules/members/domain/value-objects/member-reputation-level';
 import { CreateMemberInputBuilder } from '../../builders/inputs/member-input-builders';
-import { waitForCondition } from '../../helpers/wait-for-condition';
+import { waitFor } from '../../helpers/wait-for';
 
 import { DatabaseFixture } from './database';
 
@@ -103,7 +103,7 @@ export async function setupLevel2Member({
     }
   }
 
-  await waitForCondition(async () => {
+  await waitFor(async () => {
     const updatedMember = await databaseFixture.getMemberById(member.id);
     return updatedMember?.reputationLevel === ReputationLevel.Level2;
   });
