@@ -64,8 +64,8 @@ describe('posts', () => {
     });
   });
 
-  describe.only('creating new posts', () => {
-    it.only('it should create a link post as a level 2 member', async () => {
+  describe('creating new posts', () => {
+    it('it should create a link post as a level 2 member', async () => {
       const { authToken, userId } = await createFakeIdToken();
 
       const { member } = await setupLevel2Member({
@@ -111,7 +111,7 @@ describe('posts', () => {
     });
   });
 
-  describe.only('fetching posts', () => {
+  describe('fetching posts', () => {
     it('can fetch a previously created post by id', async () => {
       const member = await databaseFixture.seedMember();
       const post = await databaseFixture.seedPost({
@@ -145,14 +145,66 @@ describe('posts', () => {
       expect(response.error?.message).toBeDefined();
     });
 
-    it('can fetch "recent" posts', () => {
-      // Not yet implemented
-      throw new Error('Not yet implemented');
+    it('can fetch "recent" posts', async () => {
+      const [member1, member2, member3] = await Promise.all([
+        databaseFixture.seedMember(),
+        databaseFixture.seedMember(),
+        databaseFixture.seedMember(),
+      ]);
+
+      await Promise.all([
+        databaseFixture.seedPost({ memberId: member1.id }),
+        databaseFixture.seedPost({ memberId: member2.id }),
+        databaseFixture.seedPost({ memberId: member3.id }),
+      ]);
+
+      const response = await apiClient.posts.getPosts({ sort: 'recent' });
+
+      expect(response.success).toBe(true);
+      expect(response.data).toBeDefined();
+      expect(response.data?.items).toBeDefined();
+
+      const returnedPosts = response.data!.items;
+
+      for (let i = 0; i < returnedPosts.length - 1; i++) {
+        const currentPost = returnedPosts[i];
+        const nextPost = returnedPosts[i + 1];
+
+        expect(
+          new Date(currentPost.createdAt).getTime(),
+        ).toBeGreaterThanOrEqual(new Date(nextPost.createdAt).getTime());
+      }
     });
 
-    it('can fetch "popular" posts', () => {
-      // Not yet implemented
-      throw new Error('Not yet implemented');
+    it('can fetch "popular" posts', async () => {
+      const [member1, member2, member3] = await Promise.all([
+        databaseFixture.seedMember(),
+        databaseFixture.seedMember(),
+        databaseFixture.seedMember(),
+      ]);
+
+      await Promise.all([
+        databaseFixture.seedPost({ memberId: member1.id, voteScore: 1 }),
+        databaseFixture.seedPost({ memberId: member2.id, voteScore: 2 }),
+        databaseFixture.seedPost({ memberId: member3.id, voteScore: 3 }),
+      ]);
+
+      const response = await apiClient.posts.getPosts({ sort: 'popular' });
+
+      expect(response.success).toBe(true);
+      expect(response.data).toBeDefined();
+      expect(response.data?.items).toBeDefined();
+
+      const returnedPosts = response.data!.items;
+
+      for (let i = 0; i < returnedPosts.length - 1; i++) {
+        const currentPost = returnedPosts[i];
+        const nextPost = returnedPosts[i + 1];
+
+        expect(currentPost.voteScore).toBeGreaterThanOrEqual(
+          nextPost.voteScore,
+        );
+      }
     });
   });
 
