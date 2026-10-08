@@ -65,7 +65,7 @@ export class Comment extends AggregateRoot {
       text: commentModel.text,
       memberId: commentModel.memberId,
       parentCommentId: commentModel.parentCommentId || '',
-      createdAt: commentModel.dateCreated,
+      createdAt: commentModel.createdAt,
       voteScore: commentModel.voteScore,
     });
   }
