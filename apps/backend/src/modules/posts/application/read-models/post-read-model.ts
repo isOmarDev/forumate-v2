@@ -2,6 +2,7 @@ import { type PostType, type PostDto } from '@forumate/api/posts';
 import { type PostModel } from '@forumate/database';
 
 import { MemberReadModel } from '../../../members/application/read-models/member-read-model';
+
 interface PostReadModelProps {
   id: string;
   title: string;
