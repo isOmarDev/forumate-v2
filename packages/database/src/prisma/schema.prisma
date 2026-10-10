@@ -20,9 +20,8 @@ enum PostType {
 }
 
 model Member {
-  id String @id @default(uuid())
-
-  userId          String                @unique // relation scalar field (used in the `@relation` attribute above)
+  id              String                @id @default(uuid())
+  userId          String                @unique
   posts           Post[]
   postVotes       PostVote[]
   commentVotes    CommentVote[]
@@ -30,9 +29,8 @@ model Member {
   username        String                @unique
   reputationScore Int                   @default(0)
   reputationLevel MemberReputationLevel @default(Level1)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
 }
 
 model Post {
@@ -52,37 +50,28 @@ model Post {
 }
 
 model Comment {
-  id String @id @default(uuid())
-
-  // Foreign key relation to the Post table
-  postId String // Foreign key to the Post table
-  post   Post   @relation(fields: [postId], references: [id])
-  text   String
-
-  memberId       String // Foreign key to the Member table
-  memberPostedBy Member @relation(fields: [memberId], references: [id])
-
+  id              String        @id @default(uuid())
+  postId          String
+  post            Post          @relation(fields: [postId], references: [id])
+  memberId        String
+  member          Member        @relation(fields: [memberId], references: [id])
   parentCommentId String?
-  parentComment   Comment?  @relation("Replies", fields: [parentCommentId], references: [id])
-  replyComments   Comment[] @relation("Replies")
-
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  commentVotes CommentVote[]
-  voteScore    Int           @default(0)
+  parentComment   Comment?      @relation("Replies", fields: [parentCommentId], references: [id])
+  body            String
+  replyComments   Comment[]     @relation("Replies")
+  commentVotes    CommentVote[]
+  voteScore       Int           @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }
 
 model PostVote {
-  id String @id @default(uuid())
-
-  postId        String // Foreign key to the Post table
-  postBelongsTo Post   @relation(fields: [postId], references: [id])
-
-  memberId       String // Foreign key to the Member table
-  memberPostedBy Member @relation(fields: [memberId], references: [id])
-
-  value Int @default(0)
-
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  memberId  String
+  member    Member   @relation(fields: [memberId], references: [id])
+  value     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -90,16 +79,12 @@ model PostVote {
 }
 
 model CommentVote {
-  id String @id @default(uuid())
-
-  commentId        String // Foreign key to the Comment table
-  commentBelongsTo Comment @relation(fields: [commentId], references: [id])
-
-  memberId       String // Foreign key to the Member table
-  memberPostedBy Member @relation(fields: [memberId], references: [id])
-
-  value Int @default(0)
-
+  id        String   @id @default(uuid())
+  commentId String
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  memberId  String
+  member    Member   @relation(fields: [memberId], references: [id])
+  value     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
