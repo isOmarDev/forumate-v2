@@ -1,5 +1,7 @@
-import { type IDatabase, Prisma } from '@forumate/database';
+import { CommentModel, type IDatabase, Prisma } from '@forumate/database';
+import { DatabaseError } from '@forumate/errors';
 
+import { CommentMap } from '../../application/mappers/comment-map';
 import type { ICommentsRepository } from '../../application/ports/comments-repository';
 import { Comment } from '../../domain/entities/comment';
 
@@ -9,7 +11,7 @@ export class PrismaCommentsRepository implements ICommentsRepository {
   async save(comment: Comment, transaction?: Prisma.TransactionClient) {
     const prismaInstance = transaction || this.database.getClient();
 
-    const commentData = comment.toPersistence();
+    const commentData = CommentMap.toPersistence(comment);
 
     try {
       await prismaInstance.comment.upsert({
@@ -19,11 +21,11 @@ export class PrismaCommentsRepository implements ICommentsRepository {
       });
     } catch (err) {
       console.log(err);
-      throw new Error('Database exception', { cause: err });
+      throw new DatabaseError();
     }
   }
 
-  async getCommentById(id: string): Promise<Comment | null> {
+  async findById(id: string): Promise<Comment | null> {
     const connection = this.database.getClient();
 
     const comment = await connection.comment.findUnique({
@@ -32,10 +34,15 @@ export class PrismaCommentsRepository implements ICommentsRepository {
 
     if (!comment) return null;
 
-    return Comment.toDomain(comment);
+    return CommentMap.toDomain(comment);
   }
 
-  async getCommentsByPostId(postId: string): Promise<Comment[]> {
-    return [];
+  // Should return CommentReadModel later
+  async findByPostId(postId: string): Promise<Comment[]> {
+    const connection = this.database.getClient();
+
+    const comments = await connection.comment.findMany({ where: { postId } });
+
+    return comments.map((post: CommentModel) => CommentMap.toDomain(post));
   }
 }
