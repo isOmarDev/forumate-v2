@@ -26,9 +26,7 @@ export class GetCommentsByPostIdUseCase implements IUseCase<
       return fail(new PostNotFoundError());
     }
 
-    const comments = await this.commentsRepository.getCommentsByPostId(
-      query.postId,
-    );
+    const comments = await this.commentsRepository.findByPostId(query.postId);
 
     return success(comments);
   }
