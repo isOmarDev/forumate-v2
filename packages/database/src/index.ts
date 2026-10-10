@@ -1,6 +1,7 @@
 import '../scripts/load-environment';
 
 export * from './database';
+export * from './persistence';
 
 export type {
   Member as MemberModel,
