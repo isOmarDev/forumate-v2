@@ -1,24 +1,25 @@
 import { randomUUID } from 'node:crypto';
 
-import { AggregateRoot } from '@forumate/core';
+import { AggregateRoot, Result, success } from '@forumate/core';
 
 import { CommentPosted } from '../events/comment-posted';
+import { CommentBody } from '../value-objects/comment-body';
+
+type CreateCommentProps = {
+  postId: string;
+  body: CommentBody;
+  memberId: string;
+  parentCommentId?: string;
+};
 
 export interface CommentProps {
   id: string;
   postId: string;
-  body: string;
+  body: CommentBody;
   memberId: string;
   parentCommentId?: string | undefined;
   voteScore: number;
 }
-
-type CreateCommentProps = {
-  postId: string;
-  body: string;
-  memberId: string;
-  parentCommentId?: string;
-};
 
 export class Comment extends AggregateRoot {
   private constructor(private props: CommentProps) {
@@ -49,7 +50,7 @@ export class Comment extends AggregateRoot {
     return this.props.memberId;
   }
 
-  public static create(props: CreateCommentProps): Comment {
+  public static create(props: CreateCommentProps): Result<Comment, never> {
     const comment = new Comment({
       id: randomUUID(),
       body: props.body,
@@ -60,10 +61,14 @@ export class Comment extends AggregateRoot {
     });
 
     comment.addEvent(
-      new CommentPosted(comment.id, comment.memberId, comment.postId),
+      new CommentPosted({
+        commentId: comment.id,
+        memberId: comment.memberId,
+        postId: comment.postId,
+      }),
     );
 
-    return comment;
+    return success(comment);
   }
 
   public static reconstitute(props: CommentProps): Comment {
