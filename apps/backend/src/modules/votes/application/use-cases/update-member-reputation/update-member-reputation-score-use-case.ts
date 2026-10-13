@@ -36,7 +36,7 @@ export class UpdateMemberReputationScoreUseCase implements IUseCase<
 
     const [memberOrNull, commentVotesRoundup, postVotesRoundup] =
       await Promise.all([
-        this.membersRepository.getById(memberId),
+        this.membersRepository.findById(memberId),
         this.votesRepository.getMemberCommentVotesRoundup(memberId),
         this.votesRepository.getMemberPostVotesRoundup(memberId),
       ]);
