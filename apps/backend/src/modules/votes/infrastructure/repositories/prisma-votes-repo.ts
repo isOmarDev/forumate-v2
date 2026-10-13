@@ -18,20 +18,10 @@ export class prismaVotesRepository implements IVotesRepository {
         where: { memberId },
       }),
       connection.commentVote.count({
-        where: {
-          commentBelongsTo: {
-            memberId,
-          },
-          value: 1,
-        },
+        where: { comment: { memberId }, value: 1 },
       }),
       connection.commentVote.count({
-        where: {
-          commentBelongsTo: {
-            memberId,
-          },
-          value: -1,
-        },
+        where: { comment: { memberId }, value: -1 },
       }),
     ]);
 
@@ -52,27 +42,13 @@ export class prismaVotesRepository implements IVotesRepository {
       const connection = this.database.getClient();
       const [allPostsCount, upvotesCount, downvotesCount] = await Promise.all([
         connection.postVote.count({
-          where: {
-            postBelongsTo: {
-              memberId,
-            },
-          },
+          where: { post: { memberId } },
         }),
         connection.postVote.count({
-          where: {
-            postBelongsTo: {
-              memberId,
-            },
-            value: 1,
-          },
+          where: { post: { memberId }, value: 1 },
         }),
         connection.postVote.count({
-          where: {
-            postBelongsTo: {
-              memberId,
-            },
-            value: -1,
-          },
+          where: { post: { memberId }, value: -1 },
         }),
       ]);
 
