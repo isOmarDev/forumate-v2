@@ -14,8 +14,8 @@ export class InMemoryPostsRepository
 
   // ---- Write side ----
 
-  public async getById(id: string): Promise<Post | null> {
-    this.addCall('getById', [id]);
+  public async findById(id: string): Promise<Post | null> {
+    this.addCall('findById', [id]);
 
     return this.posts.find((post) => post.id === id) ?? null;
   }
@@ -39,21 +39,21 @@ export class InMemoryPostsRepository
     return this.readModels;
   }
 
-  public async getDetailsById(id: string): Promise<PostReadModel | null> {
-    this.addCall('getDetailsById', [id]);
+  public async findDetailsById(id: string): Promise<PostReadModel | null> {
+    this.addCall('findDetailsById', [id]);
 
     return this.readModels.find((post) => post.id === id) ?? null;
   }
 
-  public async getBySlug(slug: string): Promise<PostReadModel | null> {
-    this.addCall('getBySlug', [slug]);
+  public async findBySlug(slug: string): Promise<PostReadModel | null> {
+    this.addCall('findBySlug', [slug]);
 
     return this.readModels.find((post) => post.slug === slug) ?? null;
   }
 
   // ---- Test setup helpers (no call tracking) ----
 
-  public seedPosts(...posts: Post[]): void {
+  public seed(...posts: Post[]): void {
     this.posts.push(...posts);
   }
 
@@ -72,5 +72,9 @@ export class InMemoryPostsRepository
     this.posts = [];
     this.readModels = [];
     this.calls = [];
+  }
+
+  public getAll(): Post[] {
+    return this.posts;
   }
 }

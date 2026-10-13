@@ -20,7 +20,7 @@ type PostModelWithMember = PostModel & {
 export class PrismaPostsRepository implements IPostsRepository, IPostsQueries {
   constructor(private database: IDatabase) {}
 
-  async getById(id: string): Promise<Post | null> {
+  async findById(id: string): Promise<Post | null> {
     const connection = this.database.getClient();
     const post = await connection.post.findUnique({
       where: { id },
@@ -88,7 +88,7 @@ export class PrismaPostsRepository implements IPostsRepository, IPostsQueries {
     );
   }
 
-  public async getDetailsById(id: string): Promise<PostReadModel | null> {
+  public async findDetailsById(id: string): Promise<PostReadModel | null> {
     const connection = this.database.getClient();
     const post = await connection.post.findUnique({
       where: { id },
@@ -119,7 +119,7 @@ export class PrismaPostsRepository implements IPostsRepository, IPostsQueries {
     );
   }
 
-  async getBySlug(slug: string): Promise<PostReadModel | null> {
+  async findBySlug(slug: string): Promise<PostReadModel | null> {
     const connection = this.database.getClient();
     const post = await connection.post.findFirst({
       where: { slug },

@@ -1,7 +1,7 @@
 import { Result, type IUseCase } from '@forumate/core';
 
 import { PostNotFoundError } from '../../../domain/errors/posts-errors';
-import { IGetPostDetailsByIdQuery } from '../../ports';
+import { IFindPostDetailsByIdQuery } from '../../ports';
 import { PostReadModel } from '../../read-models/post-read-model';
 
 export type GetPostDetailsByIdResponse = Result<
@@ -13,10 +13,10 @@ export class GetPostDetailsByIdUseCase implements IUseCase<
   string,
   GetPostDetailsByIdResponse
 > {
-  constructor(private postsRepository: IGetPostDetailsByIdQuery) {}
+  constructor(private postsRepository: IFindPostDetailsByIdQuery) {}
 
   async execute(id: string): Promise<GetPostDetailsByIdResponse> {
-    const post = await this.postsRepository.getDetailsById(id);
+    const post = await this.postsRepository.findDetailsById(id);
 
     if (!post) {
       return Result.failure(new PostNotFoundError());
