@@ -9,7 +9,7 @@ type CommentPostedData = {
 export class CommentPosted extends DomainEvent<CommentPostedData> {
   static readonly eventName = 'CommentPosted';
 
-  constructor(commentId: string, memberId: string, postId: string) {
-    super(CommentPosted.eventName, commentId, { commentId, memberId, postId });
+  constructor(data: CommentPostedData) {
+    super(CommentPosted.eventName, data.commentId, data);
   }
 }
