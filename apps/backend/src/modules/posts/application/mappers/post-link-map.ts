@@ -3,8 +3,8 @@ import { type IToDomainMapper } from '@forumate/core/application';
 import { PostLink } from '../../domain/value-objects/post-link';
 
 class PostLinkMapper implements IToDomainMapper<string, PostLink> {
-  toDomain(persistence: string): PostLink {
-    return PostLink.reconstitute(persistence);
+  toDomain(value: string): PostLink {
+    return PostLink.reconstitute(value);
   }
 }
 

@@ -3,8 +3,8 @@ import { type IToDomainMapper } from '@forumate/core/application';
 import { PostSlug } from '../../domain/value-objects/post-slug';
 
 class PostSlugMapper implements IToDomainMapper<string, PostSlug> {
-  toDomain(persistence: string): PostSlug {
-    return PostSlug.reconstitute(persistence);
+  toDomain(value: string): PostSlug {
+    return PostSlug.reconstitute(value);
   }
 }
 
