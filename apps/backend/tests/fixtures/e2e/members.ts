@@ -92,7 +92,7 @@ export async function setupLevel2Member({
 
   for (let i = 1; i <= COMMENTS_REQUIRED_FOR_LEVEL_2; i++) {
     const response = await apiClient.comments.postComment(
-      { postId: post.id, memberId: member.id, text: `Test comment ${i}` },
+      { postId: post.id, memberId: member.id, body: `Test comment ${i}` },
       authToken,
     );
 
