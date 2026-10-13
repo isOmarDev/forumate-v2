@@ -1,7 +1,6 @@
 export const commentErrorCodes = {
-  COMMENTS_NOT_FOUND: 'COMMENTS_NOT_FOUND',
   COMMENT_NOT_FOUND: 'COMMENT_NOT_FOUND',
-  INVALID_COMMENT: 'INVALID_COMMENT',
+  INVALID_COMMENT_BODY: 'INVALID_COMMENT_BODY',
 } as const;
 
 export type CommentErrorCode =
