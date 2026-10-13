@@ -5,9 +5,9 @@ export type CommentDto = {
   postId: string;
   commentId: string;
   parentCommentId?: string;
-  text: string;
+  body: string;
   member: MemberDto;
-  createdAt: string | Date;
+  createdAt: string;
   childComments: CommentDto[];
   points: number;
 };

@@ -3,16 +3,20 @@ import { InvalidRequestInputError } from '@forumate/errors';
 
 import { validateCommandInput } from '../validate-command-input';
 
-import { CreateCommentInput, createCommentInputSchema } from './inputs';
+import { PostCommentInput, postCommentInputSchema } from './inputs';
 
 export class PostCommentCommand {
-  private constructor(public readonly props: CreateCommentInput) {}
+  private constructor(private readonly props: PostCommentInput) {}
+
+  public getProps(): PostCommentInput {
+    return this.props;
+  }
 
   static create(
     input: unknown,
     // decodedToken: DecodedIdToken | undefined,
   ): Result<PostCommentCommand, InvalidRequestInputError> {
-    const inputOrError = validateCommandInput(createCommentInputSchema, input);
+    const inputOrError = validateCommandInput(postCommentInputSchema, input);
 
     if (inputOrError.isFailure) {
       return fail(inputOrError.getError());
