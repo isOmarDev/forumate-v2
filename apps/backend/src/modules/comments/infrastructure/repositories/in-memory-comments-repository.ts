@@ -39,4 +39,8 @@ export class InMemoryCommentsRepository
     this.comments = [];
     this.calls = [];
   }
+
+  public getAll(): Comment[] {
+    return this.comments;
+  }
 }
