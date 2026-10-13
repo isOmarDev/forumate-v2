@@ -32,8 +32,8 @@ function setupTest({
     username: 'jill1234',
     reputationScore,
     reputationLevel,
-    dateCreated: new Date(),
-    lastUpdated: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
 
   const commentVotesRoundup = MemberCommentVotesRoundup.toDomain({
@@ -50,7 +50,7 @@ function setupTest({
     memberId: member.id,
   });
 
-  useCase['membersRepository'].getById = jest.fn().mockResolvedValue(member);
+  useCase['membersRepository'].findById = jest.fn().mockResolvedValue(member);
   useCase['votesRepository'].getMemberPostVotesRoundup = jest
     .fn()
     .mockResolvedValue(postVotesRoundup);
