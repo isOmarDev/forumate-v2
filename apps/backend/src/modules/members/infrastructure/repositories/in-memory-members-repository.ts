@@ -8,24 +8,24 @@ export class InMemoryMembersRepository
 {
   private members: Member[] = [];
 
-  public getByUsername(username: string): Promise<Member | null> {
-    this.addCall('getByUsername', [username]);
+  public findByUsername(username: string): Promise<Member | null> {
+    this.addCall('findByUsername', [username]);
 
     return Promise.resolve(
       this.members.find((member) => member.username.value === username) ?? null,
     );
   }
 
-  public getByUserId(userId: string): Promise<Member | null> {
-    this.addCall('getByUserId', [userId]);
+  public findByUserId(userId: string): Promise<Member | null> {
+    this.addCall('findByUserId', [userId]);
 
     return Promise.resolve(
       this.members.find((member) => member.userId === userId) ?? null,
     );
   }
 
-  public getById(memberId: string): Promise<Member | null> {
-    this.addCall('getById', [memberId]);
+  public findById(memberId: string): Promise<Member | null> {
+    this.addCall('findById', [memberId]);
 
     return Promise.resolve(
       this.members.find((member) => member.id === memberId) ?? null,

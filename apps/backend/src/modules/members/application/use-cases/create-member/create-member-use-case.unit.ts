@@ -67,7 +67,7 @@ describe('createMember', () => {
     );
     expect(result.getError().message).toBeDefined();
 
-    expect(membersRepositorySpy.getTimesMethodCalled('getByUsername')).toBe(1);
+    expect(membersRepositorySpy.getTimesMethodCalled('findByUsername')).toBe(1);
     expect(membersRepositorySpy.getTimesMethodCalled('save')).toBe(0);
   });
 
@@ -86,7 +86,7 @@ describe('createMember', () => {
     expect(result.getError().code).toBe(memberErrorCodes.MEMBER_ALREADY_EXISTS);
     expect(result.getError().message).toBeDefined();
 
-    expect(membersRepositorySpy.getTimesMethodCalled('getByUserId')).toBe(1);
+    expect(membersRepositorySpy.getTimesMethodCalled('findByUserId')).toBe(1);
     expect(membersRepositorySpy.getTimesMethodCalled('save')).toBe(0);
   });
 });

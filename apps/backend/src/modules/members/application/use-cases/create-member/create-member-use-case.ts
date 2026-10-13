@@ -35,13 +35,13 @@ export class CreateMemberUseCase implements IUseCase<
     }
 
     const existingMemberByUserId =
-      await this.membersRepository.getByUserId(userId);
+      await this.membersRepository.findByUserId(userId);
     if (existingMemberByUserId) {
       return fail(new MemberAlreadyExistsError());
     }
 
     const existingMemberByUsername =
-      await this.membersRepository.getByUsername(username);
+      await this.membersRepository.findByUsername(username);
     if (existingMemberByUsername) {
       return fail(new MemberUsernameAlreadyExistsError());
     }
