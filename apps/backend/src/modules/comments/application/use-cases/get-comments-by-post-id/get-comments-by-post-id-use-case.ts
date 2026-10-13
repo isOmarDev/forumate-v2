@@ -20,7 +20,7 @@ export class GetCommentsByPostIdUseCase implements IUseCase<
   async execute(
     query: GetCommentsByPostIdQuery,
   ): Promise<GetCommentsByPostIdResponse> {
-    const post = await this.postsRepository.getById(query.postId);
+    const post = await this.postsRepository.findById(query.postId);
 
     if (!post) {
       return fail(new PostNotFoundError());
