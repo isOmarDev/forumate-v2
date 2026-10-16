@@ -47,7 +47,7 @@ export class PostCommentUseCase implements IUseCase<
       return fail(new InsufficientMemberLevelError());
     }
 
-    const post = this.postsRepository.findById(props.postId);
+    const post = await this.postsRepository.findById(props.postId);
     if (!post) {
       return fail(new PostNotFoundError());
     }
