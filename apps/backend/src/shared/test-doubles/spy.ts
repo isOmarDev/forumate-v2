@@ -1,7 +1,7 @@
-type ValidMethodNames<T> = keyof T;
+type MethodNames<T> = keyof T;
 
 interface Call<T> {
-  methodName: ValidMethodNames<T>;
+  methodName: MethodNames<T>;
   args: unknown[];
   context: unknown;
 }
@@ -15,7 +15,7 @@ export abstract class Spy<T> {
     this.calls = [];
   }
 
-  protected addCall<MethodName extends ValidMethodNames<T>>(
+  protected addCall<MethodName extends MethodNames<T>>(
     methodName: MethodName,
     args: unknown[],
     context?: unknown,
@@ -23,18 +23,24 @@ export abstract class Spy<T> {
     this.calls.push({ methodName, args, context });
   }
 
-  getTimesMethodCalled<MethodName extends ValidMethodNames<T>>(
+  public getTimesMethodCalled<MethodName extends MethodNames<T>>(
     methodName: MethodName,
   ) {
     const calls = this.calls.filter((call) => call.methodName === methodName);
     return calls.length;
   }
 
-  getCalls(): Calls<T> {
+  public wasMethodCalled<MethodName extends MethodNames<T>>(
+    methodName: MethodName,
+  ): boolean {
+    return this.getTimesMethodCalled(methodName) > 0;
+  }
+
+  public getCalls(): Calls<T> {
     return this.calls;
   }
 
-  reset() {
+  public reset() {
     this.calls = [];
   }
 }
