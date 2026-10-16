@@ -101,3 +101,21 @@ model Event {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model CommentReadModel {
+  id                    String                @id
+  postId                String
+  parentCommentId       String?
+  body                  String
+  voteScore             Int                   @default(0)
+  replyCount            Int                   @default(0)
+  authorId              String
+  authorUsername        String
+  authorReputationLevel MemberReputationLevel
+  postedAt              DateTime
+  projectedAt           DateTime              @updatedAt
+
+  @@index([postId, postedAt])
+  @@index([parentCommentId])
+  @@index([authorId])
+}
