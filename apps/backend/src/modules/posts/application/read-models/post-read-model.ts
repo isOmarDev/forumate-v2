@@ -18,11 +18,7 @@ interface PostReadModelProps {
 }
 
 export class PostReadModel {
-  private props: PostReadModelProps;
-
-  constructor(props: PostReadModelProps) {
-    this.props = props;
-  }
+  constructor(private props: PostReadModelProps) {}
 
   get id(): string {
     return this.props.id;
