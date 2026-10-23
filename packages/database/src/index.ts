@@ -10,7 +10,7 @@ export type {
   Post as PostModel,
   PostVote as PostVoteModel,
   Event as EventModel,
-  CommentReadModel as PrismaCommentReadModel,
+  CommentRead as PrismaCommentReadModel,
 } from './prisma/generated/client';
 
 export { PrismaClient, Prisma } from './prisma/generated/client';

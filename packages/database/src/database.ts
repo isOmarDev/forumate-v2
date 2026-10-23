@@ -21,15 +21,15 @@ export class PrismaDatabase implements IDatabase {
     return new PrismaClient({ adapter });
   }
 
-  getClient() {
+  public getClient() {
     return this.client;
   }
 
-  async connect() {
+  public async connect() {
     await this.client.$connect();
   }
 
-  async disconnect() {
+  public async disconnect() {
     await this.client.$disconnect();
   }
 }
@@ -37,11 +37,11 @@ export class PrismaDatabase implements IDatabase {
 export class FakeDatabase implements IDatabase {
   constructor() {}
 
-  getClient() {
+  public getClient() {
     return {} as PrismaClient;
   }
 
-  async connect() {
+  public async connect() {
     return Promise.resolve();
   }
 }
