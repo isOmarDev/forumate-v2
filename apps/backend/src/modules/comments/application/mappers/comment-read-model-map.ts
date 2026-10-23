@@ -6,7 +6,7 @@ export class CommentReadModelMap {
   public static fromPersistence(
     prismaCommentReadModel: PrismaCommentReadModel,
   ): CommentReadModel {
-    return new CommentReadModel({
+    return CommentReadModel.create({
       id: prismaCommentReadModel.id,
       postId: prismaCommentReadModel.postId,
       parentCommentId: prismaCommentReadModel.parentCommentId,
