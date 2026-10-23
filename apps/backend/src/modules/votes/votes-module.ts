@@ -39,6 +39,7 @@ export class VotesModule extends ApplicationModule {
     this.votesRouter = this.createPostsRouter();
 
     this.setupRoutes();
+    this.setupSubscriptions();
   }
 
   static build(
@@ -57,6 +58,10 @@ export class VotesModule extends ApplicationModule {
       eventBus,
       config,
     );
+  }
+
+  private setupSubscriptions() {
+    this.votesSubscriptions.register();
   }
 
   private createVotesRepository() {
