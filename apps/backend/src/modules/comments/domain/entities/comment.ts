@@ -63,6 +63,7 @@ export class Comment extends AggregateRoot {
     comment.addEvent(
       new CommentPosted({
         commentId: comment.id,
+        parentCommentId: comment.parentCommentId ?? null,
         memberId: comment.memberId,
         postId: comment.postId,
       }),
