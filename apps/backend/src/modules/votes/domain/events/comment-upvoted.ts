@@ -1,19 +1,11 @@
-import { DomainEvent } from '@forumate/core';
+import { DomainEvent } from '@forumate/core/domain';
 
-type CommentUpvotedData = {
-  commentVoteId: string;
-  commentId: string;
-  memberId: string;
-};
+import type { CommentVoteEventData } from './types';
 
-export class CommentUpvoted extends DomainEvent<CommentUpvotedData> {
+export class CommentUpvoted extends DomainEvent<CommentVoteEventData> {
   static readonly eventName = 'CommentUpvoted';
 
-  constructor(commentVoteId: string, commentId: string, memberId: string) {
-    super(CommentUpvoted.eventName, commentVoteId, {
-      commentVoteId,
-      commentId,
-      memberId,
-    });
+  constructor(data: CommentVoteEventData) {
+    super(CommentUpvoted.eventName, data.voteId, data);
   }
 }
