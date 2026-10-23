@@ -37,11 +37,10 @@ export class PrismaCommentsRepository implements ICommentsRepository {
     return CommentMap.toDomain(comment);
   }
 
-  // Should return CommentReadModel later
   async findByPostId(postId: string): Promise<Comment[]> {
-    const connection = this.database.getClient();
+    const client = this.database.getClient();
 
-    const comments = await connection.comment.findMany({ where: { postId } });
+    const comments = await client.comment.findMany({ where: { postId } });
 
     return comments.map((post: CommentModel) => CommentMap.toDomain(post));
   }
