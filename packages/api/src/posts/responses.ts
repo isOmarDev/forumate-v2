@@ -1,21 +1,18 @@
-import { memberErrorCodes, postErrorCodes } from '@forumate/errors';
+import { memberErrorCodes, postErrorCodes } from '@forumate/errors/domain';
 
 import { ApiResponse } from '../types';
 
 import { CreatePostDto, PostDto } from './dtos';
 
 // Create Post Response
-type CreatePostDomainError =
+type CreatePostError =
   | typeof memberErrorCodes.MEMBER_NOT_FOUND
   | typeof memberErrorCodes.INSUFFICIENT_MEMBER_LEVEL
   | typeof postErrorCodes.INVALID_POST_TITLE
   | typeof postErrorCodes.INVALID_POST_CONTENT
   | typeof postErrorCodes.INVALID_POST_LINK;
 
-export type CreatePostApiResponse = ApiResponse<
-  CreatePostDto,
-  CreatePostDomainError
->;
+export type CreatePostApiResponse = ApiResponse<CreatePostDto, CreatePostError>;
 
 // Get Posts Response
 export type GetPostsData = {
