@@ -4,7 +4,7 @@ import { IEventSubscriptions } from '@forumate/core';
 import { CommentPosted } from '../../domain/events/comment-posted';
 import { CommentProjector } from '../projections/comment-projector';
 
-export class CommentSubscriptions implements IEventSubscriptions {
+export class CommentsSubscriptions implements IEventSubscriptions {
   constructor(
     private eventBus: IEventBus,
     private commentProjector: CommentProjector,

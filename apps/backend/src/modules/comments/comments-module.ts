@@ -13,7 +13,7 @@ import type {
   ICommentsReadRepository,
 } from './application/ports';
 import { CommentProjector } from './application/projections/comment-projector';
-import { CommentSubscriptions } from './application/subscriptions/comment-subscriptions';
+import { CommentsSubscriptions } from './application/subscriptions/comments-subscriptions';
 import { PrismaCommentsReadRepository } from './infrastructure/repositories/prisma-comments-read-repository';
 import { PrismaCommentsRepository } from './infrastructure/repositories/prisma-comments-repository';
 import { CommentsController } from './presentation/http/controllers';
@@ -24,7 +24,7 @@ export class CommentsModule extends ApplicationModule {
   private commentsReadRepository: ICommentsReadRepository;
   private commentsService: CommentsService;
   private commentProjector: CommentProjector;
-  private commentSubscriptions: CommentSubscriptions;
+  private commentsSubscriptions: CommentsSubscriptions;
   private commentsController: CommentsController;
   private commentsRouter: CommentsRouter;
 
@@ -38,10 +38,10 @@ export class CommentsModule extends ApplicationModule {
     super(config);
 
     this.commentsRepository = this.createCommentsRepository();
-    this.commentsReadRepository = this.createCommentReadRepository();
+    this.commentsReadRepository = this.createCommentsReadRepository();
     this.commentsService = this.createCommentsService();
     this.commentProjector = this.createCommentProjector();
-    this.commentSubscriptions = this.createCommentSubscriptions();
+    this.commentsSubscriptions = this.createCommentsSubscriptions();
     this.commentsController = this.createCommentsController();
     this.commentsRouter = this.createCommentsRouter();
 
@@ -66,7 +66,7 @@ export class CommentsModule extends ApplicationModule {
   }
 
   private setupSubscriptions() {
-    this.commentSubscriptions.register();
+    this.commentsSubscriptions.register();
   }
 
   private createCommentsRepository() {
@@ -74,7 +74,7 @@ export class CommentsModule extends ApplicationModule {
     return new PrismaCommentsRepository(this.db);
   }
 
-  private createCommentReadRepository() {
+  private createCommentsReadRepository() {
     if (this.commentsReadRepository) return this.commentsReadRepository;
     return new PrismaCommentsReadRepository(this.db);
   }
@@ -96,8 +96,8 @@ export class CommentsModule extends ApplicationModule {
     return new CommentProjector(this.db, this.commentsReadRepository);
   }
 
-  private createCommentSubscriptions() {
-    return new CommentSubscriptions(this.eventBus, this.commentProjector);
+  private createCommentsSubscriptions() {
+    return new CommentsSubscriptions(this.eventBus, this.commentProjector);
   }
 
   private createCommentsRouter() {
