@@ -1,7 +1,11 @@
-import { VoteType } from './types';
+import { VoteStatus } from './types';
 
-export type PostVoteDto = {
+export type VoteOnPostDto = {
   postId: string;
-  memberId: string;
-  voteType: VoteType;
+  voteStatus: VoteStatus;
+};
+
+export type VoteOnCommentDto = {
+  commentId: string;
+  voteStatus: VoteStatus;
 };
