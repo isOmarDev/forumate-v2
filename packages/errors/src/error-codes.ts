@@ -4,6 +4,7 @@ import {
   memberErrorCodes,
   postErrorCodes,
   userErrorCodes,
+  voteErrorCodes,
 } from './domain';
 import { networkErrorCodes } from './network';
 import { requestErrorCodes } from './request';
@@ -15,6 +16,7 @@ export const domainErrorCodes = {
   ...commentErrorCodes,
   ...postErrorCodes,
   ...marketingErrorCodes,
+  ...voteErrorCodes,
 } as const;
 
 export const infraErrorCodes = {
