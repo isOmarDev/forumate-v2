@@ -34,19 +34,19 @@ model Member {
 }
 
 model Post {
-  id             String     @id @default(uuid())
-  memberPostedBy Member     @relation(fields: [memberId], references: [id])
-  memberId       String
-  postType       PostType
-  title          String
-  content        String?
-  link           String?
-  comments       Comment[]
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  postVotes      PostVote[]
-  voteScore      Int        @default(0)
-  slug           String     @unique
+  id        String     @id @default(uuid())
+  member    Member     @relation(fields: [memberId], references: [id])
+  memberId  String
+  postType  PostType
+  title     String
+  content   String?
+  link      String?
+  comments  Comment[]
+  postVotes PostVote[]
+  voteScore Int        @default(0)
+  slug      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Comment {
@@ -102,7 +102,7 @@ model Event {
   updatedAt   DateTime @updatedAt
 }
 
-model CommentReadModel {
+model CommentRead {
   id                    String                @id
   postId                String
   parentCommentId       String?
