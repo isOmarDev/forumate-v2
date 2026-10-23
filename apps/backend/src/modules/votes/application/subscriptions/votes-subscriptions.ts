@@ -1,5 +1,6 @@
 import { UpdateMemberReputationScoreCommand } from '@forumate/api/votes';
 import { type IEventBus } from '@forumate/bus';
+import { IEventSubscriptions } from '@forumate/core/application';
 
 import { CommentDownvoted } from '../../domain/events/comment-downvoted';
 import { CommentUpvoted } from '../../domain/events/comment-upvoted';
@@ -7,35 +8,33 @@ import { PostDownvoted } from '../../domain/events/post-downvoted';
 import { PostUpvoted } from '../../domain/events/post-upvoted';
 import { VotesService } from '../votes-service';
 
-export class VotesSubscriptions {
+export class VotesSubscriptions implements IEventSubscriptions {
   constructor(
-    private eventBus: IEventBus,
-    private voteService: VotesService,
-  ) {
-    this.setupSubscriptions();
-  }
+    private readonly eventBus: IEventBus,
+    private readonly voteService: VotesService,
+  ) {}
 
-  setupSubscriptions() {
+  register() {
     this.eventBus.subscribe<PostUpvoted>(
-      PostUpvoted.eventName,
+      PostUpvoted.name,
       this.onPostOrCommentVoteChanged.bind(this),
     );
     this.eventBus.subscribe<PostDownvoted>(
-      PostDownvoted.eventName,
+      PostDownvoted.name,
       this.onPostOrCommentVoteChanged.bind(this),
     );
     this.eventBus.subscribe<CommentUpvoted>(
-      CommentUpvoted.eventName,
+      CommentUpvoted.name,
       this.onPostOrCommentVoteChanged.bind(this),
     );
     this.eventBus.subscribe<CommentDownvoted>(
-      CommentDownvoted.eventName,
+      CommentDownvoted.name,
       this.onPostOrCommentVoteChanged.bind(this),
     );
   }
 
-  async onPostOrCommentVoteChanged(
-    event: CommentUpvoted | PostUpvoted | CommentDownvoted | CommentUpvoted,
+  private async onPostOrCommentVoteChanged(
+    event: PostUpvoted | PostDownvoted | CommentUpvoted | CommentDownvoted,
   ) {
     try {
       console.log('updating member reputation score based on post vote');
