@@ -18,35 +18,35 @@ import {
 
 export class VotesService {
   constructor(
-    private memberRepository: IMembersRepository,
+    private membersRepository: IMembersRepository,
     private commentsRepository: ICommentsRepository,
-    private postRepository: IPostsRepository,
-    private voteRepository: IVotesRepository,
+    private postsRepository: IPostsRepository,
+    private votesRepository: IVotesRepository,
     private eventBus: IEventBus,
   ) {}
 
-  castVoteOnPost(command: VoteOnPostCommand) {
+  voteOnPost(command: VoteOnPostCommand) {
     return new VoteOnPostUseCase(
-      this.memberRepository,
-      this.postRepository,
-      this.voteRepository,
+      this.membersRepository,
+      this.postsRepository,
+      this.votesRepository,
       this.eventBus,
     ).execute(command);
   }
 
-  castVoteOnComment(command: VoteOnCommentCommand) {
+  voteOnComment(command: VoteOnCommentCommand) {
     return new VoteOnCommentUseCase(
-      this.memberRepository,
+      this.membersRepository,
       this.commentsRepository,
-      this.voteRepository,
+      this.votesRepository,
       this.eventBus,
     ).execute(command);
   }
 
   updateMemberReputationScore(command: UpdateMemberReputationScoreCommand) {
     return new UpdateMemberReputationScoreUseCase(
-      this.memberRepository,
-      this.voteRepository,
+      this.membersRepository,
+      this.votesRepository,
       this.eventBus,
     ).execute(command);
   }
