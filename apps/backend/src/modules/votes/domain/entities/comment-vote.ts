@@ -1,26 +1,25 @@
 import { randomUUID } from 'node:crypto';
 
-import type { VoteType } from '@forumate/api/votes';
-import { AggregateRoot } from '@forumate/core';
+import { AggregateRoot } from '@forumate/core/domain';
 
 import { CommentDownvoted } from '../events/comment-downvoted';
+import { CommentUnvoted } from '../events/comment-unvoted';
 import { CommentUpvoted } from '../events/comment-upvoted';
+import { CommentVoteEventData } from '../events/types';
+import { VoteStatus, VoteValue } from '../value-objects/vote-status';
 
-type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
+type VoteAction = 'upvote' | 'downvote';
 
 interface CommentVoteProps {
   id: string;
   memberId: string;
   commentId: string;
-  voteState: VoteState;
+  voteStatus: VoteStatus;
 }
 
 export class CommentVote extends AggregateRoot {
-  private props: CommentVoteProps;
-
-  private constructor(props: CommentVoteProps) {
+  private constructor(private props: CommentVoteProps) {
     super();
-    this.props = props;
   }
 
   get id(): string {
@@ -35,51 +34,8 @@ export class CommentVote extends AggregateRoot {
     return this.props.commentId;
   }
 
-  get voteState(): VoteState {
-    return this.props.voteState;
-  }
-
-  getValue(): number {
-    switch (this.props.voteState) {
-      case 'Upvoted':
-        return 1;
-      case 'Downvoted':
-        return -1;
-      default:
-        return 0;
-    }
-  }
-
-  castVote(voteType: VoteType) {
-    if (voteType === 'upvote') {
-      this.upvote();
-    } else {
-      this.downvote();
-    }
-  }
-
-  private upvote() {
-    if (this.props.voteState === 'Upvoted') {
-      return;
-    }
-    this.props.voteState = 'Upvoted';
-    this.domainEvents.push(
-      new CommentUpvoted(this.id, this.commentId, this.props.memberId),
-    );
-  }
-
-  private downvote() {
-    if (this.props.voteState === 'Downvoted') {
-      return;
-    }
-    this.props.voteState = 'Downvoted';
-    this.domainEvents.push(
-      new CommentDownvoted(this.id, this.props.commentId, this.props.memberId),
-    );
-  }
-
-  public static toDomain(props: CommentVoteProps): CommentVote {
-    return new CommentVote(props);
+  get voteStatus(): VoteStatus {
+    return this.props.voteStatus;
   }
 
   public static create(memberId: string, commentId: string): CommentVote {
@@ -87,28 +43,69 @@ export class CommentVote extends AggregateRoot {
       id: randomUUID(),
       memberId: memberId,
       commentId: commentId,
-      voteState: 'Default',
+      voteStatus: VoteStatus.unvoted(),
     });
   }
 
-  public static createUpvote(memberId: string, commentId: string): CommentVote {
-    return new CommentVote({
-      id: randomUUID(),
-      memberId: memberId,
-      commentId: commentId,
-      voteState: 'Upvoted',
-    });
+  public static reconstitute(props: CommentVoteProps): CommentVote {
+    return new CommentVote({ ...props });
   }
 
-  public static createDownvote(
-    memberId: string,
-    commentId: string,
-  ): CommentVote {
-    return new CommentVote({
-      id: randomUUID(),
-      memberId: memberId,
-      commentId: commentId,
-      voteState: 'Downvoted',
-    });
+  public getValue(): VoteValue {
+    return this.props.voteStatus.toValue();
+  }
+
+  public castVote(voteAction: VoteAction): void {
+    const oldStatus = this.props.voteStatus;
+
+    switch (voteAction) {
+      case 'upvote':
+        this.upvote();
+        break;
+      case 'downvote':
+        this.downvote();
+        break;
+      default: {
+        const _exhaustive: never = voteAction;
+        throw new Error(`Unhandled vote action: ${_exhaustive}`);
+      }
+    }
+
+    const newStatus = this.voteStatus;
+    const scoreChange = newStatus.toValue() - oldStatus.toValue();
+
+    this.addVoteChangeEvent(newStatus, scoreChange);
+  }
+
+  private upvote(): void {
+    this.props.voteStatus = this.props.voteStatus.isUpvoted()
+      ? VoteStatus.unvoted()
+      : VoteStatus.upvoted();
+  }
+
+  private downvote(): void {
+    this.props.voteStatus = this.props.voteStatus.isDownvoted()
+      ? VoteStatus.unvoted()
+      : VoteStatus.downvoted();
+  }
+
+  private addVoteChangeEvent(
+    voteStatus: VoteStatus,
+    scoreChange: number,
+  ): void {
+    const eventData: CommentVoteEventData = {
+      voteId: this.id,
+      memberId: this.memberId,
+      commentId: this.commentId,
+      scoreChange,
+    };
+
+    if (voteStatus.isUpvoted()) {
+      this.addEvent(new CommentUpvoted(eventData));
+    } else if (voteStatus.isDownvoted()) {
+      this.addEvent(new CommentDownvoted(eventData));
+    } else {
+      this.addEvent(new CommentUnvoted(eventData));
+    }
   }
 }
