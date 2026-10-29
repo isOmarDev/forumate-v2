@@ -1,20 +1,20 @@
 // Create Post
 import { z } from 'zod';
 
-import { PostTypeSchema } from './types';
+import { postTypeSchema } from './types';
 
 // Create text/link post
 export const TextPostSchema = z.object({
   title: z.string().trim().min(1, 'Title is required'),
   content: z.string().trim().min(1, 'Post content is required'),
-  postType: z.literal(PostTypeSchema.enum.text),
+  postType: z.literal(postTypeSchema.enum.text),
   memberId: z.string().min(1, 'Member ID is required'),
 });
 
 export const LinkPostSchema = z.object({
   title: z.string().trim().min(1, 'Title is required'),
   link: z.string().trim().min(1, 'Post link is required'),
-  postType: z.literal(PostTypeSchema.enum.link),
+  postType: z.literal(postTypeSchema.enum.link),
   memberId: z.string().min(1, 'Member ID is required'),
 });
 
