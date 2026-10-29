@@ -1,48 +1,38 @@
 import { randomUUID } from 'node:crypto';
 
-import { AggregateRoot } from '@forumate/core/domain';
+import { DomainEvent } from '@forumate/core/domain';
 
 import { CommentDownvoted } from '../events/comment-downvoted';
 import { CommentUnvoted } from '../events/comment-unvoted';
 import { CommentUpvoted } from '../events/comment-upvoted';
 import { CommentVoteEventData } from '../events/types';
-import { VoteStatus, VoteValue } from '../value-objects/vote-status';
+import { VoteStatus } from '../value-objects/vote-status';
 
-type VoteAction = 'upvote' | 'downvote';
+import { Vote, VoteProps } from './vote';
 
-interface CommentVoteProps {
-  id: string;
-  memberId: string;
+type CreateCommentVoteProps = { memberId: string; commentId: string };
+
+interface CommentVoteProps extends VoteProps {
   commentId: string;
-  voteStatus: VoteStatus;
 }
 
-export class CommentVote extends AggregateRoot {
-  private constructor(private props: CommentVoteProps) {
-    super();
-  }
-
-  get id(): string {
-    return this.props.id;
-  }
-
-  get memberId(): string {
-    return this.props.memberId;
+export class CommentVote extends Vote<CommentVoteProps> {
+  private constructor(props: CommentVoteProps) {
+    super(props);
   }
 
   get commentId(): string {
     return this.props.commentId;
   }
 
-  get voteStatus(): VoteStatus {
-    return this.props.voteStatus;
-  }
-
-  public static create(memberId: string, commentId: string): CommentVote {
+  public static create({
+    memberId,
+    commentId,
+  }: CreateCommentVoteProps): CommentVote {
     return new CommentVote({
       id: randomUUID(),
-      memberId: memberId,
       commentId: commentId,
+      memberId: memberId,
       voteStatus: VoteStatus.unvoted(),
     });
   }
@@ -51,48 +41,10 @@ export class CommentVote extends AggregateRoot {
     return new CommentVote({ ...props });
   }
 
-  public getValue(): VoteValue {
-    return this.props.voteStatus.toValue();
-  }
-
-  public castVote(voteAction: VoteAction): void {
-    const oldStatus = this.props.voteStatus;
-
-    switch (voteAction) {
-      case 'upvote':
-        this.upvote();
-        break;
-      case 'downvote':
-        this.downvote();
-        break;
-      default: {
-        const _exhaustive: never = voteAction;
-        throw new Error(`Unhandled vote action: ${_exhaustive}`);
-      }
-    }
-
-    const newStatus = this.voteStatus;
-    const scoreChange = newStatus.toValue() - oldStatus.toValue();
-
-    this.addVoteChangeEvent(newStatus, scoreChange);
-  }
-
-  private upvote(): void {
-    this.props.voteStatus = this.props.voteStatus.isUpvoted()
-      ? VoteStatus.unvoted()
-      : VoteStatus.upvoted();
-  }
-
-  private downvote(): void {
-    this.props.voteStatus = this.props.voteStatus.isDownvoted()
-      ? VoteStatus.unvoted()
-      : VoteStatus.downvoted();
-  }
-
-  private addVoteChangeEvent(
+  protected createVoteChangeEvent(
     voteStatus: VoteStatus,
     scoreChange: number,
-  ): void {
+  ): DomainEvent<CommentVoteEventData> {
     const eventData: CommentVoteEventData = {
       voteId: this.id,
       memberId: this.memberId,
@@ -101,11 +53,11 @@ export class CommentVote extends AggregateRoot {
     };
 
     if (voteStatus.isUpvoted()) {
-      this.addEvent(new CommentUpvoted(eventData));
+      return new CommentUpvoted(eventData);
     } else if (voteStatus.isDownvoted()) {
-      this.addEvent(new CommentDownvoted(eventData));
+      return new CommentDownvoted(eventData);
     } else {
-      this.addEvent(new CommentUnvoted(eventData));
+      return new CommentUnvoted(eventData);
     }
   }
 }
