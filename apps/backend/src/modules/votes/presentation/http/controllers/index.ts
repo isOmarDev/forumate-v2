@@ -6,11 +6,11 @@ import { VoteOnPostController } from './vote-on-post-controller';
 export class VotesController {
   constructor(private readonly votesService: VotesService) {}
 
-  public VoteOnPost() {
+  public voteOnPost() {
     return new VoteOnPostController(this.votesService);
   }
 
-  public VoteOnComment() {
+  public voteOnComment() {
     return new VoteOnCommentController(this.votesService);
   }
 }
