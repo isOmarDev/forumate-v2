@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import z from 'zod';
 
-import { LinkPostSchema, PostTypeSchema, TextPostSchema } from '@forumate/api';
+import { LinkPostSchema, postTypeSchema, TextPostSchema } from '@forumate/api';
 
 type PostInput = { title: string; memberId: string; postType: string };
 type TextPostInput = z.infer<typeof TextPostSchema>;
@@ -34,7 +34,7 @@ class CreateTextPostInputBuilder extends BasePostInputBuilder<TextPostInput> {
     super({
       title: faker.lorem.words({ min: 3, max: 8 }),
       content: faker.lorem.sentences({ min: 2, max: 5 }),
-      postType: PostTypeSchema.enum.text,
+      postType: postTypeSchema.enum.text,
       memberId: faker.string.uuid(),
     });
   }
@@ -50,7 +50,7 @@ class CreateLinkPostInputBuilder extends BasePostInputBuilder<LinkPostInput> {
     super({
       title: faker.lorem.words({ min: 3, max: 8 }),
       link: faker.internet.url({ protocol: 'https' }),
-      postType: PostTypeSchema.enum.link,
+      postType: postTypeSchema.enum.link,
       memberId: faker.string.uuid(),
     });
   }
