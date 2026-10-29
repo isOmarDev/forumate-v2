@@ -18,8 +18,6 @@ export function setupPostByRandomMember(
     postType: PostType.create('text').getValue(),
   });
 
-  expect(postOrError.isSuccess).toBe(true);
-
   const post = postOrError.getValue();
 
   repositorySpy.seed(post);

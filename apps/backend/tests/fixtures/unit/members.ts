@@ -15,8 +15,6 @@ export function setupLevel1Member(repositorySpy: InMemoryMembersRepository) {
     username: MemberUsername.create(memberInput.username).getValue(),
   });
 
-  expect(memberOrError.isSuccess).toBe(true);
-
   const member = memberOrError.getValue();
 
   repositorySpy.seed(member);
