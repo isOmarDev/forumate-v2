@@ -1,13 +1,16 @@
 import { GetPostsQuery } from '@forumate/api/posts';
 
 import { Spy } from '../../../../shared/test-doubles/spy';
-import type { IPostsRepository, IPostsQueries } from '../../application/ports';
+import type {
+  IPostsRepository,
+  IPostsReadRepository,
+} from '../../application/ports';
 import { PostReadModel } from '../../application/read-models/post-read-model';
 import { Post } from '../../domain/entities/post';
 
 export class InMemoryPostsRepository
-  extends Spy<IPostsRepository & IPostsQueries>
-  implements IPostsRepository, IPostsQueries
+  extends Spy<IPostsRepository & IPostsReadRepository>
+  implements IPostsRepository, IPostsReadRepository
 {
   private posts: Post[] = [];
   private readModels: PostReadModel[] = [];

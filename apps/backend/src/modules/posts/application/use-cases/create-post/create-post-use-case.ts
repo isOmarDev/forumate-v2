@@ -55,9 +55,9 @@ export class CreatePostUseCase implements IUseCase<
       return fail(new MemberNotFoundError());
     }
 
-    const canCreatePost = CanCreatePostPolicy.isAllowed(member);
-    if (!canCreatePost) {
-      return fail(new InsufficientMemberLevelError());
+    const canCreatePost = CanCreatePostPolicy.check(member);
+    if (canCreatePost.isFailure) {
+      return fail(canCreatePost.getError());
     }
 
     const titleOrError = PostTitle.create(props.title);

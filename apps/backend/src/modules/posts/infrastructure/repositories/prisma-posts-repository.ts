@@ -9,7 +9,10 @@ import { DatabaseError } from '@forumate/errors/server';
 
 import { MemberReadModel } from '../../../members/application/read-models/member-read-model';
 import { PostMap } from '../../application/mappers/post-map';
-import type { IPostsRepository, IPostsQueries } from '../../application/ports';
+import type {
+  IPostsRepository,
+  IPostsReadRepository,
+} from '../../application/ports';
 import { PostReadModel } from '../../application/read-models/post-read-model';
 import { Post } from '../../domain/entities/post';
 
@@ -17,7 +20,9 @@ type PostModelWithMember = PostModel & {
   memberPostedBy: MemberModel;
 };
 
-export class PrismaPostsRepository implements IPostsRepository, IPostsQueries {
+export class PrismaPostsRepository
+  implements IPostsRepository, IPostsReadRepository
+{
   constructor(private database: IDatabase) {}
 
   async findById(id: string): Promise<Post | null> {

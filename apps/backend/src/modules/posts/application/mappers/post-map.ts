@@ -1,5 +1,5 @@
 import { IToDomainMapper, IToPersistenceMapper } from '@forumate/core';
-import { type PostModel } from '@forumate/database';
+import { Persistence, type PostModel } from '@forumate/database';
 
 import {
   Post,
@@ -12,7 +12,7 @@ import { PostLinkMap } from './post-link-map';
 import { PostSlugMap } from './post-slug-map';
 import { PostTitleMap } from './post-title-map';
 
-type PostPersistence = Omit<PostModel, 'createdAt' | 'updatedAt'>;
+type PostPersistence = Persistence<PostModel>;
 
 class PostMapper
   implements

@@ -7,7 +7,7 @@ import { IEventBus } from '@forumate/bus';
 
 import type { IMembersRepository } from '../../members/application/ports/members-repository';
 
-import { IPostsQueries } from './ports';
+import { IPostsReadRepository } from './ports';
 import type { IPostsRepository } from './ports/posts-repository';
 import {
   CreatePostUseCase,
@@ -18,7 +18,7 @@ import {
 
 export class PostsService {
   constructor(
-    private postsRepository: IPostsRepository & IPostsQueries,
+    private postsRepository: IPostsRepository & IPostsReadRepository,
     private membersRepository: IMembersRepository,
     private eventBus: IEventBus,
   ) {}

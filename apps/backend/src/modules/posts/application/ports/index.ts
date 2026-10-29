@@ -1,2 +1,2 @@
-export * from './posts-queries';
+export * from './posts-read-repository';
 export * from './posts-repository';
