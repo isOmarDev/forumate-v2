@@ -1,4 +1,4 @@
-import { VoteStatus } from './types';
+type VoteStatus = 'UPVOTED' | 'DOWNVOTED' | 'NONE';
 
 export type VoteOnPostDto = {
   postId: string;

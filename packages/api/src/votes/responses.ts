@@ -20,7 +20,7 @@ export type VoteOnCommentError =
   | typeof commentErrorCodes.COMMENT_NOT_FOUND
   | typeof memberErrorCodes.MEMBER_NOT_FOUND;
 
-export type VoteOnCommentAPIResponse = ApiResponse<
+export type VoteOnCommentApiResponse = ApiResponse<
   VoteOnCommentDto,
   VoteOnCommentError
 >;
