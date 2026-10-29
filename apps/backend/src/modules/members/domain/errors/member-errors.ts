@@ -19,10 +19,8 @@ export class InvalidMemberUsernameError extends ValidationError {
 export class InsufficientMemberLevelError extends ForbiddenError {
   readonly code = memberErrorCodes.INSUFFICIENT_MEMBER_LEVEL;
 
-  constructor(
-    message: string = 'Member level is insufficient for this action.',
-  ) {
-    super(message);
+  constructor(readonly requiredLevel: ReputationLevel) {
+    super(`You must be reputation level ${requiredLevel} or higher`);
   }
 }
 

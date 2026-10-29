@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto';
 
-import { AggregateRoot, Result, success } from '@forumate/core';
+import { AggregateRoot, Result, success, fail } from '@forumate/core';
 
+import { InsufficientMemberLevelError } from '../errors/member-errors';
 import { MemberReputationLevelUpgraded } from '../events/member-reputation-level-upgraded';
 import {
   MemberReputationLevel,
@@ -106,7 +107,13 @@ export class Member extends AggregateRoot {
     }
   }
 
-  public hasReputationLevelAtLeast(level: number): boolean {
-    return this.props.reputationLevel.isAtLeast(level);
+  public reputationLevelAtLeast(
+    level: ReputationLevel,
+  ): Result<void, InsufficientMemberLevelError> {
+    if (!this.props.reputationLevel.isAtLeast(level)) {
+      return fail(new InsufficientMemberLevelError(level));
+    }
+
+    return success(undefined);
   }
 }

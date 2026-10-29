@@ -49,7 +49,7 @@ export class MemberReputationLevel extends ValueObject<ReputationLevelProps> {
     return new MemberReputationLevel({ value: ReputationLevel.Level1 });
   }
 
-  public isAtLeast(threshold: number): boolean {
-    return this.numericValue >= threshold;
+  public isAtLeast(required: ReputationLevel): boolean {
+    return this.numericValue >= LEVEL_ORDER[required];
   }
 }

@@ -4,7 +4,7 @@ import {
   IToDtoMapper,
   IToPersistenceMapper,
 } from '@forumate/core';
-import { MemberModel } from '@forumate/database';
+import { MemberModel, Persistence } from '@forumate/database';
 
 import { Member } from '../../domain/entities/member';
 import { ReputationLevel } from '../../domain/value-objects/member-reputation-level';
@@ -12,7 +12,7 @@ import { ReputationLevel } from '../../domain/value-objects/member-reputation-le
 import { MemberReputationLevelMap } from './member-reputation-level-map';
 import { MemberUsernameMap } from './member-username-map';
 
-type MemberPersistence = Omit<MemberModel, 'createdAt' | 'updatedAt'>;
+type MemberPersistence = Persistence<MemberModel>;
 
 class MemberMapper
   implements
