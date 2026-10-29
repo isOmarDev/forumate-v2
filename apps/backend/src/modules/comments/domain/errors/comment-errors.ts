@@ -1,4 +1,4 @@
-import { ValidationError } from '@forumate/errors/application';
+import { NotFoundError, ValidationError } from '@forumate/errors/application';
 import { commentErrorCodes } from '@forumate/errors/domain';
 
 export class InvalidCommentBodyError extends ValidationError {
@@ -6,5 +6,13 @@ export class InvalidCommentBodyError extends ValidationError {
 
   constructor(message: string) {
     super(message);
+  }
+}
+
+export class CommentNotFoundError extends NotFoundError {
+  readonly code = commentErrorCodes.COMMENT_NOT_FOUND;
+
+  constructor() {
+    super('Comment not found');
   }
 }

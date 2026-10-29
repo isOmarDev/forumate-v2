@@ -5,7 +5,7 @@ import { AggregateRoot, Result, success } from '@forumate/core';
 import { CommentPosted } from '../events/comment-posted';
 import { CommentBody } from '../value-objects/comment-body';
 
-type CreateCommentProps = {
+export type CreateCommentProps = {
   postId: string;
   body: CommentBody;
   memberId: string;
@@ -74,5 +74,9 @@ export class Comment extends AggregateRoot {
 
   public static reconstitute(props: CommentProps): Comment {
     return new Comment({ ...props });
+  }
+
+  public isAuthoredBy(memberId: string): boolean {
+    return this.memberId === memberId;
   }
 }

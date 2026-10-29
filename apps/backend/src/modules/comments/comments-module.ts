@@ -82,6 +82,7 @@ export class CommentsModule extends ApplicationModule {
   private createCommentsService() {
     return new CommentsService(
       this.commentsRepository,
+      this.commentsReadRepository,
       this.postsRepository,
       this.membersRepository,
       this.eventBus,

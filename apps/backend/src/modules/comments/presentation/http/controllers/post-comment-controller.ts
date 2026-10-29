@@ -14,9 +14,10 @@ export class PostCommentController extends BaseController {
     req: express.Request<{ postId: string }>,
     res: express.Response,
   ) {
+    const postId = req.params.postId;
     const commandOrError = PostCommentCommand.create({
       ...req.body,
-      postId: req.params.postId,
+      postId,
     });
 
     if (commandOrError.isFailure) {

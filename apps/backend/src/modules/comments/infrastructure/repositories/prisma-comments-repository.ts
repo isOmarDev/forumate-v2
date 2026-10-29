@@ -1,4 +1,4 @@
-import { CommentModel, type IDatabase, Prisma } from '@forumate/database';
+import { type CommentModel, type IDatabase, Prisma } from '@forumate/database';
 import { DatabaseError } from '@forumate/errors';
 
 import { CommentMap } from '../../application/mappers/comment-map';

@@ -42,9 +42,9 @@ export class PostCommentUseCase implements IUseCase<
       return fail(new MemberNotFoundError());
     }
 
-    const canPostComment = CanPostCommentPolicy.isAllowed(member);
-    if (!canPostComment) {
-      return fail(new InsufficientMemberLevelError());
+    const canPostComment = CanPostCommentPolicy.check(member);
+    if (canPostComment.isFailure) {
+      return fail(canPostComment.getError());
     }
 
     const post = await this.postsRepository.findById(props.postId);
