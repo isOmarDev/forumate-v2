@@ -36,6 +36,26 @@ export abstract class Spy<T> {
     return this.getTimesMethodCalled(methodName) > 0;
   }
 
+  public getMethodCall<MethodName extends MethodNames<T>>(
+    methodName: MethodName,
+  ) {
+    return this.calls.find((c) => c.methodName === methodName);
+  }
+
+  public getMethodCallArgs<MethodName extends MethodNames<T>>(
+    methodName: MethodName,
+  ) {
+    const call = this.getMethodCall(methodName);
+
+    if (!call) {
+      throw new Error(
+        `Expected "${String(methodName)}" to have been called, but it was not`,
+      );
+    }
+
+    return call.args;
+  }
+
   public getCalls(): Calls<T> {
     return this.calls;
   }
