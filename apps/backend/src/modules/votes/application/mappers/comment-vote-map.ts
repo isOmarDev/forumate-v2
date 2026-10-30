@@ -3,11 +3,12 @@ import type {
   IToPersistenceMapper,
 } from '@forumate/core/application';
 import { type CommentVoteModel } from '@forumate/database';
+import { type Persistence } from '@forumate/database';
 
 import { CommentVote } from '../../domain/entities/comment-vote';
 import { VoteStatus } from '../../domain/value-objects/vote-status';
 
-type CommentVotePersistence = Omit<CommentVoteModel, 'createdAt' | 'updatedAt'>;
+type CommentVotePersistence = Persistence<CommentVoteModel>;
 
 class CommentVoteMapper
   implements
@@ -23,12 +24,12 @@ class CommentVoteMapper
     });
   }
 
-  public toPersistence(commentVote: CommentVote): CommentVotePersistence {
+  public toPersistence(vote: CommentVote): CommentVotePersistence {
     return {
-      id: commentVote.id,
-      commentId: commentVote.commentId,
-      memberId: commentVote.memberId,
-      value: commentVote.getValue(),
+      id: vote.id,
+      commentId: vote.commentId,
+      memberId: vote.memberId,
+      value: vote.getValue(),
     };
   }
 }
