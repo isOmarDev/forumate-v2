@@ -30,11 +30,11 @@ abstract class VoteInputBuilder<T extends VoteInput> {
     return this;
   }
 
-  public asUpvoted() {
+  public asUpvote() {
     return this.withVoteType('upvote');
   }
 
-  public asDownvoted() {
+  public asDownvote() {
     return this.withVoteType('downvote');
   }
 
