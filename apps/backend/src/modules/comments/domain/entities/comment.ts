@@ -60,7 +60,7 @@ export class Comment extends AggregateRoot {
       voteScore: 0,
     });
 
-    comment.addEvent(
+    comment.addDomainEvent(
       new CommentPosted({
         commentId: comment.id,
         parentCommentId: comment.parentCommentId ?? null,
