@@ -4,6 +4,7 @@ import { AggregateRoot, Result, success, fail } from '@forumate/core';
 
 import { InsufficientMemberLevelError } from '../errors/member-errors';
 import { MemberReputationLevelUpgraded } from '../events/member-reputation-level-upgraded';
+import { MemberReputationChanged } from '../events/member-reputation-score-changed';
 import {
   MemberReputationLevel,
   ReputationLevel,
@@ -24,11 +25,6 @@ interface MemberProps {
 }
 
 export class Member extends AggregateRoot {
-  public static REPUTATION_SCORE_THRESH = {
-    Level1: 5,
-    Level2: 10,
-  };
-
   private constructor(private props: MemberProps) {
     super();
     this.props = props;
@@ -73,36 +69,29 @@ export class Member extends AggregateRoot {
     return new Member(props);
   }
 
-  public updateReputationScore(newScore: number) {
-    const oldScore = this.props.reputationScore;
+  public updateReputation(scoreChange: number) {
+    const newScore = this.props.reputationScore + scoreChange;
+    const previousLevel = this.props.reputationLevel;
+    const newLevel = MemberReputationLevel.fromScore(newScore);
+
     this.props.reputationScore = newScore;
-    console.log('score', newScore);
+    this.props.reputationLevel = newLevel;
 
-    if (
-      oldScore < Member.REPUTATION_SCORE_THRESH.Level1 &&
-      newScore >= Member.REPUTATION_SCORE_THRESH.Level1
-    ) {
-      const reputationLevel2 = MemberReputationLevel.create(
-        ReputationLevel.Level2,
-      ).getValue();
-      this.props.reputationLevel = reputationLevel2;
+    this.addDomainEvent(
+      new MemberReputationChanged({
+        memberId: this.id,
+        score: newScore,
+        level: newLevel.value,
+        previousLevel: previousLevel.value,
+      }),
+    );
 
-      this.domainEvents.push(
-        new MemberReputationLevelUpgraded(this.id, this.reputationLevel.value),
-      );
-      console.log('going to level 2!');
-    } else if (
-      oldScore < Member.REPUTATION_SCORE_THRESH.Level2 &&
-      newScore >= Member.REPUTATION_SCORE_THRESH.Level2
-    ) {
-      const reputationLevel3 = MemberReputationLevel.create(
-        ReputationLevel.Level3,
-      ).getValue();
-      this.props.reputationLevel = reputationLevel3;
-      console.log('going to level 3!');
-
-      this.domainEvents.push(
-        new MemberReputationLevelUpgraded(this.id, this.reputationLevel.value),
+    if (newLevel.isHigherThan(previousLevel)) {
+      this.addDomainEvent(
+        new MemberReputationLevelUpgraded({
+          memberId: this.id,
+          newLevel: newLevel.value,
+        }),
       );
     }
   }
