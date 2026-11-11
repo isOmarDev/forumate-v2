@@ -14,14 +14,14 @@ import { PostCommentInputBuilder } from '../../../../../../tests/builders/inputs
 import { setupLevel1Member } from '../../../../../../tests/fixtures/unit/members';
 import { setupPostByRandomMember } from '../../../../../../tests/fixtures/unit/posts';
 import { MemberNotFoundError } from '../../../../members/domain/errors/member-errors';
-import { InMemoryMembersRepository } from '../../../../members/infrastructure/repositories/in-memory-members-repository';
+import { InMemoryMembersRepository } from '../../../../members/infrastructure/repositories/in-memory';
 import { PostNotFoundError } from '../../../../posts/domain/errors/posts-errors';
-import { InMemoryPostsRepository } from '../../../../posts/infrastructure/repositories/in-memory-posts-repository';
+import { InMemoryPostsRepository } from '../../../../posts/infrastructure/repositories/in-memory/in-memory-posts-repository';
 import { Comment } from '../../../domain/entities/comment';
 import { InvalidCommentBodyError } from '../../../domain/errors/comment-errors';
 import { CommentPosted } from '../../../domain/events/comment-posted';
 import { CommentBody } from '../../../domain/value-objects/comment-body';
-import { InMemoryCommentsRepository } from '../../../infrastructure/repositories/in-memory-comments-repository';
+import { InMemoryCommentsRepository } from '../../../infrastructure/repositories/in-memory/in-memory-comments-repository';
 
 import { PostCommentUseCase } from './post-comment-use-case';
 

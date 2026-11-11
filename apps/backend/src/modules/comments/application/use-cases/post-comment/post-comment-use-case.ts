@@ -35,7 +35,7 @@ export class PostCommentUseCase implements IUseCase<
   ) {}
 
   async execute(command: PostCommentCommand): Promise<PostCommentResponse> {
-    const props = command.getProps();
+    const props = command.props;
 
     const member = await this.membersRepository.findById(props.memberId);
     if (!member) {
