@@ -1,5 +1,6 @@
-import { ReputationLevel } from '@forumate/api';
 import { DomainEvent } from '@forumate/core';
+
+import { ReputationLevel } from '../value-objects';
 
 type MemberReputationLevelUpgradedData = {
   memberId: string;
@@ -9,10 +10,7 @@ type MemberReputationLevelUpgradedData = {
 export class MemberReputationLevelUpgraded extends DomainEvent<MemberReputationLevelUpgradedData> {
   static readonly eventName = 'MemberReputationLevelUpgraded';
 
-  constructor(memberId: string, newLevel: ReputationLevel) {
-    super(MemberReputationLevelUpgraded.eventName, memberId, {
-      memberId,
-      newLevel,
-    });
+  constructor(data: MemberReputationLevelUpgradedData) {
+    super(MemberReputationLevelUpgraded.eventName, data.memberId, data);
   }
 }
