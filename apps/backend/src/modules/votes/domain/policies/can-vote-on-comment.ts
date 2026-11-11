@@ -1,9 +1,23 @@
+import { Result, success } from '@forumate/core/application';
+
 import { Comment } from '../../../comments/domain/entities/comment';
 import { Member } from '../../../members/domain/entities/member';
+import { InsufficientMemberLevelError } from '../../../members/domain/errors/member-errors';
+import { reputationLevel } from '../../../members/domain/value-objects/member-reputation-level';
 
 export class CanVoteOnCommentPolicy {
-  public static isAllowed(member: Member, comment: Comment): boolean {
-    // implement
-    throw new Error('Not yet implemented');
+  private static readonly REQUIRED_LEVEL_VALUE = reputationLevel.level2;
+
+  public static check(
+    member: Member,
+    comment: Comment,
+  ): Result<void, InsufficientMemberLevelError> {
+    if (comment.isAuthoredBy(member.id)) {
+      return success(undefined);
+    }
+
+    return member.reputationLevelAtLeast(
+      CanVoteOnCommentPolicy.REQUIRED_LEVEL_VALUE,
+    );
   }
 }

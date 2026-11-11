@@ -5,5 +5,5 @@ export interface EventModel {
   aggregateId: string;
   retries: number;
   status: string;
-  dateCreated: Date;
+  createdAt: Date;
 }

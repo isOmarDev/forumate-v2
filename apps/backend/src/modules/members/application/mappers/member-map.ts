@@ -1,41 +1,43 @@
-import { MemberDto, ReputationLevel } from '@forumate/api/members';
+import { MemberDto } from '@forumate/api/members';
 import {
   IToDomainMapper,
   IToDtoMapper,
   IToPersistenceMapper,
 } from '@forumate/core';
-import { MemberModel } from '@forumate/database';
+import { MemberModel, Persistence } from '@forumate/database';
 
 import { Member } from '../../domain/entities/member';
+import { ReputationLevel } from '../../domain/value-objects/member-reputation-level';
 
+import { MemberReputationLevelMap } from './member-reputation-level-map';
 import { MemberUsernameMap } from './member-username-map';
 
-type MemberPersistence = Omit<MemberModel, 'dateCreated' | 'lastUpdated'>;
+type MemberPersistence = Persistence<MemberModel>;
 
 class MemberMapper
   implements
-    IToDomainMapper<Member, MemberPersistence>,
+    IToDomainMapper<MemberModel, Member>,
     IToDtoMapper<Member, MemberDto>,
     IToPersistenceMapper<Member, MemberPersistence>
 {
-  toDomain(persistence: MemberPersistence): Member {
-    const memberOrError = Member.reconstitute({
+  toDomain(persistence: MemberModel): Member {
+    return Member.reconstitute({
       id: persistence.id,
       userId: persistence.userId,
       username: MemberUsernameMap.toDomain(persistence.username),
       reputationScore: persistence.reputationScore,
-      reputationLevel: persistence.reputationLevel as ReputationLevel,
+      reputationLevel: MemberReputationLevelMap.toDomain(
+        persistence.reputationLevel as ReputationLevel,
+      ),
     });
-
-    return memberOrError.getValue();
   }
 
   toDTO(domain: Member): MemberDto {
     return {
+      id: domain.id,
       userId: domain.userId,
-      memberId: domain.id,
       username: domain.username.value,
-      reputationLevel: domain.reputationLevel,
+      reputationLevel: domain.reputationLevel.value,
       reputationScore: domain.reputationScore,
     };
   }
@@ -45,8 +47,8 @@ class MemberMapper
       id: domain.id,
       userId: domain.userId,
       username: domain.username.value,
+      reputationLevel: domain.reputationLevel.value,
       reputationScore: domain.reputationScore,
-      reputationLevel: domain.reputationLevel,
     };
   }
 }

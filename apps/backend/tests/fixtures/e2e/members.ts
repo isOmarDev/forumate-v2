@@ -1,18 +1,41 @@
-import { ApiClient, MemberDto } from '@forumate/api';
-import { NumberUtil } from '@forumate/core';
+import { randomUUID } from 'node:crypto';
+
+import { ApiClient } from '@forumate/api';
+
+import {
+  LEVEL_2_MIN_SCORE,
+  reputationLevel,
+} from '../../../src/modules/members/domain/value-objects/member-reputation-level';
+import { CreateMemberInputBuilder } from '../../builders/inputs/member-input-builders';
+import { waitFor } from '../../helpers/wait-for';
 
 import { DatabaseFixture } from './database';
 
-export async function setupLevel1Member(
-  apiClient: ApiClient,
-  authToken: string,
-  userId: string,
-) {
-  // arrange
-  const username = `omarimik${NumberUtil.generateRandomInteger(10000, 99999)}`;
-  const email = `${username}@test.com`;
+const VOTES_REQUIRED_FOR_LEVEL_2 = LEVEL_2_MIN_SCORE;
 
-  // act
+interface SetupLevel1MemberOptions {
+  apiClient: ApiClient;
+  authToken: string;
+  userId: string;
+}
+
+/**
+ * E2E scenario helper: registers a new Level 1 member through the real
+ * API, using a randomly generated username and email.
+ *
+ * @param options.apiClient - HTTP client for the API under test.
+ * @param options.authToken - Auth token for the user being registered.
+ * @param options.userId - User id the new member is linked to.
+ * @returns `{ member }` - the member as returned by the API.
+ * @throws If registration fails, or the response is missing expected fields.
+ */
+export async function setupLevel1Member({
+  apiClient,
+  authToken,
+  userId,
+}: SetupLevel1MemberOptions) {
+  const { username, email } = new CreateMemberInputBuilder().build();
+
   const response = await apiClient.members.register(
     {
       username,
@@ -22,7 +45,6 @@ export async function setupLevel1Member(
     authToken,
   );
 
-  // assert
   if (!response.success) {
     throw new Error(
       `Failed to create member: ${response.error.code} - ${response.error.message}`,
@@ -30,62 +52,84 @@ export async function setupLevel1Member(
   }
 
   expect(response.data).toBeDefined();
-  expect(response.data?.memberId).toBeDefined();
+  expect(response.data?.id).toBeDefined();
   expect(response.data?.userId).toBeDefined();
   expect(response.data?.username).toBeDefined();
 
-  console.log(`Created a Level 1 member`);
-  console.log(response);
-
-  return { member: response.data as MemberDto };
+  return { member: response.data };
 }
 
-export async function setupLevel2Member(
-  apiClient: ApiClient,
-  authToken: string,
-  userId: string,
-  databaseFixture: DatabaseFixture,
-) {
-  const { member } = await setupLevel1Member(apiClient, authToken, userId);
+interface SetupLevel2MemberOptions {
+  apiClient: ApiClient;
+  authToken: string;
+  userId: string;
+  databaseFixture: DatabaseFixture;
+}
 
-  // get all posts
-  const postsResponse = await apiClient.posts.getPosts({
-    sort: 'recent',
+/**
+ * E2E scenario helper: creates a member and levels them up to Level 2 by
+ * posting comments through the real API, then waits for the (async)
+ * reputation update to land.
+ *
+ * Seeds its own post (authored by a separate member) to comment on, so it
+ * doesn't depend on any pre-existing data.
+ *
+ * @param options.apiClient - HTTP client for the API under test.
+ * @param options.authToken - Auth token for the member being created.
+ * @param options.userId - User id the new member is linked to.
+ * @param options.databaseFixture - Used to seed the post and poll the member's level.
+ * @returns `{ member }` - the member as returned by `setupLevel1Member`
+ *   (a snapshot from before leveling, so its reputation fields are stale).
+ * @throws If a comment fails, or the member doesn't reach Level 2 in time.
+ */
+export async function setupLevel2Member({
+  apiClient,
+  authToken,
+  userId,
+  databaseFixture,
+}: SetupLevel2MemberOptions) {
+  const { member: level1Member } = await setupLevel1Member({
+    apiClient,
+    authToken,
+    userId,
   });
-  if (!postsResponse.success || !postsResponse.data) {
-    throw new Error('Failed to get posts');
-  }
 
-  // Find a post to comment on
-  const postToCommentOn = postsResponse.data[0];
-  if (!postToCommentOn) {
-    throw new Error('No posts found to comment on');
-  }
+  const postAuthor = await databaseFixture.seedMember({
+    reputationLevel: reputationLevel.level2,
+    reputationScore: LEVEL_2_MIN_SCORE,
+  });
+  const post = await databaseFixture.seedPost({ memberId: postAuthor.id });
 
-  // post a comment to the post x5 times
-  for (let i = 0; i < 5; i++) {
-    const commentResponse = await apiClient.comments.postComment(
-      {
-        postId: postToCommentOn.id,
-        memberId: member.memberId,
-        text: `Test comment ${i + 1}`,
-      },
+  for (let i = 1; i <= VOTES_REQUIRED_FOR_LEVEL_2; i++) {
+    const response = await apiClient.comments.postComment(
+      { postId: post.id, memberId: level1Member.id, body: `Test comment ${i}` },
       authToken,
     );
-    console.log(commentResponse);
-    if (!commentResponse.success) {
-      throw new Error('Failed to post comment');
+
+    if (!response.success) {
+      throw new Error(
+        `Failed to post comment ${i}/${VOTES_REQUIRED_FOR_LEVEL_2}: ${response.error.message}`,
+      );
+    }
+
+    const voteResponse = await apiClient.votes.voteOnComment(
+      {
+        memberId: postAuthor.id,
+        commentId: response.data.id,
+        voteType: 'upvote',
+      },
+      randomUUID(),
+    );
+
+    if (!voteResponse.success) {
+      throw new Error(voteResponse.error.message);
     }
   }
 
-  // verify that the member is now level 2 by checking the database via the fixture
-  const updatedMember = await databaseFixture.getMemberById(member.memberId);
-  if (!updatedMember) {
-    throw new Error('Failed to verify member level');
-  }
+  await waitFor(async () => {
+    const updatedMember = await databaseFixture.getMemberById(level1Member.id);
+    return updatedMember?.reputationLevel === reputationLevel.level2;
+  });
 
-  // Wait for 3 seconds before checking the reputation level
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
-  return { member };
+  return { member: level1Member };
 }

@@ -1,6 +1,5 @@
 import '../scripts/load-environment';
-
-import { PrismaDatabase } from '../src';
+import { PrismaDatabase } from '../src/index';
 
 const database = new PrismaDatabase();
 const prisma = database.getClient();
@@ -14,8 +13,9 @@ async function main() {
         id: 'seed-member-1',
         userId: 'auth0|seed-user-1',
         username: 'seeduser',
-        reputationLevel: 'Level1',
-        lastUpdated: new Date(),
+        reputationLevel: 'level1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     }),
     prisma.member.create({
@@ -23,8 +23,9 @@ async function main() {
         id: 'seed-member-2',
         userId: 'auth0|seed-user-2',
         username: 'alice_ddd',
-        reputationLevel: 'Level1',
-        lastUpdated: new Date(),
+        reputationLevel: 'level1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     }),
     prisma.member.create({
@@ -32,8 +33,9 @@ async function main() {
         id: 'seed-member-3',
         userId: 'auth0|seed-user-3',
         username: 'bob_developer',
-        reputationLevel: 'Level1',
-        lastUpdated: new Date(),
+        reputationLevel: 'level1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     }),
   ]);
@@ -53,7 +55,8 @@ async function main() {
         title: 'Introduction to Domain-Driven Design',
         content:
           'DDD is an approach to software development that centers the development on programming a domain model that has a rich understanding of the processes and rules of a domain...',
-        lastUpdated: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         slug: 'introduction-to-domain-driven-design',
         voteScore: 1,
         postVotes: {
@@ -72,7 +75,8 @@ async function main() {
         title: 'How to implement Value Objects?',
         content:
           "I'm struggling with implementing value objects in my domain model. What's the best way to ensure immutability and equality comparison?",
-        lastUpdated: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         slug: 'how-to-implement-value-objects',
         voteScore: 1,
         postVotes: {
@@ -91,7 +95,8 @@ async function main() {
         title: 'Great Article on Aggregate Design',
         link: 'https://example.com/aggregate-design',
         content: null,
-        lastUpdated: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         slug: 'great-article-on-aggregate-design',
         voteScore: 1,
         postVotes: {
@@ -110,7 +115,8 @@ async function main() {
         title: 'Event Sourcing vs Traditional Architecture',
         content:
           "Let's discuss the pros and cons of event sourcing compared to traditional CRUD-based architectures...",
-        lastUpdated: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         slug: 'event-sourcing-vs-traditional-architecture',
         voteScore: 1,
         postVotes: {
@@ -129,7 +135,8 @@ async function main() {
         title: 'Best Practices for Domain Events',
         content:
           'What are some best practices for handling domain events in a DDD application? How do you ensure proper event propagation?',
-        lastUpdated: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         slug: 'best-practices-for-domain-events',
         voteScore: 1,
         postVotes: {
@@ -150,8 +157,9 @@ async function main() {
       data: {
         memberId: member2.id,
         postId: posts[0].id,
-        text: 'Great introduction! I would also add that DDD is particularly useful for complex domains where the business logic is crucial.',
-        lastUpdated: new Date(),
+        body: 'Great introduction! I would also add that DDD is particularly useful for complex domains where the business logic is crucial.',
+        createdAt: new Date(),
+        updatedAt: new Date(),
         voteScore: 1,
         commentVotes: {
           create: {
@@ -165,8 +173,9 @@ async function main() {
       data: {
         memberId: member3.id,
         postId: posts[0].id,
-        text: "I've been using DDD in my projects for a year now. It really helps with maintaining clean architecture.",
-        lastUpdated: new Date(),
+        body: "I've been using DDD in my projects for a year now. It really helps with maintaining clean architecture.",
+        createdAt: new Date(),
+        updatedAt: new Date(),
         voteScore: 1,
         commentVotes: {
           create: {
@@ -180,8 +189,9 @@ async function main() {
       data: {
         memberId: member2.id,
         postId: posts[1].id,
-        text: 'Make sure to implement equals() and hashCode() methods for proper value object comparison.',
-        lastUpdated: new Date(),
+        body: 'Make sure to implement equals() and hashCode() methods for proper value object comparison.',
+        createdAt: new Date(),
+        updatedAt: new Date(),
         voteScore: 1,
         commentVotes: {
           create: {
@@ -195,8 +205,9 @@ async function main() {
       data: {
         memberId: member3.id,
         postId: posts[1].id,
-        text: "Consider using TypeScript's readonly modifier to enforce immutability.",
-        lastUpdated: new Date(),
+        body: "Consider using TypeScript's readonly modifier to enforce immutability.",
+        createdAt: new Date(),
+        updatedAt: new Date(),
         voteScore: 1,
         commentVotes: {
           create: {
@@ -210,8 +221,9 @@ async function main() {
       data: {
         memberId: member2.id,
         postId: posts[2].id,
-        text: 'This article really helped me understand aggregate boundaries better.',
-        lastUpdated: new Date(),
+        body: 'This article really helped me understand aggregate boundaries better.',
+        createdAt: new Date(),
+        updatedAt: new Date(),
         voteScore: 1,
         commentVotes: {
           create: {

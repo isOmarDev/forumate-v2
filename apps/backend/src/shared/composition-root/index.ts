@@ -151,7 +151,14 @@ export class CompositionRoot {
       posts: this.postsModule.getPostsRepository(),
       comments: this.commentsModule.getCommentsRepository(),
       members: this.membersModule.getMembersRepository(),
-      votes: this.votesModule.getVotesRepository(),
+      commentvotes: this.votesModule.getCommentVotesRepository(),
+      postvotes: this.votesModule.getPostVotesRepository(),
+    };
+  }
+
+  public getReadRepositories() {
+    return {
+      comments: this.commentsModule.getCommentsReadRepository(),
     };
   }
 

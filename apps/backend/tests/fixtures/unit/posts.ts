@@ -1,19 +1,29 @@
-import { PostCommentUseCase } from '../../../src/modules/comments/application/use-cases';
-import { Post } from '../../../src/modules/posts/domain/entities/post';
+import { randomUUID } from 'node:crypto';
 
-export function withExistingPostByRandomMember(useCase: PostCommentUseCase) {
-  const existingPost = Post.create({
-    memberId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
-    title: 'Test Post',
-    postType: 'text',
-    content: 'This is a test post',
+import { Post } from '../../../src/modules/posts/domain/entities/post';
+import {
+  PostContent,
+  PostTitle,
+  PostType,
+} from '../../../src/modules/posts/domain/value-objects';
+import { InMemoryPostsRepository } from '../../../src/modules/posts/infrastructure/repositories/in-memory/in-memory-posts-repository';
+import { CreatePostInputBuilder } from '../../builders/inputs/post-input-builders';
+
+export function setupPostByRandomMember(
+  repositorySpy: InMemoryPostsRepository,
+) {
+  const input = CreatePostInputBuilder.aTextPost().build();
+
+  const postOrError = Post.create({
+    memberId: randomUUID(),
+    title: PostTitle.create(input.title).getValue(),
+    content: PostContent.create(input.content).getValue(),
+    postType: PostType.create(input.postType).getValue(),
   });
 
-  expect(existingPost instanceof Post).toBe(true);
+  const post = postOrError.getValue();
 
-  useCase['postsRepository'].getPostById = jest
-    .fn()
-    .mockResolvedValue(existingPost as Post);
+  repositorySpy.seed(post);
 
-  return existingPost as Post;
+  return post;
 }

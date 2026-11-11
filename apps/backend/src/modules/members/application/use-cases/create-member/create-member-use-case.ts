@@ -3,11 +3,18 @@ import { type IEventBus } from '@forumate/bus';
 import { type IUseCase, Result, fail, success } from '@forumate/core';
 
 import { Member } from '../../../domain/entities/member';
-import { InvalidMemberUsernameError } from '../../../domain/errors/member-errors';
+import {
+  InvalidMemberUsernameError,
+  MemberAlreadyExistsError,
+  MemberUsernameAlreadyExistsError,
+} from '../../../domain/errors/member-errors';
 import { MemberUsername } from '../../../domain/value-objects/member-username';
 import type { IMembersRepository } from '../../ports/members-repository';
 
-export type CreateMemberError = InvalidMemberUsernameError;
+export type CreateMemberError =
+  | InvalidMemberUsernameError
+  | MemberAlreadyExistsError
+  | MemberUsernameAlreadyExistsError;
 export type CreateMemberResponse = Result<Member, CreateMemberError>;
 
 export class CreateMemberUseCase implements IUseCase<
@@ -23,9 +30,20 @@ export class CreateMemberUseCase implements IUseCase<
     const { username, userId } = command.props;
 
     const usernameOrError = MemberUsername.create(username);
-
     if (usernameOrError.isFailure) {
       return fail(usernameOrError.getError());
+    }
+
+    const existingMemberByUserId =
+      await this.membersRepository.findByUserId(userId);
+    if (existingMemberByUserId) {
+      return fail(new MemberAlreadyExistsError());
+    }
+
+    const existingMemberByUsername =
+      await this.membersRepository.findByUsername(username);
+    if (existingMemberByUsername) {
+      return fail(new MemberUsernameAlreadyExistsError());
     }
 
     const memberOrError = Member.create({
@@ -40,7 +58,7 @@ export class CreateMemberUseCase implements IUseCase<
     const member = memberOrError.getValue();
 
     await this.membersRepository.save(member);
-    this.eventBus.publishEvents(member.getDomainEvents());
+    await this.eventBus.publishEvents(member.getDomainEvents());
 
     return success(member);
   }

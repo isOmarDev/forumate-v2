@@ -1,155 +1,153 @@
 import { randomUUID } from 'node:crypto';
 
-import { z } from 'zod';
-
-import { type CreatePostInput } from '@forumate/api/posts';
-import { AggregateRoot } from '@forumate/core';
-import { type PostModel } from '@forumate/database';
+import { AggregateRoot, Result, success } from '@forumate/core';
 
 import {
-  mapPostValidationError,
-  PostCreationError,
+  InvalidLinkPostError,
+  InvalidTextPostError,
 } from '../errors/posts-errors';
 import { PostCreated } from '../events/post-created';
-import { PostSlug } from '../value-objects/post-slug';
+import {
+  PostContent,
+  PostLink,
+  PostTitle,
+  PostSlug,
+  PostType,
+} from '../value-objects';
 
-interface BasePostProps {
+export type CreateTextPostProps = {
+  memberId: string;
+  title: PostTitle;
+  content: PostContent;
+  postType: PostType;
+};
+
+export type CreateLinkPostProps = {
+  memberId: string;
+  title: PostTitle;
+  link: PostLink;
+  postType: PostType;
+};
+
+export type CreatePostProps = CreateTextPostProps | CreateLinkPostProps;
+
+export interface BasePostProps {
   id: string;
   memberId: string;
-  title: string;
-  voteScore: number;
+  title: PostTitle;
   slug: PostSlug;
+  voteScore: number;
 }
 
 interface TextPostProps extends BasePostProps {
   postType: 'text';
-  content: string;
-  link?: undefined;
+  content: PostContent;
 }
 
 interface LinkPostProps extends BasePostProps {
   postType: 'link';
-  link: string;
-  content?: undefined;
+  link: PostLink;
 }
 
-type PostProps = TextPostProps | LinkPostProps;
-
-// These could be value objects too
-const createTextPostSchema = z.object({
-  postType: z.literal('text'),
-
-  title: z
-    .string()
-    .min(5, 'Post title must be at least 5 characters')
-    .max(100, 'Post title must not exceed 100 characters'),
-
-  content: z
-    .string()
-    .min(5, 'Post content must be at least 5 characters')
-    .max(3000, 'Post content must not exceed 3000 characters'),
-
-  link: z.never().optional(),
-});
-
-const createLinkPostSchema = z.object({
-  postType: z.literal('link'),
-
-  title: z
-    .string()
-    .min(5, 'Post title must be at least 5 characters')
-    .max(100, 'Post title must not exceed 100 characters'),
-
-  link: z.url('Post link must be a valid URL'),
-
-  content: z.never().optional(),
-});
-
-const createPostSchema = z.discriminatedUnion('postType', [
-  createTextPostSchema,
-  createLinkPostSchema,
-]);
+export type PostProps = TextPostProps | LinkPostProps;
 
 export class Post extends AggregateRoot {
-  constructor(private props: PostProps) {
+  private constructor(private props: PostProps) {
     super();
+    this.props = props;
   }
 
-  get id() {
+  get id(): string {
     return this.props.id;
   }
 
-  get title() {
-    return this.props.title;
-  }
-
-  get link() {
-    return this.props.link;
-  }
-
-  get memberId() {
+  get memberId(): string {
     return this.props.memberId;
   }
 
-  get content() {
+  get title(): PostTitle {
+    return this.props.title;
+  }
+
+  get content(): PostContent {
+    if (this.props.postType !== 'text') {
+      throw new Error('Cannot access content on a non-text post');
+    }
+
     return this.props.content;
   }
 
-  get postType() {
+  get link(): PostLink {
+    if (this.props.postType !== 'link') {
+      throw new Error('Cannot access link on a non-link post');
+    }
+
+    return this.props.link;
+  }
+
+  get postType(): PostProps['postType'] {
     return this.props.postType;
   }
 
-  get voteScore() {
+  get slug(): PostSlug {
+    return this.props.slug;
+  }
+
+  get voteScore(): number {
     return this.props.voteScore;
   }
 
-  get slug() {
-    return this.props.slug.value;
-  }
+  public static create(input: CreatePostProps): Result<Post, never> {
+    const { memberId, postType, title } = input;
 
-  public static create(input: CreatePostInput): Post | PostCreationError {
-    const { memberId, ...postInput } = input;
+    const baseProps = {
+      id: randomUUID(),
+      memberId,
+      title,
+      voteScore: 0,
+      slug: PostSlug.create(title.value),
+    };
 
-    const result = createPostSchema.safeParse(postInput);
+    let props: PostProps;
 
-    if (!result.success) {
-      return mapPostValidationError(result.error, input);
+    if (postType.value === 'text') {
+      if ('link' in input) {
+        return fail(
+          new InvalidTextPostError('A text post cannot contain a link'),
+        );
+      }
+
+      props = { ...baseProps, postType: 'text', content: input.content };
+    } else {
+      if ('content' in input) {
+        return fail(
+          new InvalidLinkPostError('A link post cannot contain text content'),
+        );
+      }
+
+      props = { ...baseProps, postType: 'link', link: input.link };
     }
 
-    const postId = randomUUID();
+    const post = new Post(props);
 
-    const post = new Post({
-      ...result.data,
-      memberId,
-      id: postId,
-      voteScore: 0,
-      slug: PostSlug.create(result.data.title),
-    });
+    post.addDomainEvent(new PostCreated(post.id, post.memberId));
 
-    post.domainEvents.push(new PostCreated(postId, input.memberId));
-
-    return post;
+    return success(post);
   }
 
-  public static toDomain(prismaModel: PostModel): Post {
-    const postVariant =
-      prismaModel.postType === 'text'
-        ? {
-            postType: 'text' as const,
-            content: prismaModel.content!,
-          }
-        : {
-            postType: 'link' as const,
-            link: prismaModel.link!,
-          };
+  public static reconstitute(props: PostProps): Post {
+    return new Post(props);
+  }
 
-    return new Post({
-      id: prismaModel.id,
-      memberId: prismaModel.memberId,
-      title: prismaModel.title,
-      voteScore: prismaModel.voteScore,
-      slug: PostSlug.toDomain(prismaModel.slug),
-      ...postVariant,
-    });
+  public isTextPost(): boolean {
+    return this.props.postType === 'text';
+  }
+
+  public isLinkPost(): boolean {
+    return this.props.postType === 'link';
+  }
+
+  public isAuthoredBy(memberId: string): boolean {
+    return this.memberId === memberId;
   }
 }

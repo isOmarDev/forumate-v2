@@ -5,3 +5,4 @@ export * from './request';
 export * from './result';
 export * from './use-case';
 export * from './mapper';
+export * from './event-subscriptions';

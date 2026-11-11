@@ -1,111 +1,62 @@
 import { randomUUID } from 'node:crypto';
 
-import { PostVoteDto, VoteType } from '@forumate/api/votes';
-import { AggregateRoot } from '@forumate/core';
-import { ValidationError } from '@forumate/errors/application';
+import { DomainEvent } from '@forumate/core';
 
 import { PostDownvoted } from '../events/post-downvoted';
+import { PostUnvoted } from '../events/post-unvoted';
 import { PostUpvoted } from '../events/post-upvoted';
+import { PostVoteEventData } from '../events/types';
+import { VoteStatus } from '../value-objects/vote-status';
 
-export type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
+import { Vote, type VoteProps } from './vote';
 
-interface PostVoteProps {
-  id: string;
+export type CreatePostVoteProps = {
   memberId: string;
   postId: string;
-  voteState: VoteState;
+};
+
+interface PostVoteProps extends VoteProps {
+  postId: string;
 }
 
-export class PostVote extends AggregateRoot {
-  private props: PostVoteProps;
-
+export class PostVote extends Vote<PostVoteProps> {
   private constructor(props: PostVoteProps) {
-    super();
-    this.props = props;
-  }
-
-  get id(): string {
-    return this.props.id;
-  }
-
-  get memberId(): string {
-    return this.props.memberId;
+    super(props);
   }
 
   get postId(): string {
     return this.props.postId;
   }
 
-  get voteState(): VoteState {
-    return this.props.voteState;
-  }
-
-  getValue() {
-    switch (this.props.voteState) {
-      case 'Upvoted':
-        return 1;
-      case 'Downvoted':
-        return -1;
-      default:
-        return 0;
-    }
-  }
-
-  castVote(voteType: VoteType) {
-    if (voteType === 'upvote') {
-      this.upvote();
-    } else {
-      this.downvote();
-    }
-  }
-
-  private upvote() {
-    if (this.props.voteState === 'Upvoted') {
-      return;
-    }
-    const domainEvent = new PostUpvoted(
-      this.props.postId,
-      this.props.memberId,
-      this.id,
-    );
-    this.props.voteState = 'Upvoted';
-    this.domainEvents.push(domainEvent);
-  }
-
-  private downvote() {
-    if (this.props.voteState === 'Downvoted') {
-      return;
-    }
-    const domainEvent = new PostDownvoted(
-      this.props.postId,
-      this.props.memberId,
-      this.id,
-    );
-    this.props.voteState = 'Downvoted';
-    this.domainEvents.push(domainEvent);
-  }
-
-  public static toDomain(props: PostVoteProps): PostVote {
-    return new PostVote(props);
-  }
-
-  public static create(
-    memberId: string,
-    postId: string,
-  ): PostVote | ValidationError {
+  public static create(props: CreatePostVoteProps): PostVote {
     return new PostVote({
       id: randomUUID(),
-      memberId: memberId,
-      postId: postId,
-      voteState: 'Default',
+      memberId: props.memberId,
+      postId: props.postId,
+      voteStatus: VoteStatus.unvoted(),
     });
   }
 
-  public toDTO(): PostVoteDto {
-    return {
-      memberId: this.props.memberId,
-      postId: this.props.postId,
-      voteType: this.props.voteState === 'Upvoted' ? 'upvote' : 'downvote',
+  public static reconstitute(props: PostVoteProps): PostVote {
+    return new PostVote({ ...props });
+  }
+
+  protected createVoteChangeEvent(
+    voteStatus: VoteStatus,
+    scoreChange: number,
+    authorId: string,
+  ): DomainEvent<PostVoteEventData> {
+    const eventData: PostVoteEventData = {
+      voteId: this.id,
+      voterId: this.memberId,
+      postId: this.postId,
+      isSelfVote: this.memberId === authorId,
+      scoreChange,
+      authorId,
     };
+
+    if (voteStatus.isUpvoted()) return new PostUpvoted(eventData);
+    if (voteStatus.isDownvoted()) return new PostDownvoted(eventData);
+    return new PostUnvoted(eventData);
   }
 }

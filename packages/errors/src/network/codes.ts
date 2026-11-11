@@ -1,8 +1,8 @@
 export const networkErrorCodes = {
-  timeoutError: 'TIMEOUT_ERROR',
-  networkError: 'NETWORK_ERROR',
-  requestError: 'REQUEST_ERROR',
-  unknownError: 'UNKNOWN_ERROR',
+  TIMEOUT_ERROR: 'TIMEOUT_ERROR',
+  NETWORK_ERROR: 'NETWORK_ERROR',
+  REQUEST_ERROR: 'REQUEST_ERROR',
+  UNKNOWN_ERROR: 'UNKNOWN_ERROR',
 } as const;
 
 export type NetworkErrorCode =

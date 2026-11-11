@@ -1,9 +1,9 @@
 import { Comment } from '../../domain/entities/comment';
 
-// Not yet used.
-
 export interface ICommentsRepository {
+  findById(id: string): Promise<Comment | null>;
+  findByPostId(postId: string): Promise<Comment[]>;
+  findAuthorId(postId: string): Promise<string | null>;
   save(comment: Comment): Promise<void>;
-  getCommentById(id: string): Promise<Comment | null>;
-  getCommentsByPostId(postId: string): Promise<Comment[]>;
+  updateVoteScore(commentId: string, scoreChange: number): Promise<void>;
 }

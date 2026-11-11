@@ -1,20 +1,19 @@
 import { z } from 'zod';
 
 // Create Comment
-export const createCommentInputSchema = z.object({
-  postId: z.string('Post ID is required').min(1, 'Post ID cannot be empty'),
-  text: z
-    .string()
+export const postCommentInputSchema = z.object({
+  postId: z.string('Post Id is required').min(1, 'Post Id cannot be empty'),
+  body: z
+    .string('comment body is required')
     .trim()
-    .min(1, 'Comment text is required')
-    .max(100, 'Comment text must not exceed 100 characters'),
+    .min(1, 'Comment body cannot be empty'),
   memberId: z
-    .string('Member ID is required')
-    .min(1, 'Member ID cannot be empty'),
+    .string('Member Id is required')
+    .min(1, 'Member Id cannot be empty'),
   parentCommentId: z.string().min(1).optional(),
 });
 
-export type CreateCommentInput = z.infer<typeof createCommentInputSchema>;
+export type PostCommentInput = z.infer<typeof postCommentInputSchema>;
 
 // Get Comments by Post Id
 export const getCommentsByPostIdQueryInputSchema = z.object({

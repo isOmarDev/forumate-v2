@@ -1,4 +1,4 @@
-export interface IToDomainMapper<Domain, Persistence> {
+export interface IToDomainMapper<Persistence, Domain> {
   toDomain(persistence: Persistence): Domain;
 }
 

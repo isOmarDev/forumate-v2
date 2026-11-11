@@ -6,11 +6,11 @@ import { PostCommentController } from './post-comment-controller';
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  public postComment(): PostCommentController {
+  public postComment() {
     return new PostCommentController(this.commentsService);
   }
 
-  public getCommentsByPostId(): GetCommentsByPostIdController {
+  public getCommentsByPostId() {
     return new GetCommentsByPostIdController(this.commentsService);
   }
 }

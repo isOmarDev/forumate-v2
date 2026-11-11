@@ -6,15 +6,18 @@ import { WebServer } from '../../shared/infra/http';
 import { ApplicationModule } from '../../shared/modules/application-module';
 import type { IMembersRepository } from '../members/application/ports/members-repository';
 
-import type { IPostsRepository } from './application/ports/posts-repository';
+import type {
+  IPostsRepository,
+  IPostsReadRepository,
+} from './application/ports';
 import { PostsService } from './application/posts-service';
-import { InMemoryPostsRepository } from './infrastructure/repositories/in-memory-posts-repository';
-import { PrismaPostsRepository } from './infrastructure/repositories/prisma-posts-repository';
+import { InMemoryPostsRepository } from './infrastructure/repositories/in-memory';
+import { PrismaPostsRepository } from './infrastructure/repositories/prisma';
 import { PostsController } from './presentation/http/controllers';
 import { PostsRouter } from './presentation/http/routes/posts-router';
 
 export class PostsModule extends ApplicationModule {
-  private postsRepository: IPostsRepository;
+  private postsRepository: IPostsRepository & IPostsReadRepository;
   private postsService: PostsService;
   private postsController: PostsController;
   private postsRouter: PostsRouter;

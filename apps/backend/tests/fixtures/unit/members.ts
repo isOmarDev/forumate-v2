@@ -1,47 +1,43 @@
-// Fixtures (hvut fixtures)
+import { randomUUID } from 'node:crypto';
 
-import { ReputationLevel } from '@forumate/api';
-
-import { PostCommentUseCase } from '../../../src/modules/comments/application/use-cases/post-comment/post-comment-use-case';
-import { MemberMap } from '../../../src/modules/members/application/mappers/member-map';
 import { Member } from '../../../src/modules/members/domain/entities/member';
-import { MemberUsername } from '../../../src/modules/members/domain/value-objects/member-username';
-import { CreatePostUseCase } from '../../../src/modules/posts/application/use-cases/create-post/create-post-use-case';
+import {
+  MemberUsername,
+  MemberReputationLevel,
+  reputationLevel,
+} from '../../../src/modules/members/domain/value-objects';
+import { InMemoryMembersRepository } from '../../../src/modules/members/infrastructure/repositories/in-memory';
+import { CreateMemberInputBuilder } from '../../builders/inputs/member-input-builders';
 
-export function setupTestWithLevel1Member(
-  useCase: CreatePostUseCase | PostCommentUseCase,
-) {
-  const level1MemberOrError = Member.create({
-    userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
-    username: MemberUsername.create('jill1234').getValue(),
+export function setupLevel1Member(repositorySpy: InMemoryMembersRepository) {
+  const input = new CreateMemberInputBuilder().build();
+
+  const memberOrError = Member.create({
+    userId: input.userId,
+    username: MemberUsername.create(input.username).getValue(),
   });
 
-  expect(level1MemberOrError.isSuccess).toBe(true);
+  const member = memberOrError.getValue();
 
-  const member = level1MemberOrError.getValue();
-  useCase['membersRepository'].getMemberById = jest
-    .fn()
-    .mockResolvedValue(member);
+  repositorySpy.seed(member);
 
   return member;
 }
 
-export function setupTestWithLevel2Member(
-  useCase: CreatePostUseCase | PostCommentUseCase,
-) {
-  jest.resetAllMocks();
+export function setupLevel2Member(repositorySpy: InMemoryMembersRepository) {
+  const input = new CreateMemberInputBuilder().build();
 
-  const level2Member = MemberMap.toDomain({
-    id: 'bf6b4773-feea-44cd-a951-f0ffd68625ea',
-    userId: '8be25ac7-49ff-43be-9f22-3811e268e0bd',
-    username: 'jill-12345',
-    reputationScore: 10,
-    reputationLevel: ReputationLevel.Level2,
+  const member = Member.reconstitute({
+    id: randomUUID(),
+    userId: randomUUID(),
+    username: MemberUsername.create(input.username).getValue(),
+    reputationScore: 5,
+    reputationLevel: MemberReputationLevel.create(
+      reputationLevel.level2,
+    ).getValue(),
   });
 
-  useCase['memberRepository'].getMemberById = jest
-    .fn()
-    .mockResolvedValue(level2Member);
+  repositorySpy.seed(member);
 
-  return level2Member;
+  return member;
 }

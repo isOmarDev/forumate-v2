@@ -1,8 +1,17 @@
+import { Result } from '@forumate/core/application';
+
 import { Member } from '../../../members/domain/entities/member';
+import { InsufficientMemberLevelError } from '../../../members/domain/errors/member-errors';
+import { reputationLevel } from '../../../members/domain/value-objects/member-reputation-level';
 
 export class CanCreatePostPolicy {
-  public static isAllowed(member: Member): boolean {
-    // Implement!
-    throw new Error('To be implemented');
+  private static readonly REQUIRED_LEVEL_VALUE = reputationLevel.level2;
+
+  public static check(
+    member: Member,
+  ): Result<void, InsufficientMemberLevelError> {
+    return member.reputationLevelAtLeast(
+      CanCreatePostPolicy.REQUIRED_LEVEL_VALUE,
+    );
   }
 }

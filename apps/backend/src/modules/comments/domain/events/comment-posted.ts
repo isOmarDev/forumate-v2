@@ -1,15 +1,16 @@
-import { randomUUID } from 'node:crypto';
-
 import { DomainEvent } from '@forumate/core';
 
-export class CommentPosted extends DomainEvent {
-  constructor(
-    public readonly commentId: string,
-    public readonly memberId: string,
-    public readonly postId: string,
-    public readonly id: string = randomUUID(),
-    public readonly date: Date = new Date(),
-  ) {
-    super(id, date, 'CommentPosted');
+type CommentPostedData = {
+  commentId: string;
+  parentCommentId: string | null;
+  memberId: string;
+  postId: string;
+};
+
+export class CommentPosted extends DomainEvent<CommentPostedData> {
+  static readonly eventName = 'CommentPosted';
+
+  constructor(data: CommentPostedData) {
+    super(CommentPosted.eventName, data.commentId, data);
   }
 }

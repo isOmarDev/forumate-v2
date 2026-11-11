@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { GetPostsQuery } from '@forumate/api/posts';
+import { GetPostsData, GetPostsQuery } from '@forumate/api/posts';
 
 import { BaseController } from '../../../../../shared/infra/http';
 import { PostsService } from '../../../application/posts-service';
@@ -27,6 +27,7 @@ export class GetPostsController extends BaseController {
 
     const posts = resultOrError.getValue().map((p) => p.toDTO());
 
-    return this.ok(res, posts);
+    const responseData: GetPostsData = { items: posts };
+    return this.ok(res, responseData);
   }
 }

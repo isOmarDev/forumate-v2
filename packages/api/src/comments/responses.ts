@@ -1,33 +1,21 @@
 import {
   commentErrorCodes,
   postErrorCodes,
-  RequestErrorCode,
-  ServerErrorCode,
+  memberErrorCodes,
 } from '@forumate/errors';
 
 import { ApiResponse } from '../types';
 
 import { CommentDto } from './dtos';
 
-// Comment Errors
-type CommentsNotFoundError = typeof commentErrorCodes.COMMENTS_NOT_FOUND;
-type InvalidCommentError = typeof commentErrorCodes.INVALID_COMMENT;
-type PostNotFoundError = typeof postErrorCodes.POST_NOT_FOUND;
-
-type RequestError = RequestErrorCode;
-type ServerError = ServerErrorCode;
-
-// Get Comments By Post ID Response
-export type GetCommentsByPostIdError =
-  CommentsNotFoundError | RequestError | ServerError;
-
-export type GetCommentsByPostIdApiResponse = ApiResponse<
-  CommentDto[],
-  GetCommentsByPostIdError
->;
+// Get Comments By Post Id Response
+export type GetCommentsByPostIdApiResponse = ApiResponse<CommentDto[], never>;
 
 // Post Comment Response
 export type PostCommentError =
-  InvalidCommentError | PostNotFoundError | RequestError | ServerError;
+  | typeof memberErrorCodes.MEMBER_NOT_FOUND
+  | typeof memberErrorCodes.INSUFFICIENT_MEMBER_LEVEL
+  | typeof commentErrorCodes.INVALID_COMMENT_BODY
+  | typeof postErrorCodes.POST_NOT_FOUND;
 
 export type PostCommentApiResponse = ApiResponse<CommentDto, PostCommentError>;

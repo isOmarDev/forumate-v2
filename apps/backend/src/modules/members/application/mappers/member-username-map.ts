@@ -2,10 +2,9 @@ import { IToDomainMapper } from '@forumate/core/application';
 
 import { MemberUsername } from '../../domain/value-objects/member-username';
 
-class MemberUsernameMapper implements IToDomainMapper<MemberUsername, string> {
+class MemberUsernameMapper implements IToDomainMapper<string, MemberUsername> {
   toDomain(username: string): MemberUsername {
-    const memberOrError = MemberUsername.create(username);
-    return memberOrError.getValue();
+    return MemberUsername.reconstitute(username);
   }
 }
 

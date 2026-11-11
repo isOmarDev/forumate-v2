@@ -10,8 +10,15 @@ export class PostCommentController extends BaseController {
     super();
   }
 
-  async executeImpl(req: express.Request, res: express.Response) {
-    const commandOrError = PostCommentCommand.create(req.body);
+  async executeImpl(
+    req: express.Request<{ postId: string }>,
+    res: express.Response,
+  ) {
+    const postId = req.params.postId;
+    const commandOrError = PostCommentCommand.create({
+      ...req.body,
+      postId,
+    });
 
     if (commandOrError.isFailure) {
       return this.fail(res, commandOrError.getError());
@@ -25,6 +32,8 @@ export class PostCommentController extends BaseController {
       return this.fail(res, resultOrError.getError());
     }
 
-    return this.created(res, resultOrError.getValue());
+    const { id, body } = resultOrError.getValue();
+
+    return this.created(res, { id, body: body.value });
   }
 }

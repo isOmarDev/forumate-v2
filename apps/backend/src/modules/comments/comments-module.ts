@@ -8,14 +8,29 @@ import type { IMembersRepository } from '../members/application/ports/members-re
 import type { IPostsRepository } from '../posts/application/ports/posts-repository';
 
 import { CommentsService } from './application/comments-service';
-import type { ICommentsRepository } from './application/ports/comments-repository';
-import { PrismaCommentsRepository } from './infrastructure/repositories/prisma-comments-repository';
+import type {
+  ICommentsRepository,
+  ICommentsReadRepository,
+} from './application/ports';
+import { CommentProjector } from './application/projections/comment-projector';
+import { CommentsSubscriptions } from './application/subscriptions/comments-subscriptions';
+import {
+  InMemoryCommentsReadRepository,
+  InMemoryCommentsRepository,
+} from './infrastructure/repositories/in-memory';
+import {
+  PrismaCommentsReadRepository,
+  PrismaCommentsRepository,
+} from './infrastructure/repositories/prisma';
 import { CommentsController } from './presentation/http/controllers';
 import { CommentsRouter } from './presentation/http/routes/comments-router';
 
 export class CommentsModule extends ApplicationModule {
   private commentsRepository: ICommentsRepository;
+  private commentsReadRepository: ICommentsReadRepository;
   private commentsService: CommentsService;
+  private commentProjector: CommentProjector;
+  private commentsSubscriptions: CommentsSubscriptions;
   private commentsController: CommentsController;
   private commentsRouter: CommentsRouter;
 
@@ -28,12 +43,16 @@ export class CommentsModule extends ApplicationModule {
   ) {
     super(config);
 
-    this.commentsRepository = this.createCommentRepository();
+    this.commentsRepository = this.createCommentsRepository();
+    this.commentsReadRepository = this.createCommentsReadRepository();
     this.commentsService = this.createCommentsService();
+    this.commentProjector = this.createCommentProjector();
+    this.commentsSubscriptions = this.createCommentsSubscriptions();
     this.commentsController = this.createCommentsController();
     this.commentsRouter = this.createCommentsRouter();
 
     this.registerRoutes();
+    this.setupSubscriptions();
   }
 
   static build(
@@ -52,14 +71,30 @@ export class CommentsModule extends ApplicationModule {
     );
   }
 
-  private createCommentRepository() {
-    if (this.commentsRepository) return this.commentsRepository;
+  private setupSubscriptions() {
+    this.commentsSubscriptions.register();
+  }
+
+  private createCommentsRepository() {
+    if (this.shouldBuildFakeRepository) {
+      return new InMemoryCommentsRepository();
+    }
+
     return new PrismaCommentsRepository(this.db);
+  }
+
+  private createCommentsReadRepository() {
+    if (this.shouldBuildFakeRepository) {
+      return new InMemoryCommentsReadRepository();
+    }
+
+    return new PrismaCommentsReadRepository(this.db);
   }
 
   private createCommentsService() {
     return new CommentsService(
       this.commentsRepository,
+      this.commentsReadRepository,
       this.postsRepository,
       this.membersRepository,
       this.eventBus,
@@ -68,6 +103,14 @@ export class CommentsModule extends ApplicationModule {
 
   private createCommentsController(): CommentsController {
     return new CommentsController(this.commentsService);
+  }
+
+  private createCommentProjector() {
+    return new CommentProjector(this.db, this.commentsReadRepository);
+  }
+
+  private createCommentsSubscriptions() {
+    return new CommentsSubscriptions(this.eventBus, this.commentProjector);
   }
 
   private createCommentsRouter() {
@@ -82,6 +125,10 @@ export class CommentsModule extends ApplicationModule {
 
   private registerRoutes() {
     this.commentsRouter.register();
+  }
+
+  public getCommentsReadRepository() {
+    return this.commentsReadRepository;
   }
 
   public getCommentsRepository() {

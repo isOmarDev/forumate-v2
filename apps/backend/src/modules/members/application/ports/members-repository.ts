@@ -1,8 +1,8 @@
 import { Member } from '../../domain/entities/member';
 
 export interface IMembersRepository {
-  findUserByUsername(username: string): Promise<Member | null>;
-  getMemberByUserId(userId: string): Promise<Member | null>;
-  getMemberById(memberId: string): Promise<Member | null>;
+  findByUsername(username: string): Promise<Member | null>;
+  findByUserId(userId: string): Promise<Member | null>;
+  findById(memberId: string): Promise<Member | null>;
   save(member: Member): Promise<void>;
 }

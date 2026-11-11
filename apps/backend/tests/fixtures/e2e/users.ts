@@ -7,19 +7,19 @@ import { getAuth } from 'firebase-admin/auth';
  * This should only be used in development and test environments.
  */
 export async function createFakeAuthTokenAndUser(): Promise<{
-  token: string;
+  authToken: string;
   userId: string;
 }> {
   const userId = randomUUID();
 
   // In test/development mode, we can use Firebase's createCustomToken
   // This will generate a token that can be verified by the JWT middleware
-  const token = await getAuth().createCustomToken(userId, {
+  const authToken = await getAuth().createCustomToken(userId, {
     // Add any additional claims needed for testing. We won't be using these now.
     permissions: ['create:members', 'create:posts'],
   });
 
-  return { token, userId };
+  return { authToken, userId };
 }
 
 /**
@@ -27,12 +27,12 @@ export async function createFakeAuthTokenAndUser(): Promise<{
  * This should only be used in development and test environments.
  */
 export async function createFakeIdToken(): Promise<{
-  token: string;
+  authToken: string;
   userId: string;
 }> {
-  const { token, userId } = await createFakeAuthTokenAndUser();
+  const { authToken, userId } = await createFakeAuthTokenAndUser();
 
   // In a real environment, you would exchange the custom token for an ID token
   // For testing purposes, we'll just return the custom token
-  return { token, userId };
+  return { authToken, userId };
 }

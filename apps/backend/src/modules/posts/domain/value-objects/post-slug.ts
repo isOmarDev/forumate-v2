@@ -5,7 +5,7 @@ type PostSlugProps = {
 };
 
 export class PostSlug extends ValueObject<PostSlugProps> {
-  constructor(props: PostSlugProps) {
+  private constructor(props: PostSlugProps) {
     super(props);
   }
 
@@ -20,7 +20,7 @@ export class PostSlug extends ValueObject<PostSlugProps> {
     return new PostSlug({ value });
   }
 
-  public static toDomain(value: string): PostSlug {
+  public static reconstitute(value: string): PostSlug {
     return new PostSlug({ value });
   }
 }

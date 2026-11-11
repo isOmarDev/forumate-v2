@@ -1,5 +1,5 @@
 import {
-  UpdateMemberReputationScoreCommand,
+  CastInitialUpvoteOnCommentCommand,
   VoteOnCommentCommand,
   VoteOnPostCommand,
 } from '@forumate/api/votes';
@@ -9,44 +9,47 @@ import type { ICommentsRepository } from '../../comments/application/ports/comme
 import type { IMembersRepository } from '../../members/application/ports/members-repository';
 import type { IPostsRepository } from '../../posts/application/ports/posts-repository';
 
-import type { IVotesRepository } from './ports/votes-repository';
+import type { ICommentVotesRepository, IPostVotesRepository } from './ports';
 import {
-  UpdateMemberReputationScoreUseCase,
   VoteOnCommentUseCase,
   VoteOnPostUseCase,
+  CastInitialUpvoteOnCommentUseCase,
 } from './use-cases';
 
 export class VotesService {
   constructor(
-    private memberRepository: IMembersRepository,
+    private membersRepository: IMembersRepository,
     private commentsRepository: ICommentsRepository,
-    private postRepository: IPostsRepository,
-    private voteRepository: IVotesRepository,
+    private postsRepository: IPostsRepository,
+    private postVotesRepository: IPostVotesRepository,
+    private commentVotesRepository: ICommentVotesRepository,
     private eventBus: IEventBus,
   ) {}
 
-  castVoteOnPost(command: VoteOnPostCommand) {
+  public voteOnPost(command: VoteOnPostCommand) {
     return new VoteOnPostUseCase(
-      this.memberRepository,
-      this.postRepository,
-      this.voteRepository,
+      this.membersRepository,
+      this.postsRepository,
+      this.postVotesRepository,
       this.eventBus,
     ).execute(command);
   }
 
-  castVoteOnComment(command: VoteOnCommentCommand) {
+  public voteOnComment(command: VoteOnCommentCommand) {
     return new VoteOnCommentUseCase(
-      this.memberRepository,
+      this.commentVotesRepository,
+      this.membersRepository,
       this.commentsRepository,
-      this.voteRepository,
       this.eventBus,
     ).execute(command);
   }
 
-  updateMemberReputationScore(command: UpdateMemberReputationScoreCommand) {
-    return new UpdateMemberReputationScoreUseCase(
-      this.memberRepository,
-      this.voteRepository,
+  public CastInitialUpvoteOnComment(
+    command: CastInitialUpvoteOnCommentCommand,
+  ) {
+    return new CastInitialUpvoteOnCommentUseCase(
+      this.commentsRepository,
+      this.commentVotesRepository,
       this.eventBus,
     ).execute(command);
   }

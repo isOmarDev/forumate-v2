@@ -1,11 +1,17 @@
+import { randomUUID } from 'node:crypto';
+
 import { createApiClient } from '@forumate/api';
-import { memberErrorCodes } from '@forumate/errors/domain';
+import { memberErrorCodes, postErrorCodes } from '@forumate/errors/domain';
 
 import { CompositionRoot } from '../../../src/shared/composition-root';
 import { Config } from '../../../src/shared/config';
-import { CreateTextPostInputBuilder } from '../../builders/inputs/post-input-builders';
+import { httpStatus } from '../../../src/shared/infra/http/http-status';
+import { CreatePostInputBuilder } from '../../builders/inputs/post-input-builders';
 import { DatabaseFixture } from '../../fixtures/e2e/database';
-import { setupLevel1Member } from '../../fixtures/e2e/members';
+import {
+  setupLevel1Member,
+  setupLevel2Member,
+} from '../../fixtures/e2e/members';
 import { createFakeIdToken } from '../../fixtures/e2e/users';
 
 jest.setTimeout(30000);
@@ -34,32 +40,59 @@ describe('posts', () => {
 
   describe('identity & permissions', () => {
     it('should not be able to create a post if they are level 1', async () => {
-      const { token, userId } = await createFakeIdToken();
+      const { authToken, userId } = await createFakeIdToken();
 
-      const { member } = await setupLevel1Member(apiClient, token, userId);
+      const { member } = await setupLevel1Member({
+        apiClient,
+        authToken,
+        userId,
+      });
 
-      const postInput = new CreateTextPostInputBuilder()
-        .withMemberId(member.memberId)
+      const postInput = CreatePostInputBuilder.aTextPost()
+        .withMemberId(member.id)
         .build();
 
-      const response = await apiClient.posts.create(postInput, token);
+      const response = await apiClient.posts.create(postInput, authToken);
 
-      expect(response).toEqual({
-        success: false,
-        status: 403,
-        data: null,
-        error: {
-          code: memberErrorCodes.INSUFFICIENT_MEMBER_LEVEL,
-          message: 'You do not have permission to create a post.',
-        },
-      });
+      expect(response.success).toBe(false);
+      expect(response.status).toBe(httpStatus.FORBIDDEN);
+      expect(response.data).toBe(null);
+      expect(response.error?.code).toBe(
+        memberErrorCodes.INSUFFICIENT_MEMBER_LEVEL,
+      );
+      expect(response.error?.message).toBeDefined();
     });
   });
 
-  describe.skip('creating new posts', () => {
-    it('as a level 2 member, it can create a link post', async () => {
-      // Implement
-      throw new Error('Not yet implemented');
+  describe('creating new posts', () => {
+    it('it should create a link post as a level 2 member', async () => {
+      const { authToken, userId } = await createFakeIdToken();
+
+      const { member } = await setupLevel2Member({
+        apiClient,
+        authToken,
+        userId,
+        databaseFixture,
+      });
+
+      const postInput = CreatePostInputBuilder.aLinkPost()
+        .withMemberId(member.id)
+        .build();
+
+      const response = await apiClient.posts.create(postInput, authToken);
+
+      expect(response.success).toBe(true);
+      expect(response.status).toBe(httpStatus.CREATED);
+      expect(response.data).toBeDefined();
+      expect(response.data?.id).toBeDefined();
+      expect(response.error).toBe(null);
+
+      const createdPost = await databaseFixture.getPostById(response.data!.id);
+
+      expect(createdPost?.postType).toBe('link');
+      expect(createdPost?.link).toBe(postInput.link);
+      expect(createdPost?.content).toBeNull();
+      expect(createdPost?.memberId).toBe(member.id);
     });
 
     it('should have an initial upvote when creating a post', async () => {
@@ -78,25 +111,100 @@ describe('posts', () => {
     });
   });
 
-  describe.skip('fetching posts', () => {
+  describe('fetching posts', () => {
     it('can fetch a previously created post by id', async () => {
-      // Implement
-      throw new Error('Not yet implemented');
+      const member = await databaseFixture.seedMember();
+      const post = await databaseFixture.seedPost({
+        memberId: member.id,
+        postType: 'text',
+      });
+
+      const response = await apiClient.posts.getPostById(post.id);
+
+      expect(response.success).toBe(true);
+      expect(response.status).toBe(httpStatus.OK);
+      expect(response.error).toBe(null);
+      expect(response.data).toMatchObject({
+        id: post.id,
+        member: { id: member.id },
+        title: post.title,
+        content: post.content,
+        postType: post.postType,
+      });
     });
 
     it('returns a not found error if the post does not exist', async () => {
-      // Implement
-      throw new Error('Not yet implemented');
+      const nonExistentPostId = randomUUID();
+
+      const response = await apiClient.posts.getPostById(nonExistentPostId);
+
+      expect(response.success).toBe(false);
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
+      expect(response.data).toBe(null);
+      expect(response.error?.code).toBe(postErrorCodes.POST_NOT_FOUND);
+      expect(response.error?.message).toBeDefined();
     });
 
-    it('can fetch recent posts', () => {
-      // Not yet implemented
-      throw new Error('Not yet implemented');
+    it('can fetch "recent" posts', async () => {
+      const [member1, member2, member3] = await Promise.all([
+        databaseFixture.seedMember(),
+        databaseFixture.seedMember(),
+        databaseFixture.seedMember(),
+      ]);
+
+      await Promise.all([
+        databaseFixture.seedPost({ memberId: member1.id }),
+        databaseFixture.seedPost({ memberId: member2.id }),
+        databaseFixture.seedPost({ memberId: member3.id }),
+      ]);
+
+      const response = await apiClient.posts.getPosts({ sort: 'recent' });
+
+      expect(response.success).toBe(true);
+      expect(response.data).toBeDefined();
+      expect(response.data?.items).toBeDefined();
+
+      const returnedPosts = response.data!.items;
+
+      for (let i = 0; i < returnedPosts.length - 1; i++) {
+        const currentPost = returnedPosts[i];
+        const nextPost = returnedPosts[i + 1];
+
+        expect(
+          new Date(currentPost.createdAt).getTime(),
+        ).toBeGreaterThanOrEqual(new Date(nextPost.createdAt).getTime());
+      }
     });
 
-    it('can fetch "popular" posts', () => {
-      // Not yet implemented
-      throw new Error('Not yet implemented');
+    it('can fetch "popular" posts', async () => {
+      const [member1, member2, member3] = await Promise.all([
+        databaseFixture.seedMember(),
+        databaseFixture.seedMember(),
+        databaseFixture.seedMember(),
+      ]);
+
+      await Promise.all([
+        databaseFixture.seedPost({ memberId: member1.id, voteScore: 1 }),
+        databaseFixture.seedPost({ memberId: member2.id, voteScore: 2 }),
+        databaseFixture.seedPost({ memberId: member3.id, voteScore: 3 }),
+      ]);
+
+      const response = await apiClient.posts.getPosts({ sort: 'popular' });
+
+      expect(response.success).toBe(true);
+      expect(response.data).toBeDefined();
+      expect(response.data?.items).toBeDefined();
+
+      const returnedPosts = response.data!.items;
+
+      for (let i = 0; i < returnedPosts.length - 1; i++) {
+        const currentPost = returnedPosts[i];
+        const nextPost = returnedPosts[i + 1];
+
+        expect(currentPost.voteScore).toBeGreaterThanOrEqual(
+          nextPost.voteScore,
+        );
+      }
     });
   });
 

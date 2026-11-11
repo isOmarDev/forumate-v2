@@ -8,15 +8,27 @@ import type { ICommentsRepository } from '../comments/application/ports/comments
 import type { IMembersRepository } from '../members/application/ports/members-repository';
 import type { IPostsRepository } from '../posts/application/ports/posts-repository';
 
-import type { IVotesRepository } from './application/ports/votes-repository';
+import type {
+  IPostVotesRepository,
+  ICommentVotesRepository,
+} from './application/ports';
 import { VotesSubscriptions } from './application/subscriptions/votes-subscriptions';
 import { VotesService } from './application/votes-service';
-import { prismaVotesRepository } from './infrastructure/repositories/prisma-votes-repo';
+import {
+  InMemoryCommentVotesRepository,
+  InMemoryPostVotesRepository,
+} from './infrastructure/repositories/in-memory';
+import {
+  PrismaPostVotesRepository,
+  PrismaCommentVotesRepository,
+} from './infrastructure/repositories/prisma';
 import { VotesController } from './presentation/http/controllers';
 import { VotesRouter } from './presentation/http/routes/votes-router';
 
 export class VotesModule extends ApplicationModule {
-  private votesRepository: IVotesRepository;
+  private postVotesRepository: IPostVotesRepository;
+  private commentVotesRepository: ICommentVotesRepository;
+
   private votesService: VotesService;
   private votesSubscriptions: VotesSubscriptions;
   private votesController: VotesController;
@@ -25,89 +37,118 @@ export class VotesModule extends ApplicationModule {
   private constructor(
     private db: IDatabase,
     private membersRepository: IMembersRepository,
-    private commentRepository: ICommentsRepository,
+    private commentsRepository: ICommentsRepository,
     private postsRepository: IPostsRepository,
     private eventBus: IEventBus,
     config: Config,
   ) {
     super(config);
 
-    this.votesRepository = this.createVotesRepository();
+    this.postVotesRepository = this.createPostVotesRepository();
+    this.commentVotesRepository = this.createCommentVotesRepository();
+
     this.votesService = this.createVotesService();
     this.votesSubscriptions = this.createVotesSubscriptions();
     this.votesController = this.createVotesController();
-    this.votesRouter = this.createPostsRouter();
+    this.votesRouter = this.createVotesRouter();
 
     this.setupRoutes();
+    this.setupSubscriptions();
   }
 
-  static build(
+  public static build(
     db: IDatabase,
-    membersRepo: IMembersRepository,
-    commentsRepo: ICommentsRepository,
-    postsRepo: IPostsRepository,
+    membersRepository: IMembersRepository,
+    commentsRepository: ICommentsRepository,
+    postsRepository: IPostsRepository,
     eventBus: IEventBus,
     config: Config,
-  ) {
+  ): VotesModule {
     return new VotesModule(
       db,
-      membersRepo,
-      commentsRepo,
-      postsRepo,
+      membersRepository,
+      commentsRepository,
+      postsRepository,
       eventBus,
       config,
     );
   }
 
-  private createVotesRepository() {
+  // ---- Write repositories ----
+
+  private createPostVotesRepository(): IPostVotesRepository {
     if (this.shouldBuildFakeRepository) {
-      return new prismaVotesRepository(this.db); // change to in memory repo
+      return new InMemoryPostVotesRepository();
     }
 
-    return new prismaVotesRepository(this.db);
+    return new PrismaPostVotesRepository(this.db);
   }
 
-  private createVotesService() {
+  private createCommentVotesRepository(): ICommentVotesRepository {
+    if (this.shouldBuildFakeRepository) {
+      return new InMemoryCommentVotesRepository();
+    }
+
+    return new PrismaCommentVotesRepository(this.db);
+  }
+
+  // ---- Services ----
+
+  private createVotesService(): VotesService {
     return new VotesService(
       this.membersRepository,
-      this.commentRepository,
+      this.commentsRepository,
       this.postsRepository,
-      this.votesRepository,
+      this.postVotesRepository,
+      this.commentVotesRepository,
       this.eventBus,
     );
   }
 
-  private createVotesController() {
-    return new VotesController(this.votesService);
-  }
-
-  private createPostsRouter() {
-    return new VotesRouter(this.votesController);
-  }
-
-  private createVotesSubscriptions() {
+  private createVotesSubscriptions(): VotesSubscriptions {
     return new VotesSubscriptions(this.eventBus, this.votesService);
   }
 
-  private setupRoutes() {
+  private createVotesController(): VotesController {
+    return new VotesController(this.votesService);
+  }
+
+  private createVotesRouter(): VotesRouter {
+    return new VotesRouter(this.votesController);
+  }
+
+  // ---- Setup ----
+
+  private setupSubscriptions(): void {
+    this.votesSubscriptions.register();
+  }
+
+  private setupRoutes(): void {
     this.votesRouter.register();
   }
 
-  public mountRouter(webServer: WebServer) {
-    const path = this.votesRouter.basePath;
-    const router = this.votesRouter.getRouter();
-    webServer.mountRouter(path, router);
+  public mountRouter(webServer: WebServer): void {
+    webServer.mountRouter(
+      this.votesRouter.basePath,
+      this.votesRouter.getRouter(),
+    );
   }
 
-  public getVotesRepository() {
-    return this.votesRepository;
+  // ---- Public accessors ----
+
+  public getPostVotesRepository() {
+    return this.postVotesRepository;
   }
 
-  public getVotesService() {
+  public getCommentVotesRepository() {
+    return this.commentVotesRepository;
+  }
+
+  public getVotesService(): VotesService {
     return this.votesService;
   }
 
-  public getVotesController() {
+  public getVotesController(): VotesController {
     return this.votesController;
   }
 }

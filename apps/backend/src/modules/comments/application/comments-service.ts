@@ -7,30 +7,31 @@ import { IEventBus } from '@forumate/bus';
 import type { IMembersRepository } from '../../members/application/ports/members-repository';
 import type { IPostsRepository } from '../../posts/application/ports/posts-repository';
 
-import type { ICommentsRepository } from './ports/comments-repository';
+import type { ICommentsReadRepository, ICommentsRepository } from './ports';
 import { GetCommentsByPostIdUseCase, PostCommentUseCase } from './use-cases';
 
 export class CommentsService {
   constructor(
-    private commentRepo: ICommentsRepository,
-    private postRepo: IPostsRepository,
-    private membersRepo: IMembersRepository,
+    private commentsRepository: ICommentsRepository,
+    private commentsReadRepository: ICommentsReadRepository,
+    private postsRepository: IPostsRepository,
+    private membersRepository: IMembersRepository,
     private eventBus: IEventBus,
   ) {}
 
   async postComment(command: PostCommentCommand) {
     return new PostCommentUseCase(
-      this.commentRepo,
-      this.postRepo,
-      this.membersRepo,
+      this.commentsRepository,
+      this.postsRepository,
+      this.membersRepository,
       this.eventBus,
     ).execute(command);
   }
 
   async getCommentsByPostId(query: GetCommentsByPostIdQuery) {
     return new GetCommentsByPostIdUseCase(
-      this.commentRepo,
-      this.postRepo,
+      this.commentsRepository,
+      this.postsRepository,
     ).execute(query);
   }
 }

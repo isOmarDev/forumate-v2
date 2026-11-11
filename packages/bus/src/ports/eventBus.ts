@@ -1,16 +1,18 @@
 import { DomainEvent } from '@forumate/core';
 
+export type EventHandler<T extends DomainEvent<unknown>> = (event: T) => void;
+
 export interface IEventBus {
   initialize(): Promise<unknown>;
   stop(): Promise<unknown>;
-  publishEvents(events: DomainEvent[]): void;
-  subscribe<T extends DomainEvent>(
-    eventTypeName: string,
-    handler: (event: T) => void,
+  publishEvents(events: DomainEvent<unknown>[]): Promise<void>;
+  subscribe<T extends DomainEvent<unknown>>(
+    eventName: string,
+    handler: EventHandler<T>,
   ): void;
-  unsubscribe(
-    eventTypeName: string,
-    handler: (event: DomainEvent) => void,
+  unsubscribe<T extends DomainEvent<unknown>>(
+    eventName: string,
+    handler: EventHandler<T>,
   ): void;
   clear(): void;
 }

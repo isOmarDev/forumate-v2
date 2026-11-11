@@ -1,11 +1,16 @@
 import { VotesService } from '../../../application/votes-service';
 
-import { CastVoteOnPostController } from './cast-vote-on-post-controller';
+import { VoteOnCommentController } from './vote-on-comment-controller';
+import { VoteOnPostController } from './vote-on-post-controller';
 
 export class VotesController {
   constructor(private readonly votesService: VotesService) {}
 
-  public CastVoteOnPost(): CastVoteOnPostController {
-    return new CastVoteOnPostController(this.votesService);
+  public voteOnPost() {
+    return new VoteOnPostController(this.votesService);
+  }
+
+  public voteOnComment() {
+    return new VoteOnCommentController(this.votesService);
   }
 }
