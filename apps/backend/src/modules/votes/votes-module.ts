@@ -10,31 +10,24 @@ import type { IPostsRepository } from '../posts/application/ports/posts-reposito
 
 import type {
   IPostVotesRepository,
-  IPostVotesReadRepository,
   ICommentVotesRepository,
-  ICommentVotesReadRepository,
 } from './application/ports';
 import { VotesSubscriptions } from './application/subscriptions/votes-subscriptions';
 import { VotesService } from './application/votes-service';
 import {
-  PrismaPostVotesRepository,
-  PrismaCommentVotesRepository,
-  InMemoryPostVotesReadRepository,
-  PrismaPostVotesReadRepository,
-  InMemoryCommentVotesReadRepository,
-  PrismaCommentVotesReadRepository,
   InMemoryCommentVotesRepository,
   InMemoryPostVotesRepository,
-} from './infrastructure/repositories';
+} from './infrastructure/repositories/in-memory';
+import {
+  PrismaPostVotesRepository,
+  PrismaCommentVotesRepository,
+} from './infrastructure/repositories/prisma';
 import { VotesController } from './presentation/http/controllers';
 import { VotesRouter } from './presentation/http/routes/votes-router';
 
 export class VotesModule extends ApplicationModule {
   private postVotesRepository: IPostVotesRepository;
   private commentVotesRepository: ICommentVotesRepository;
-
-  private postVotesReadRepository: IPostVotesReadRepository;
-  private commentVotesReadRepository: ICommentVotesReadRepository;
 
   private votesService: VotesService;
   private votesSubscriptions: VotesSubscriptions;
@@ -44,7 +37,7 @@ export class VotesModule extends ApplicationModule {
   private constructor(
     private db: IDatabase,
     private membersRepository: IMembersRepository,
-    private commentRepository: ICommentsRepository,
+    private commentsRepository: ICommentsRepository,
     private postsRepository: IPostsRepository,
     private eventBus: IEventBus,
     config: Config,
@@ -53,9 +46,6 @@ export class VotesModule extends ApplicationModule {
 
     this.postVotesRepository = this.createPostVotesRepository();
     this.commentVotesRepository = this.createCommentVotesRepository();
-
-    this.postVotesReadRepository = this.createPostVotesReadRepository();
-    this.commentVotesReadRepository = this.createCommentVotesReadRepository();
 
     this.votesService = this.createVotesService();
     this.votesSubscriptions = this.createVotesSubscriptions();
@@ -102,37 +92,21 @@ export class VotesModule extends ApplicationModule {
     return new PrismaCommentVotesRepository(this.db);
   }
 
-  // ---- Read repositories ----
-
-  private createPostVotesReadRepository(): IPostVotesReadRepository {
-    if (this.shouldBuildFakeRepository) {
-      return new InMemoryPostVotesReadRepository();
-    }
-
-    return new PrismaPostVotesReadRepository(this.db);
-  }
-
-  private createCommentVotesReadRepository(): ICommentVotesReadRepository {
-    if (this.shouldBuildFakeRepository) {
-      return new InMemoryCommentVotesReadRepository();
-    }
-
-    return new PrismaCommentVotesReadRepository(this.db);
-  }
-
   // ---- Services ----
 
   private createVotesService(): VotesService {
     return new VotesService(
       this.membersRepository,
-      this.commentRepository,
+      this.commentsRepository,
       this.postsRepository,
       this.postVotesRepository,
       this.commentVotesRepository,
-      this.postVotesReadRepository,
-      this.commentVotesReadRepository,
       this.eventBus,
     );
+  }
+
+  private createVotesSubscriptions(): VotesSubscriptions {
+    return new VotesSubscriptions(this.eventBus, this.votesService);
   }
 
   private createVotesController(): VotesController {
@@ -141,10 +115,6 @@ export class VotesModule extends ApplicationModule {
 
   private createVotesRouter(): VotesRouter {
     return new VotesRouter(this.votesController);
-  }
-
-  private createVotesSubscriptions(): VotesSubscriptions {
-    return new VotesSubscriptions(this.eventBus, this.votesService);
   }
 
   // ---- Setup ----
@@ -165,6 +135,14 @@ export class VotesModule extends ApplicationModule {
   }
 
   // ---- Public accessors ----
+
+  public getPostVotesRepository() {
+    return this.postVotesRepository;
+  }
+
+  public getCommentVotesRepository() {
+    return this.commentVotesRepository;
+  }
 
   public getVotesService(): VotesService {
     return this.votesService;

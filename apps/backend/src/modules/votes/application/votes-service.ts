@@ -1,5 +1,5 @@
 import {
-  UpdateMemberReputationScoreCommand,
+  CastInitialUpvoteOnCommentCommand,
   VoteOnCommentCommand,
   VoteOnPostCommand,
 } from '@forumate/api/votes';
@@ -9,16 +9,11 @@ import type { ICommentsRepository } from '../../comments/application/ports/comme
 import type { IMembersRepository } from '../../members/application/ports/members-repository';
 import type { IPostsRepository } from '../../posts/application/ports/posts-repository';
 
-import type {
-  ICommentVotesReadRepository,
-  ICommentVotesRepository,
-  IPostVotesReadRepository,
-  IPostVotesRepository,
-} from './ports';
+import type { ICommentVotesRepository, IPostVotesRepository } from './ports';
 import {
-  UpdateMemberReputationScoreUseCase,
   VoteOnCommentUseCase,
   VoteOnPostUseCase,
+  CastInitialUpvoteOnCommentUseCase,
 } from './use-cases';
 
 export class VotesService {
@@ -28,8 +23,6 @@ export class VotesService {
     private postsRepository: IPostsRepository,
     private postVotesRepository: IPostVotesRepository,
     private commentVotesRepository: ICommentVotesRepository,
-    private postVotesReadRepository: IPostVotesReadRepository,
-    private commentVotesReadRepository: ICommentVotesReadRepository,
     private eventBus: IEventBus,
   ) {}
 
@@ -51,13 +44,12 @@ export class VotesService {
     ).execute(command);
   }
 
-  public updateMemberReputationScore(
-    command: UpdateMemberReputationScoreCommand,
+  public CastInitialUpvoteOnComment(
+    command: CastInitialUpvoteOnCommentCommand,
   ) {
-    return new UpdateMemberReputationScoreUseCase(
-      this.membersRepository,
-      this.postVotesReadRepository,
-      this.commentVotesReadRepository,
+    return new CastInitialUpvoteOnCommentUseCase(
+      this.commentsRepository,
+      this.commentVotesRepository,
       this.eventBus,
     ).execute(command);
   }
