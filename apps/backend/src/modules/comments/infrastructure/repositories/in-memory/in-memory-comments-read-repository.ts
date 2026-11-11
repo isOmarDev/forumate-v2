@@ -1,6 +1,6 @@
-import { Spy } from '../../../../shared/test-doubles/spy';
-import type { ICommentsReadRepository } from '../../application/ports/comments-read-repository';
-import { CommentReadModel } from '../../application/read-models/comment-read-model';
+import { Spy } from '../../../../../shared/test-doubles/spy';
+import type { ICommentsReadRepository } from '../../../application/ports/comments-read-repository';
+import { CommentReadModel } from '../../../application/read-models/comment-read-model';
 
 export class InMemoryCommentsReadRepository
   extends Spy<ICommentsReadRepository>

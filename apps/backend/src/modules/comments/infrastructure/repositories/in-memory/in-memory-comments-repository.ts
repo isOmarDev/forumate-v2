@@ -1,6 +1,6 @@
-import { Spy } from '../../../../shared/test-doubles/spy';
-import { ICommentsRepository } from '../../application/ports/comments-repository';
-import { Comment } from '../../domain/entities/comment';
+import { Spy } from '../../../../../shared/test-doubles/spy';
+import { ICommentsRepository } from '../../../application/ports/comments-repository';
+import { Comment } from '../../../domain/entities/comment';
 
 export class InMemoryCommentsRepository
   extends Spy<ICommentsRepository>
@@ -27,6 +27,30 @@ export class InMemoryCommentsRepository
   public async findByPostId(postId: string): Promise<Comment[]> {
     this.addCall('findByPostId', [postId]);
     return this.comments.filter((comment) => comment.postId === postId);
+  }
+
+  public async findAuthorId(commentId: string) {
+    this.addCall('findAuthorId', [commentId]);
+    const comment = this.comments.find((comment) => comment.id === commentId);
+    return comment?.memberId ?? null;
+  }
+
+  async updateVoteScore(commentId: string, scoreChange: number): Promise<void> {
+    const index = this.comments.findIndex(
+      (comment) => comment.id === commentId,
+    );
+    if (index === -1) throw new Error(`Comment ${commentId} not found`);
+
+    const comment = this.comments[index]!;
+
+    this.comments[index] = Comment.reconstitute({
+      id: comment.id,
+      postId: comment.postId,
+      body: comment.body,
+      parentCommentId: comment.parentCommentId,
+      memberId: comment.memberId,
+      voteScore: comment.voteScore + scoreChange,
+    });
   }
 
   // ---- Test setup helpers (no call tracking) ----
