@@ -1,4 +1,4 @@
-import { ReputationLevel } from '@forumate/api';
+import { ReputationLevel } from '../../../members/domain/value-objects';
 
 export type CommentReadModelProps = {
   id: string;
