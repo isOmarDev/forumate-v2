@@ -5,8 +5,8 @@ import { memberErrorCodes } from '@forumate/errors';
 import { CreatePostInputBuilder } from '../../../../../../tests/builders/inputs/post-input-builders';
 import { setupLevel1Member } from '../../../../../../tests/fixtures/unit/members';
 import { InsufficientMemberLevelError } from '../../../../members/domain/errors/member-errors';
-import { InMemoryMembersRepository } from '../../../../members/infrastructure/repositories/in-memory-members-repository';
-import { InMemoryPostsRepository } from '../../../infrastructure/repositories/in-memory-posts-repository';
+import { InMemoryMembersRepository } from '../../../../members/infrastructure/repositories/in-memory';
+import { InMemoryPostsRepository } from '../../../infrastructure/repositories/in-memory/in-memory-posts-repository';
 
 import { CreatePostUseCase } from './create-post-use-case';
 
