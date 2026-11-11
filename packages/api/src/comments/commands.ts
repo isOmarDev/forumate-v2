@@ -6,11 +6,7 @@ import { validateCommandInput } from '../validate-command-input';
 import { PostCommentInput, postCommentInputSchema } from './inputs';
 
 export class PostCommentCommand {
-  private constructor(private readonly props: PostCommentInput) {}
-
-  public getProps(): PostCommentInput {
-    return this.props;
-  }
+  private constructor(public readonly props: PostCommentInput) {}
 
   static create(
     input: unknown,
