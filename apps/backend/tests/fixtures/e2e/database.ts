@@ -43,7 +43,7 @@ export class DatabaseFixture {
         userId: overrides.userId ?? faker.string.uuid(),
         username: overrides.username ?? faker.internet.username(),
         reputationScore: overrides.reputationScore ?? 0,
-        reputationLevel: overrides.reputationLevel ?? 'Level1',
+        reputationLevel: overrides.reputationLevel ?? 'level1',
       },
     });
   }

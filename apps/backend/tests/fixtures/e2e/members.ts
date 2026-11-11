@@ -1,12 +1,17 @@
+import { randomUUID } from 'node:crypto';
+
 import { ApiClient } from '@forumate/api';
 
-import { ReputationLevel } from '../../../src/modules/members/domain/value-objects/member-reputation-level';
+import {
+  LEVEL_2_MIN_SCORE,
+  reputationLevel,
+} from '../../../src/modules/members/domain/value-objects/member-reputation-level';
 import { CreateMemberInputBuilder } from '../../builders/inputs/member-input-builders';
 import { waitFor } from '../../helpers/wait-for';
 
 import { DatabaseFixture } from './database';
 
-const COMMENTS_REQUIRED_FOR_LEVEL_2 = 5;
+const VOTES_REQUIRED_FOR_LEVEL_2 = LEVEL_2_MIN_SCORE;
 
 interface SetupLevel1MemberOptions {
   apiClient: ApiClient;
@@ -83,30 +88,48 @@ export async function setupLevel2Member({
   userId,
   databaseFixture,
 }: SetupLevel2MemberOptions) {
-  const { member } = await setupLevel1Member({ apiClient, authToken, userId });
+  const { member: level1Member } = await setupLevel1Member({
+    apiClient,
+    authToken,
+    userId,
+  });
 
   const postAuthor = await databaseFixture.seedMember({
-    reputationLevel: ReputationLevel.Level2,
+    reputationLevel: reputationLevel.level2,
+    reputationScore: LEVEL_2_MIN_SCORE,
   });
   const post = await databaseFixture.seedPost({ memberId: postAuthor.id });
 
-  for (let i = 1; i <= COMMENTS_REQUIRED_FOR_LEVEL_2; i++) {
+  for (let i = 1; i <= VOTES_REQUIRED_FOR_LEVEL_2; i++) {
     const response = await apiClient.comments.postComment(
-      { postId: post.id, memberId: member.id, body: `Test comment ${i}` },
+      { postId: post.id, memberId: level1Member.id, body: `Test comment ${i}` },
       authToken,
     );
 
     if (!response.success) {
       throw new Error(
-        `Failed to post comment ${i}/${COMMENTS_REQUIRED_FOR_LEVEL_2}: ${response.error.message}`,
+        `Failed to post comment ${i}/${VOTES_REQUIRED_FOR_LEVEL_2}: ${response.error.message}`,
       );
+    }
+
+    const voteResponse = await apiClient.votes.voteOnComment(
+      {
+        memberId: postAuthor.id,
+        commentId: response.data.id,
+        voteType: 'upvote',
+      },
+      randomUUID(),
+    );
+
+    if (!voteResponse.success) {
+      throw new Error(voteResponse.error.message);
     }
   }
 
   await waitFor(async () => {
-    const updatedMember = await databaseFixture.getMemberById(member.id);
-    return updatedMember?.reputationLevel === ReputationLevel.Level2;
+    const updatedMember = await databaseFixture.getMemberById(level1Member.id);
+    return updatedMember?.reputationLevel === reputationLevel.level2;
   });
 
-  return { member };
+  return { member: level1Member };
 }
