@@ -10,7 +10,10 @@ import { VoteStatus } from '../value-objects/vote-status';
 
 import { Vote, type VoteProps } from './vote';
 
-export type VoteState = 'Upvoted' | 'Downvoted' | 'Default';
+export type CreatePostVoteProps = {
+  memberId: string;
+  postId: string;
+};
 
 interface PostVoteProps extends VoteProps {
   postId: string;
@@ -25,11 +28,11 @@ export class PostVote extends Vote<PostVoteProps> {
     return this.props.postId;
   }
 
-  public static create(memberId: string, postId: string): PostVote {
+  public static create(props: CreatePostVoteProps): PostVote {
     return new PostVote({
       id: randomUUID(),
-      memberId: memberId,
-      postId: postId,
+      memberId: props.memberId,
+      postId: props.postId,
       voteStatus: VoteStatus.unvoted(),
     });
   }
@@ -41,22 +44,19 @@ export class PostVote extends Vote<PostVoteProps> {
   protected createVoteChangeEvent(
     voteStatus: VoteStatus,
     scoreChange: number,
+    authorId: string,
   ): DomainEvent<PostVoteEventData> {
     const eventData: PostVoteEventData = {
       voteId: this.id,
-      memberId: this.memberId,
+      voterId: this.memberId,
       postId: this.postId,
+      isSelfVote: this.memberId === authorId,
       scoreChange,
+      authorId,
     };
 
-    if (voteStatus.isUpvoted()) {
-      return new PostUpvoted(eventData);
-    }
-
-    if (voteStatus.isDownvoted()) {
-      return new PostDownvoted(eventData);
-    }
-
+    if (voteStatus.isUpvoted()) return new PostUpvoted(eventData);
+    if (voteStatus.isDownvoted()) return new PostDownvoted(eventData);
     return new PostUnvoted(eventData);
   }
 }

@@ -1,13 +1,16 @@
-export type CommentVoteEventData = {
+export type VoteEventData = {
   voteId: string;
-  commentId: string;
-  memberId: string;
+  voterId: string;
+  authorId: string;
   scoreChange: number;
 };
 
-export type PostVoteEventData = {
-  voteId: string;
+export type CommentVoteEventData = VoteEventData & {
+  commentId: string;
+  isSelfVote: boolean;
+};
+
+export type PostVoteEventData = VoteEventData & {
   postId: string;
-  memberId: string;
-  scoreChange: number;
+  isSelfVote: boolean;
 };

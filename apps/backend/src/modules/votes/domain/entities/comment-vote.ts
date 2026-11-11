@@ -10,7 +10,7 @@ import { VoteStatus } from '../value-objects/vote-status';
 
 import { Vote, VoteProps } from './vote';
 
-type CreateCommentVoteProps = { memberId: string; commentId: string };
+export type CreateCommentVoteProps = { memberId: string; commentId: string };
 
 interface CommentVoteProps extends VoteProps {
   commentId: string;
@@ -44,20 +44,19 @@ export class CommentVote extends Vote<CommentVoteProps> {
   protected createVoteChangeEvent(
     voteStatus: VoteStatus,
     scoreChange: number,
+    authorId: string,
   ): DomainEvent<CommentVoteEventData> {
     const eventData: CommentVoteEventData = {
       voteId: this.id,
-      memberId: this.memberId,
+      voterId: this.memberId,
       commentId: this.commentId,
+      isSelfVote: this.memberId === authorId,
       scoreChange,
+      authorId,
     };
 
-    if (voteStatus.isUpvoted()) {
-      return new CommentUpvoted(eventData);
-    } else if (voteStatus.isDownvoted()) {
-      return new CommentDownvoted(eventData);
-    } else {
-      return new CommentUnvoted(eventData);
-    }
+    if (voteStatus.isUpvoted()) return new CommentUpvoted(eventData);
+    if (voteStatus.isDownvoted()) return new CommentDownvoted(eventData);
+    return new CommentUnvoted(eventData);
   }
 }
