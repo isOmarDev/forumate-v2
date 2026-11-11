@@ -14,8 +14,14 @@ import type {
 } from './application/ports';
 import { CommentProjector } from './application/projections/comment-projector';
 import { CommentsSubscriptions } from './application/subscriptions/comments-subscriptions';
-import { PrismaCommentsReadRepository } from './infrastructure/repositories/prisma-comments-read-repository';
-import { PrismaCommentsRepository } from './infrastructure/repositories/prisma-comments-repository';
+import {
+  InMemoryCommentsReadRepository,
+  InMemoryCommentsRepository,
+} from './infrastructure/repositories/in-memory';
+import {
+  PrismaCommentsReadRepository,
+  PrismaCommentsRepository,
+} from './infrastructure/repositories/prisma';
 import { CommentsController } from './presentation/http/controllers';
 import { CommentsRouter } from './presentation/http/routes/comments-router';
 
@@ -70,12 +76,18 @@ export class CommentsModule extends ApplicationModule {
   }
 
   private createCommentsRepository() {
-    if (this.commentsRepository) return this.commentsRepository;
+    if (this.shouldBuildFakeRepository) {
+      return new InMemoryCommentsRepository();
+    }
+
     return new PrismaCommentsRepository(this.db);
   }
 
   private createCommentsReadRepository() {
-    if (this.commentsReadRepository) return this.commentsReadRepository;
+    if (this.shouldBuildFakeRepository) {
+      return new InMemoryCommentsReadRepository();
+    }
+
     return new PrismaCommentsReadRepository(this.db);
   }
 
@@ -113,6 +125,10 @@ export class CommentsModule extends ApplicationModule {
 
   private registerRoutes() {
     this.commentsRouter.register();
+  }
+
+  public getCommentsReadRepository() {
+    return this.commentsReadRepository;
   }
 
   public getCommentsRepository() {
