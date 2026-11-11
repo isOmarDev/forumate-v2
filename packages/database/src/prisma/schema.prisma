@@ -9,9 +9,9 @@ datasource db {
 }
 
 enum MemberReputationLevel {
-  Level1 @map("Level 1")
-  Level2 @map("Level 2")
-  Level3 @map("Level 3")
+  level1
+  level2
+  level3
 }
 
 enum PostType {
@@ -28,7 +28,7 @@ model Member {
   comments        Comment[]
   username        String                @unique
   reputationScore Int                   @default(0)
-  reputationLevel MemberReputationLevel @default(Level1)
+  reputationLevel MemberReputationLevel @default(level1)
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
 }
