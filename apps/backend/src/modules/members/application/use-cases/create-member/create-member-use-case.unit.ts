@@ -11,7 +11,7 @@ import {
   MemberAlreadyExistsError,
   MemberUsernameAlreadyExistsError,
 } from '../../../domain/errors/member-errors';
-import { InMemoryMembersRepository } from '../../../infrastructure/repositories/in-memory-members-repository';
+import { InMemoryMembersRepository } from '../../../infrastructure/repositories/in-memory';
 
 import { CreateMemberUseCase } from './create-member-use-case';
 
