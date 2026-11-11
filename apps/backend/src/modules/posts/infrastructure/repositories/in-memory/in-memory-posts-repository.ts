@@ -1,12 +1,12 @@
 import { GetPostsQuery } from '@forumate/api/posts';
 
-import { Spy } from '../../../../shared/test-doubles/spy';
+import { Spy } from '../../../../../shared/test-doubles/spy';
 import type {
   IPostsRepository,
   IPostsReadRepository,
-} from '../../application/ports';
-import { PostReadModel } from '../../application/read-models/post-read-model';
-import { Post } from '../../domain/entities/post';
+} from '../../../application/ports';
+import { PostReadModel } from '../../../application/read-models/post-read-model';
+import { Post } from '../../../domain/entities/post';
 
 export class InMemoryPostsRepository
   extends Spy<IPostsRepository & IPostsReadRepository>
@@ -21,6 +21,12 @@ export class InMemoryPostsRepository
     this.addCall('findById', [id]);
 
     return this.posts.find((post) => post.id === id) ?? null;
+  }
+
+  public async findAuthorId(postId: string) {
+    this.addCall('findAuthorId', [postId]);
+    const post = this.posts.find((post) => post.id === postId);
+    return post?.memberId ?? null;
   }
 
   public async save(post: Post): Promise<void> {
@@ -52,6 +58,31 @@ export class InMemoryPostsRepository
     this.addCall('findBySlug', [slug]);
 
     return this.readModels.find((post) => post.slug === slug) ?? null;
+  }
+
+  async updateVoteScore(postId: string, scoreChange: number): Promise<void> {
+    const index = this.posts.findIndex((post) => post.id === postId);
+    if (index === -1) throw new Error(`Comment ${postId} not found`);
+
+    const post = this.posts[index]!;
+    const voteScore = post.voteScore + scoreChange;
+
+    const base = {
+      id: post.id,
+      memberId: post.memberId,
+      slug: post.slug,
+      title: post.title,
+      voteScore,
+    };
+
+    this.posts[index] =
+      post.postType === 'link'
+        ? Post.reconstitute({ ...base, postType: 'link', link: post.link })
+        : Post.reconstitute({
+            ...base,
+            postType: 'text',
+            content: post.content,
+          });
   }
 
   // ---- Test setup helpers (no call tracking) ----

@@ -7,17 +7,17 @@ import {
 } from '@forumate/database';
 import { DatabaseError } from '@forumate/errors/server';
 
-import { MemberReadModel } from '../../../members/application/read-models/member-read-model';
-import { PostMap } from '../../application/mappers/post-map';
+import { MemberReadModel } from '../../../../members/application/read-models/member-read-model';
+import { PostMap } from '../../../application/mappers/post-map';
 import type {
   IPostsRepository,
   IPostsReadRepository,
-} from '../../application/ports';
-import { PostReadModel } from '../../application/read-models/post-read-model';
-import { Post } from '../../domain/entities/post';
+} from '../../../application/ports';
+import { PostReadModel } from '../../../application/read-models/post-read-model';
+import { Post } from '../../../domain/entities/post';
 
 type PostModelWithMember = PostModel & {
-  memberPostedBy: MemberModel;
+  member: MemberModel;
 };
 
 export class PrismaPostsRepository
@@ -25,13 +25,11 @@ export class PrismaPostsRepository
 {
   constructor(private database: IDatabase) {}
 
-  async findById(id: string): Promise<Post | null> {
+  public async findById(id: string): Promise<Post | null> {
     const connection = this.database.getClient();
     const post = await connection.post.findUnique({
       where: { id },
-      include: {
-        memberPostedBy: true,
-      },
+      include: { member: true },
     });
 
     if (!post) {
@@ -41,7 +39,15 @@ export class PrismaPostsRepository
     return PostMap.toDomain(post);
   }
 
-  async save(
+  public async findAuthorId(postId: string) {
+    const row = await this.database.getClient().post.findUnique({
+      where: { id: postId },
+      select: { memberId: true },
+    });
+    return row?.memberId ?? null;
+  }
+
+  public async save(
     post: Post,
     transaction?: Prisma.TransactionClient,
   ): Promise<void> {
@@ -61,12 +67,12 @@ export class PrismaPostsRepository
     }
   }
 
-  async findPosts(query: GetPostsQuery): Promise<PostReadModel[]> {
+  public async findPosts(query: GetPostsQuery): Promise<PostReadModel[]> {
     const connection = this.database.getClient();
     const sqlQuery = {
       orderBy: {},
       include: {
-        memberPostedBy: true,
+        member: true,
         _count: {
           select: {
             comments: true,
@@ -88,7 +94,7 @@ export class PrismaPostsRepository
     return posts.map((post: PostModelWithMember) =>
       PostReadModel.fromPersistence(
         post,
-        MemberReadModel.fromPrisma(post.memberPostedBy),
+        MemberReadModel.fromPrisma(post.member),
       ),
     );
   }
@@ -98,7 +104,7 @@ export class PrismaPostsRepository
     const post = await connection.post.findUnique({
       where: { id },
       include: {
-        memberPostedBy: true,
+        member: true,
         _count: {
           select: {
             comments: true,
@@ -120,16 +126,16 @@ export class PrismaPostsRepository
 
     return PostReadModel.fromPersistence(
       { ...post, voteScore },
-      MemberReadModel.fromPrisma(post.memberPostedBy),
+      MemberReadModel.fromPrisma(post.member),
     );
   }
 
-  async findBySlug(slug: string): Promise<PostReadModel | null> {
+  public async findBySlug(slug: string): Promise<PostReadModel | null> {
     const connection = this.database.getClient();
     const post = await connection.post.findFirst({
       where: { slug },
       include: {
-        memberPostedBy: true,
+        member: true,
         _count: {
           select: {
             comments: true,
@@ -140,7 +146,19 @@ export class PrismaPostsRepository
 
     if (!post) return null;
 
-    const member = MemberReadModel.fromPrisma(post.memberPostedBy);
+    const member = MemberReadModel.fromPrisma(post.member);
     return PostReadModel.fromPersistence(post, member);
+  }
+
+  public async updateVoteScore(
+    postId: string,
+    scoreChange: number,
+  ): Promise<void> {
+    const client = this.database.getClient();
+
+    await client.post.update({
+      where: { id: postId },
+      data: { voteScore: { increment: scoreChange } },
+    });
   }
 }

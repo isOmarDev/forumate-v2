@@ -27,6 +27,6 @@ export class CreatePostController extends BaseController {
 
     const post = resultOrError.getValue();
 
-    return this.ok(res, { id: post.id, slug: post.slug.value });
+    return this.created(res, { id: post.id, slug: post.slug.value });
   }
 }
