@@ -1,14 +1,17 @@
+import { randomUUID } from 'node:crypto';
+
 import { VoteType } from '@forumate/api/votes';
 
 import {
   CommentVote,
   CreateCommentVoteProps,
 } from '../../../src/modules/votes/domain/entities/comment-vote';
-import { InMemoryCommentVotesRepository } from '../../../src/modules/votes/infrastructure/repositories/In-memory-comment-votes-repository';
+import { InMemoryCommentVotesRepository } from '../../../src/modules/votes/infrastructure/repositories/in-memory/In-memory-comment-votes-repository';
 import { VoteInputBuilders } from '../../builders/inputs/vote-input-builders';
 
 type BuildCommentVoteOverrides = Partial<CreateCommentVoteProps> & {
   voteType?: VoteType;
+  authorId?: string;
 };
 
 export function buildCommentVote(overrides: BuildCommentVoteOverrides = {}) {
@@ -19,7 +22,11 @@ export function buildCommentVote(overrides: BuildCommentVoteOverrides = {}) {
     commentId: overrides.commentId ?? input.commentId,
   });
 
-  vote.castVote(overrides.voteType ?? input.voteType);
+  const authorId = overrides.authorId ?? randomUUID();
+
+  vote.castVote(overrides.voteType ?? input.voteType, authorId);
+
+  // clear this initial upvote event so that it doesnt interfer with the test
   vote.clearDomainEvents();
 
   return vote;

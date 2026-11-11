@@ -6,16 +6,19 @@ import {
   PostTitle,
   PostType,
 } from '../../../src/modules/posts/domain/value-objects';
-import { InMemoryPostsRepository } from '../../../src/modules/posts/infrastructure/repositories/in-memory-posts-repository';
+import { InMemoryPostsRepository } from '../../../src/modules/posts/infrastructure/repositories/in-memory/in-memory-posts-repository';
+import { CreatePostInputBuilder } from '../../builders/inputs/post-input-builders';
 
 export function setupPostByRandomMember(
   repositorySpy: InMemoryPostsRepository,
 ) {
+  const input = CreatePostInputBuilder.aTextPost().build();
+
   const postOrError = Post.create({
     memberId: randomUUID(),
-    title: PostTitle.create('Test Post').getValue(),
-    content: PostContent.create('This is a test post').getValue(),
-    postType: PostType.create('text').getValue(),
+    title: PostTitle.create(input.title).getValue(),
+    content: PostContent.create(input.content).getValue(),
+    postType: PostType.create(input.postType).getValue(),
   });
 
   const post = postOrError.getValue();

@@ -3,8 +3,8 @@ import {
   CreateCommentProps,
 } from '../../../src/modules/comments/domain/entities/comment';
 import { CommentBody } from '../../../src/modules/comments/domain/value-objects/comment-body';
-import { InMemoryCommentsRepository } from '../../../src/modules/comments/infrastructure/repositories/in-memory-comments-repository';
-import { InMemoryCommentVotesRepository } from '../../../src/modules/votes/infrastructure/repositories/In-memory-comment-votes-repository';
+import { InMemoryCommentsRepository } from '../../../src/modules/comments/infrastructure/repositories/in-memory/in-memory-comments-repository';
+import { InMemoryCommentVotesRepository } from '../../../src/modules/votes/infrastructure/repositories/in-memory/In-memory-comment-votes-repository';
 import { PostCommentInputBuilder } from '../../builders/inputs/comment-input-builder';
 
 import { setupCommentVote } from './votes';
@@ -38,6 +38,7 @@ export function setupCommentWithInitialUpvote(
     memberId: existingComment.memberId,
     commentId: existingComment.id,
     voteType: 'upvote',
+    authorId: existingComment.memberId,
   });
 
   return { existingComment, authorVote };
@@ -53,6 +54,7 @@ export function setupCommentWithInitialDownvote(
     memberId: existingComment.memberId,
     commentId: existingComment.id,
     voteType: 'downvote',
+    authorId: existingComment.memberId,
   });
 
   return { existingComment, authorVote };
