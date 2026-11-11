@@ -1,4 +1,4 @@
-import { ReputationLevel } from '@forumate/api';
+import { type ReputationLevel, reputationLevel } from '@forumate/api';
 
 import { UserDm } from './userDm';
 
@@ -43,7 +43,7 @@ export class MemberDm {
       username: user.username,
       email: user.email,
       userId: user.id,
-      reputationLevel: ReputationLevel.Level1,
+      reputationLevel: reputationLevel.Level1,
     });
   }
 
