@@ -1,6 +1,6 @@
-import { Spy } from '../../../../shared/test-doubles/spy';
-import type { ICommentVotesRepository } from '../../application/ports/comment-votes-repository';
-import { CommentVote } from '../../domain/entities/comment-vote';
+import { Spy } from '../../../../../shared/test-doubles/spy';
+import type { ICommentVotesRepository } from '../../../application/ports/comment-votes-repository';
+import { CommentVote } from '../../../domain/entities/comment-vote';
 
 export class InMemoryCommentVotesRepository
   extends Spy<ICommentVotesRepository>

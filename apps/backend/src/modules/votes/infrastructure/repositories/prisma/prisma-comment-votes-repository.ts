@@ -1,14 +1,14 @@
 import { type IDatabase, Prisma } from '@forumate/database';
 import { DatabaseError } from '@forumate/errors/server';
 
-import { CommentVoteMap } from '../../application/mappers/comment-vote-map';
-import type { ICommentVotesRepository } from '../../application/ports';
-import { CommentVote } from '../../domain/entities/comment-vote';
+import { CommentVoteMap } from '../../../application/mappers/comment-vote-map';
+import type { ICommentVotesRepository } from '../../../application/ports';
+import { CommentVote } from '../../../domain/entities/comment-vote';
 
 export class PrismaCommentVotesRepository implements ICommentVotesRepository {
   constructor(private database: IDatabase) {}
 
-  async findByMemberAndCommentId(
+  public async findByMemberAndCommentId(
     memberId: string,
     commentId: string,
   ): Promise<CommentVote | null> {
@@ -27,7 +27,7 @@ export class PrismaCommentVotesRepository implements ICommentVotesRepository {
     return CommentVoteMap.toDomain(vote);
   }
 
-  async save(vote: CommentVote, transaction?: Prisma.TransactionClient) {
+  public async save(vote: CommentVote, transaction?: Prisma.TransactionClient) {
     const prismaInstance = transaction || this.database.getClient();
 
     const voteData = CommentVoteMap.toPersistence(vote);
