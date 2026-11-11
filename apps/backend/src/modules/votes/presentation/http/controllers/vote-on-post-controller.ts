@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { VoteOnPostCommand } from '@forumate/api/votes';
+import { VoteOnPostCommand, VoteOnPostDto } from '@forumate/api/votes';
 
 import { BaseController } from '../../../../../shared/infra/http';
 import { VotesService } from '../../../application/votes-service';
@@ -27,14 +27,19 @@ export class VoteOnPostController extends BaseController {
       return this.fail(res, commandOrError.getError());
     }
 
-    const result = await this.votesService.voteOnPost(
+    const resultOrError = await this.votesService.voteOnPost(
       commandOrError.getValue(),
     );
 
-    if (result.isFailure) {
-      return this.fail(res, result.getError());
+    if (resultOrError.isFailure) {
+      return this.fail(res, resultOrError.getError());
     }
 
-    return this.ok(res, result.getValue().toDTO());
+    const postVote = resultOrError.getValue();
+
+    return this.ok<VoteOnPostDto>(res, {
+      postId: postVote.postId,
+      voteStatus: postVote.voteStatus.value,
+    });
   }
 }

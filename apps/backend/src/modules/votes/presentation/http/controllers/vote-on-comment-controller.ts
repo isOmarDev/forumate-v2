@@ -35,12 +35,11 @@ export class VoteOnCommentController extends BaseController {
       return this.fail(res, resultOrError.getError());
     }
 
-    const result = resultOrError.getValue();
-    const voteOnCommentDto: VoteOnCommentDto = {
-      commentId: result.commentId,
-      voteStatus: result.voteStatus.value,
-    };
+    const commentVote = resultOrError.getValue();
 
-    this.ok(res, voteOnCommentDto);
+    this.ok<VoteOnCommentDto>(res, {
+      commentId: commentVote.commentId,
+      voteStatus: commentVote.voteStatus.value,
+    });
   }
 }
