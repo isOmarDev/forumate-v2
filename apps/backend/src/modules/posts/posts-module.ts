@@ -11,8 +11,8 @@ import type {
   IPostsReadRepository,
 } from './application/ports';
 import { PostsService } from './application/posts-service';
-import { InMemoryPostsRepository } from './infrastructure/repositories/in-memory-posts-repository';
-import { PrismaPostsRepository } from './infrastructure/repositories/prisma-posts-repository';
+import { InMemoryPostsRepository } from './infrastructure/repositories/in-memory';
+import { PrismaPostsRepository } from './infrastructure/repositories/prisma';
 import { PostsController } from './presentation/http/controllers';
 import { PostsRouter } from './presentation/http/routes/posts-router';
 
