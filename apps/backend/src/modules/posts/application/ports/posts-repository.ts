@@ -4,5 +4,7 @@ import { Post } from '../../domain/entities/post';
 
 export interface IPostsRepository {
   findById(id: string): Promise<Post | null>;
+  findAuthorId(postId: string): Promise<string | null>;
   save(post: Post): Promise<void | DatabaseError>;
+  updateVoteScore(postId: string, scoreChange: number): Promise<void>;
 }
