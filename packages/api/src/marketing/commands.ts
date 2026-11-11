@@ -6,7 +6,7 @@ import { validateCommandInput } from '../validate-command-input';
 import { AddEmailToListInput, addEmailToListSchema } from './inputs';
 
 export class AddEmailToListCommand {
-  private constructor(readonly props: AddEmailToListInput) {}
+  private constructor(public readonly props: AddEmailToListInput) {}
 
   get email() {
     return this.props.email;
