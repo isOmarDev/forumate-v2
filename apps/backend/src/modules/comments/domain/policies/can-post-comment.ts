@@ -2,10 +2,10 @@ import { Result } from '@forumate/core/application';
 
 import { Member } from '../../../members/domain/entities/member';
 import { InsufficientMemberLevelError } from '../../../members/domain/errors/member-errors';
-import { ReputationLevel } from '../../../members/domain/value-objects/member-reputation-level';
+import { reputationLevel } from '../../../members/domain/value-objects/member-reputation-level';
 
 export class CanPostCommentPolicy {
-  private static readonly REQUIRED_LEVEL_VALUE = ReputationLevel.Level1;
+  private static readonly REQUIRED_LEVEL_VALUE = reputationLevel.level1;
 
   public static check(
     member: Member,
