@@ -8,14 +8,14 @@ import {
   setupCommentWithInitialUpvote,
 } from '../../../../../../tests/fixtures/unit/comments';
 import { setupLevel1Member } from '../../../../../../tests/fixtures/unit/members';
-import { InMemoryCommentsRepository } from '../../../../comments/infrastructure/repositories/in-memory-comments-repository';
+import { InMemoryCommentsRepository } from '../../../../comments/infrastructure/repositories/in-memory/in-memory-comments-repository';
 import { InsufficientMemberLevelError } from '../../../../members/domain/errors/member-errors';
-import { InMemoryMembersRepository } from '../../../../members/infrastructure/repositories/in-memory-members-repository';
+import { InMemoryMembersRepository } from '../../../../members/infrastructure/repositories/in-memory';
 import { CommentVote } from '../../../domain/entities/comment-vote';
 import { CommentDownvoted } from '../../../domain/events/comment-downvoted';
 import { CommentUnvoted } from '../../../domain/events/comment-unvoted';
 import { CommentUpvoted } from '../../../domain/events/comment-upvoted';
-import { InMemoryCommentVotesRepository } from '../../../infrastructure/repositories';
+import { InMemoryCommentVotesRepository } from '../../../infrastructure/repositories/in-memory';
 
 import { VoteOnCommentUseCase } from './vote-on-comment-use-case';
 
@@ -96,7 +96,7 @@ describe('voteOnComment', () => {
       expect(event).toBeInstanceOf(CommentUpvoted);
       expect(event.data.voteId).toBe(commentVote.id);
       expect(event.data.commentId).toBe(existingComment.id);
-      expect(event.data.memberId).toBe(author.id);
+      expect(event.data.voterId).toBe(author.id);
     });
 
     it('should unvote the author upvote when the author upvotes again', async () => {
@@ -137,7 +137,7 @@ describe('voteOnComment', () => {
       expect(event).toBeInstanceOf(CommentUnvoted);
       expect(event.data.voteId).toBe(authorVote.id);
       expect(event.data.commentId).toBe(existingComment.id);
-      expect(event.data.memberId).toBe(author.id);
+      expect(event.data.authorId).toBe(author.id);
       expect(event.data.scoreChange).toBe(expectedScoreChange);
     });
 
@@ -177,7 +177,7 @@ describe('voteOnComment', () => {
       expect(event).toBeInstanceOf(CommentDownvoted);
       expect(event.data.voteId).toBe(authorVote.id);
       expect(event.data.commentId).toBe(existingComment.id);
-      expect(event.data.memberId).toBe(author.id);
+      expect(event.data.authorId).toBe(author.id);
       expect(event.data.scoreChange).toBe(expectedScoreChange);
     });
 
@@ -217,7 +217,7 @@ describe('voteOnComment', () => {
       expect(event).toBeInstanceOf(CommentUpvoted);
       expect(event.data.voteId).toBe(authorVote.id);
       expect(event.data.commentId).toBe(existingComment.id);
-      expect(event.data.memberId).toBe(author.id);
+      expect(event.data.authorId).toBe(author.id);
       expect(event.data.scoreChange).toBe(expectedScoreChange);
     });
   });

@@ -53,9 +53,11 @@ export class VoteOnCommentUseCase implements IUseCase<
     const commentVote =
       existingVote ?? CommentVote.create({ commentId, memberId });
 
-    commentVote.castVote(voteType);
+    const { scoreChange } = commentVote.castVote(voteType, comment.memberId);
 
     await this.commentVotesRepository.save(commentVote);
+    // updateVoteScore in comment should be triggered via event
+    await this.commentsRepository.updateVoteScore(commentId, scoreChange);
     await this.eventBus.publishEvents(commentVote.getDomainEvents());
 
     return success(commentVote);
