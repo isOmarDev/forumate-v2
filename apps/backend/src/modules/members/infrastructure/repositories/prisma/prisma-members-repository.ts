@@ -1,8 +1,8 @@
 import { Prisma, type IDatabase } from '@forumate/database';
 
-import { MemberMap } from '../../application/mappers/member-map';
-import { type IMembersRepository } from '../../application/ports/members-repository';
-import { Member } from '../../domain/entities/member';
+import { MemberMap } from '../../../application/mappers/member-map';
+import { type IMembersRepository } from '../../../application/ports/members-repository';
+import { Member } from '../../../domain/entities/member';
 
 export class PrismaMembersRepository implements IMembersRepository {
   constructor(private database: IDatabase) {}
