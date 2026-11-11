@@ -146,4 +146,8 @@ export class Post extends AggregateRoot {
   public isLinkPost(): boolean {
     return this.props.postType === 'link';
   }
+
+  public isAuthoredBy(memberId: string): boolean {
+    return this.memberId === memberId;
+  }
 }
