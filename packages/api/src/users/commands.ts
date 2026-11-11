@@ -6,7 +6,7 @@ import { validateCommandInput } from '../validate-command-input';
 import { createUserInputSchema, type CreateUserInput } from './inputs';
 
 export class CreateUserCommand {
-  private constructor(public props: CreateUserInput) {}
+  private constructor(public readonly props: CreateUserInput) {}
 
   static create(
     input: unknown,
